@@ -5,7 +5,7 @@ Robotics paper notes and practical analysis for robot projects.
 <!-- ZH_NOTES_LIST_START -->
 ## 中文论文笔记
 
-共 11 篇中文笔记。此列表由 `python scripts/update_readme_zh_notes.py` 生成。
+共 12 篇中文笔记。此列表由 `python scripts/update_readme_zh_notes.py` 生成。
 
 | 论文 | 会议/年份 | 链接 |
 | --- | --- | --- |
@@ -20,6 +20,7 @@ Robotics paper notes and practical analysis for robot projects.
 | Qwen-VLA: 统一任务、环境和机器人本体的视觉-语言-动作建模 | - | [笔记](notes/Qwen-VLA-Unifying-Vision-Language-Action-Modeling-across-Tasks-Environments-and-Robot-Embodiments.zh-CN.md) / [来源](https://arxiv.org/pdf/2605.30280) / [代码](https://github.com/QwenLM/Qwen-VLA) |
 | RISE：基于组合式世界模型的机器人策略自我提升 | arXiv，2026 | [笔记](notes/RISE-Self-Improving-Robot-Policy-with-Compositional-World-Model.zh-CN.md) / [来源](https://arxiv.org/pdf/2602.11075) / [项目](https://opendrivelab.com/RISE) / [代码](https://github.com/OpenDriveLab/RISE) |
 | StarVLA: 面向 VLA 模型开发的乐高式代码库 | - | [笔记](notes/StarVLA-A-Lego-like-Codebase-for-Vision-Language-Action-Model-Developing.zh-CN.md) / [来源](https://arxiv.org/pdf/2604.05014) / [项目](https://starvla.github.io) / [代码](https://github.com/starVLA/starVLA) |
+| Tuna-2：像素嵌入在多模态理解与生成中超过视觉编码器 | arXiv，2026 | [笔记](notes/Tuna-2-Pixel-Embeddings-Beat-Vision-Encoders-for-Multimodal-Understanding-and-Generation.zh-CN.md) / [来源](https://arxiv.org/pdf/2604.24763) / [项目](https://tuna-ai.org/tuna-2/) / [代码](https://github.com/facebookresearch/tuna-2) |
 
 <!-- ZH_NOTES_LIST_END -->
 
