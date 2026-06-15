@@ -53,3 +53,71 @@ README 没有给出完整 benchmark 表格。它声明 N1.7 相比 N1.6 保持�
 ## 实施建议
 
 不要一开始就做生产部署。先用小数据集验证数据转换、动作维度、相机命名和归一化是否正确，再做 open-loop 评估。最关键的工程决策是动作表示：优先使用 relative EEF delta，并保证夹爪、腕部、底盘和相机坐标约定在训练和部署时完全一致。
+
+## 问题分析
+
+### GR00T N1.7 的模型架构是怎样的？
+
+GR00T N1.7 是一个双系统 VLA 模型。System 2 是视觉语言推理模块，N1.7 把该模块升级为 Cosmos-Reason2-2B / Qwen3-VL 骨干，用 RGB 图像和语言指令生成 vision-language hidden tokens。System 1 是动作生成模块，使用 Diffusion Transformer / flow-matching action transformer。它以 System 2 的 tokens、机器人本体状态、加噪 action chunk 和 diffusion timestep 为条件，预测目标机器人的连续动作块。
+
+关键点是：VLM 不直接输出电机控制命令。它输出的是带有场景、任务和子任务信息的隐藏表示；真正生成连续动作的是 System 1 的动作 transformer。
+
+### embodiment-aware MLP 编码/解码怎么理解？
+
+不同机器人有不同的 state 和 action 维度：单臂机械臂、双臂操作臂、人形上半身、灵巧手的关节数、末端执行器表示和控制量都不一样。GR00T 用 embodiment-aware MLP 作为“机器人身体接口适配器”，把每个机器人自己的物理接口接到共享的动作 transformer 表示空间。
+
+输入侧，state encoder MLP 把某个机器人的 proprioception，例如关节位置、关节速度、末端执行器位姿，映射成统一维度的 state embedding。action encoder MLP 把加噪 action chunk 和 flow-matching timestep 映射成 action token embedding。输出侧，embodiment-specific action decoder MLP 把 DiT 最后的 token 映射回该机器人实际需要的 action vector。
+
+因此，共享的 System 1 DiT 学的是可复用的动作生成结构；不同机器人的自由度、动作维度和控制约定由小型 MLP adapter 吸收。
+
+### embodiment-aware MLP 和 System 1 是什么关系？
+
+embodiment-aware MLP 属于 System 1 的动作路径，不是独立的第三个系统。System 1 可以理解为 DiT 主体加上 state/action encoder 和 action decoder。MLP adapter 让 DiT 能够处理多种机器人本体。
+
+```text
+robot state
+  -> embodiment-aware state MLP encoder
+  -> state embedding
+  -> System 1 DiT
+
+noisy action chunk + timestep
+  -> embodiment-aware action MLP encoder
+  -> action embedding
+  -> System 1 DiT
+
+System 1 DiT output
+  -> embodiment-specific action MLP decoder
+  -> robot-specific continuous action chunk
+```
+
+如果没有这些 adapter，DiT 就要直接面对不同机器人之间不兼容的 state/action 维度。有了 adapter，DiT 在统一 latent space 中工作，adapter 负责在统一表示和具体机器人控制量之间翻译。
+
+### System 2 VLM 输出的 high-level action tokens 是怎样定义的？
+
+这里的 high-level action tokens 更准确地说是 VLM 产生的连续 hidden tokens，而不是人工定义的离散技能标签，比如 `reach`、`grasp`、`place`。图像和语言先经过 VLM token 化和融合，GR00T 再取 VLM 的中间层隐藏表示。这些 tokens 会隐式编码任务目标、相关物体、空间关系和可能的子任务阶段。
+
+训练时，System 1 必须利用这些 tokens 预测正确 action chunk。因此这些 tokens 的动作语义来自端到端训练，而不是手写的 action vocabulary。
+
+还要区分它们和论文中用于无动作视频训练的 latent actions：VLM hidden tokens 是策略的条件输入；latent actions 是从人类视频或生成视频中提取的伪动作标签或学习目标，用来让没有真实机器人动作的数据也能参与 flow-matching 训练。
+
+### 算法模块图
+
+```mermaid
+flowchart TD
+    subgraph System2[System 2: Vision-Language Reasoning]
+        IMG[RGB camera frames] --> VLM[VLM backbone<br/>N1.7: Cosmos-Reason2-2B / Qwen3-VL]
+        TXT[Language instruction] --> VLM
+        VLM --> VL[Vision-language hidden tokens]
+    end
+
+    subgraph System1[System 1: Action Generation]
+        STATE[Robot proprioception<br/>joint pos, joint vel, EEF pose] --> SE[Embodiment-aware<br/>state MLP encoder]
+        NOISE[Noisy action chunk] --> AE[Embodiment-aware<br/>action MLP encoder]
+        TIME[Flow-matching timestep] --> AE
+        SE --> DIT[Diffusion Transformer / DiT<br/>self-attention + cross-attention]
+        AE --> DIT
+        VL --> DIT
+        DIT --> DEC[Embodiment-specific<br/>action MLP decoder]
+        DEC --> ACT[Continuous robot action chunk]
+    end
+```
