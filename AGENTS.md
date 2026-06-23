@@ -8,7 +8,6 @@ This repository supports robotics paper research: downloading papers, analyzing 
 
 There is no application build system yet. Use lightweight checks before submitting changes:
 
-- `markdownlint README.md AGENTS.md` checks Markdown style when `markdownlint` is installed.
 - `npx prettier --check "**/*.md"` checks Markdown formatting if Prettier is available.
 - `rg "TODO|FIXME"` helps find unfinished notes before opening a pull request.
 
