@@ -77,8 +77,23 @@ def read_notes(notes_dir: Path) -> list[Note]:
     return notes
 
 
+def normalize_link_target(target: str) -> str:
+    """Accept plain URLs, autolinks, or Markdown links from note metadata."""
+    target = target.strip()
+
+    markdown_match = re.fullmatch(r"<?\[[^\]]+\]\(([^)]+)\)>?", target)
+    if markdown_match:
+        return markdown_match.group(1).strip()
+
+    autolink_match = re.fullmatch(r"<([^<>]+)>", target)
+    if autolink_match:
+        return autolink_match.group(1).strip()
+
+    return target
+
+
 def markdown_link(label: str, target: str) -> str:
-    return f"[{label}]({target})" if target else ""
+    return f"[{label}]({normalize_link_target(target)})" if target else ""
 
 
 def escape_table_cell(value: str) -> str:

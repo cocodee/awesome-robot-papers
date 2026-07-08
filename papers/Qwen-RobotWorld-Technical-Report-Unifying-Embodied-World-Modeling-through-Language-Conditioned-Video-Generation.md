@@ -1,0 +1,1103 @@
+June18,2026
+Qwen-RobotWorld Technical Report: Unifying Embodied World
+Modeling through Language-Conditioned Video Generation
+QwenTeam
+https://qwen.ai/blog?id=qwen-robotworld
+Abstract
+WeintroduceQWEN-ROBOTWORLD,alanguage-conditionedvideoworldmodelfor
+embodiedintelligence. Withnaturallanguageasaunifiedactioninterface,itpredicts
+physicallygroundedfuturevisualtrajectoriesfromcurrentobservationsacrossrobotic
+manipulation, autonomousdriving, indoornavigation, andhuman-to-robottransfer.
+Thisunifiedformulationprovidesthreepromisingapplicationdirections: syntheticdata
+generationforpolicytrainingaugmentation,scalablevirtualenvironmentsforpolicy
+evaluation,andlanguage-guidedplanningsignalsfordownstreamrobotcontrol. This
+isachievedthroughathree-partdesign: a)Double-StreamMMDiTwithMLLMAc-
+tionEncoding,wherea60-layerdouble-streamdiffusiontransformercouplesfrozen
+Qwen2.5-VL semantics with video-VAE latents through layer-wise joint attention; b)
+EmbodiedWorldKnowledge(EWK),an8.6Mvideo-textcorpus(200M+frames)with
+action-language mapping over 20+ embodiments and 500+ action categories; and c)
+General+ExpertProgressiveCurriculum,atwo-stagetrainingstrategythatfirstlearns
+generalvisualpriorsandtheninjectsembodiedspecializationunderasharedlanguage
+interface. Extensiveresultsshowstrongcompetitiveness: ranks1stoverallonEWM-
+BenchandDreamGenBench,outperformsallopen-sourcemodelsonWorldModelBench
+andPBench. Additionalzero-shotanalysesonRoboTwin-IFbenchmarkfurthersupport
+robustgeneralizationandmulti-viewconsistency.
+Double-stream MMDiT
+Qwen2.5-VL Patchi
+N
+f
+o
+y
+ise !
+Reason P
+i
+h
+n
+y
+g
+sical
+VAE Encoder
+Use the right hand
+w b to o a t t p t e i l r c e k o a n n u d p fl o p p w o in u e k r r M anipu E la m tio b
+n
+odied
+Action Observation Prediction
+Multi-Embodiment Multi-Task Multi-Scenario Multi-View
+EWK dataset: 8.6M high-quality and diverse embodied video-text pairs
+1 Introduction
+Embodiedintelligencerequiresagentstoperceive,reason,andactwithinphysicalenvironments—spanning
+roboticmanipulationattabletopscale,autonomousnavigationthroughurbantraffic,andwayfinding
+acrossindoorspaces. Trainingsuchsystemsdirectlyintherealworldiscostly,inefficient,andfraught
+withsafetyrisks. Worldmodelsofferascalablealternative: bylearningenvironmentdynamicsfrom
+observationaldata,theyserveasinteractivetrainingplatformsthatallowembodiedagentstoacquire
+andrefinebehaviorswithoutphysicaldeployment.
+Aworldmodelcanbeformalizedasastatetransitionfunction: givenacurrentstates andanactiona ,
+t t
+itpredictstheresultingstate s t+1 = f(s t ,a t ) Yeetal.(2026). Invideo-basedworldmodels,statesare
+visualobservations(videoframesortheirlatentrepresentations),andthemodelgeneratesfuturevisual
+trajectoriesconditionedonthecurrentobservationandanactionsignal. Theactiona cantakevarious
+t
+forms—low-levelmotorcommands,high-levelwaypointtrajectories,ornaturallanguageinstructions.
+Amongthese,naturallanguageisthemostgeneralandaccessibleactionrepresentationYeetal.(2026):
+asingleinstructionsuchas“pickuptheredcupandplaceitontheshelf”implicitlyencodesthecomplete
+actionsequence,goalstate,andphysicalconstraints,withoutrequiringrobot-specificcontrolinterfaces.
+Language actions can furthermore be utilized in two complementary directions: as an explicit input
+fusedintothemodel’sconditionsignaltogovernstatetransitions,orasanoutputinferredpost-hocfrom
+generatedvideotoserveasanactionlabel. Thisflexibilitypositionslanguage-conditionedworldmodels
+asuniversalsimulationbackbonesthatgeneralizeacrossembodiedplatformswithoutinterfaceredesign.
+However, a fundamental tension currently limits world model effectiveness. General video generation
+models OpenAI (2024); Google DeepMind (2025) learn rich visual priors from internet-scale data but
+1
+6202
+nuJ
+71
+]VC.sc[
+3v03071.6062:viXra
+
+failtoaccuratelymodelembodiedphysics—contactdynamics,rigid-bodystructuralconstraints,and
+action-consequencerelationshipsthatarecriticalforphysicallyplausiblestatetransitions. Domain-specific
+embodiedmodelsAgarwaletal.(2025);Chenetal.(2025a);Teametal.(2025),conversely,aretailoredto
+individualscenarios(e.g.,tabletopmanipulationordriving);theyrelyonstructured,robot-specificaction
+representationssuchasjointanglesorwaypoints,whichcannotgeneralizeacrossembodimenttypesor
+taskcategories,fundamentallylimitingtheirutilityascross-platformsimulationenvironments.
+Bridging this gap requires grounding diverse embodied experiences in general visual priors, with
+naturallanguageastheunifiedactioninterfacethatenablescross-scenarioandcross-taskintegration.
+Differentembodieddomainsprovidecomplementaryphysicalknowledgethatcollectivelyenrichesthe
+worldmodel’sstatetransitionfunction: manipulationteachesfine-grainedcontactphysicsandobject-state
+transformationswithinconfinedworkspaces;autonomousdrivingteacheslarge-scalemulti-agentdynamics
+and3Dscenegeometrythroughego-motionparallaxandscene-scaletransitions;indoornavigationteaches
+room-scale spatial reasoning, where language instructions must be grounded into spatially coherent
+visualtrajectoriesoverextendedhorizons. Becausethesedomainsshareacommonlanguageinterface,
+theycanbetrainedjointly—witheachdomain’sphysicalknowledgereinforcingtheothersratherthan
+conflicting. Furthermore,translatinghumandemonstrationsintorobotexecutionsthroughvideoediting
+opensapracticalpathwaytoscaleembodiedtrainingdatabeyondthelimitsofphysicalrobotcollection.
+We present QWEN-ROBOTWORLD, a language-conditioned video world model in the Qwen series
+thatrealizesthisvisionthroughtightlycoupledinnovationsinarchitecture,data,andtraining. Beyond
+high-fidelityaction-conditionedprediction,themodelservesasaunifiedbackbonethat,withtask-specific
+adaptation,cansupportthreerepresentativeembodiedworldmodelapplications: asyntheticdataengine,
+apolicyevaluationenvironment,andanactionplanner.
+Architecture: Double-StreamMMDiTwithMLLMActionEncoding(§3). Toimplementlanguage-
+conditionedstatetransitions,weadoptadouble-streamMultimodalDiffusionTransformer(MMDiT)
+backbone. AnunderstandingstreamprocessesrichsemanticfeaturesextractedbyafrozenQwen2.5-VL
+encoder,representingtheactiona ;agenerationstreamprocessesvisuallatentsfromavideo-compatible
+t
+VAE, representing the visual state s . The two streams interact via joint attention at every layer, en-
+t
+abling bidirectional cross-modal fusion throughout the denoising process. Using an MLLM as the
+actionencoder—ratherthanlightweightencoderssuchasT5Raffeletal.(2020)orCLIPRadfordetal.
+(2021)—yields two key advantages: (1) its deep language understanding accurately parses complex,
+compositionalinstructionsintopreciseconditionsignalsthatgovernfine-grainedstatetransitions;(2)
+its internalized world knowledge (e.g., that robot arms are rigid bodies with fixed link lengths and
+jointconstraints)implicitlyconstrainsthespaceofphysicallyplausibletransitions,and—combinedwith
+T2Ico-training—preventsobjectdeformationacrossvideoframeswithoutrequiringexplicitgeometric
+prompts,acommonfailuremodeinmodelslackingsuchsemanticgrounding.
+Data: EmbodiedWorldKnowledgeDataset(§2). Totrainastatetransitionfunctionthatgeneralizes
+acrossembodieddomains,weconstructtheEmbodiedWorldKnowledge(EWK)dataset—approximately
+8.6M video-text pairs comprising over 200M observation frames. The corpus spans four embodied
+domains alongside general video data (30% of the total): manipulation (∼5.9M samples, 20+ robot
+morphologies,1300+skills)providesthecoreembodiedfoundation;autonomousdriving(∼200Ksam-
+plesfromWaymo,NVIDIAPhysicalAI-AD,Bench2Drive,andSekai)contributeslarge-scaleego-motion
+and multi-agent dynamics; indoor navigation (6K+ language-guided episodes from VLNVerse) pro-
+videsroom-scalespatialreasoninggroundedincontinuoustrajectories;andhuman-to-robottransfer
+data—generatedviaanautomatedMANORomeroetal.(2017)-to-robotpipelineacross14robotmor-
+phologies—enables cross-embodiment video editing. A central methodological contribution is our
+action-languagemappingframework,whichstandardizesactionsacross20+robotembodimenttypesand
+500+actioncategoriesintoaunifiednaturallanguageinterface,yieldingapproximately8.6Mhigh-quality
+cross-scenario, cross-task embodied video-text pairs. This is complemented by task-aware temporal
+segmentation(ensuringeachsamplecapturesacomplete,well-definedstatetransition)andahierarchi-
+calfive-layerviewpoint-awareannotationpipelinethatsubstantiallyimprovescaptionspecificityand
+downstreaminstruction-following.
+Training: FromGeneralPriorstoEmbodiedSpecialization(§4). Weadoptatwo-stageprogressive
+trainingcurriculum. Inpretraining,jointtrainingacrossT2I,T2V,andTI2Vtasksovergeneral-domain
+databuildsfoundationalvisualpriors,withT2Ispecificallyanchoringgeometricallycorrectobjectmor-
+phologythattransferstovideogeneration. IntheSFTstage,embodieddataisintroducedprogressively
+(70% embodied, 30% general) through a four-phase mixing schedule: single-view manipulation →
+multi-viewexpansion→multi-viewconcatenatedgeneration→complextasksandcross-domaindata.
+Withintheembodiedportion,manipulationdominatesat∼90%samplingweighttoensuredepthof
+physicalgrounding,whilemulti-viewconcatenationandnavigation/drivingdataeachreceive∼5%to
+providebreadth. Thisgeneral+expertjointtrainingparadigm—unifiedunderthenaturallanguageaction
+2
+
+interface—enablesstableco-trainingacrossdiversescenariosandtasks,witheachdomain’sphysical
+knowledgemutuallyreinforcingtheothers. Asymmetric3DRoPEpositionalencodingandmulti-view
+concatenation training enable geometrically consistent synthesis across synchronized camera views
+withoutarchitecturalmodification.
+Evaluatedonfourestablishedbenchmarks,QWEN-ROBOTWORLDachievescompetitiveperformance
+acrosscross-scenarioandcross-tasksettings.Itoutperformsallopen-sourcemodelsonWorldModelBench
+(8.99,3rdoverall),attainingperfectphysicsadherencescoresacrossNewton’slaws,massconservation,
+fluiddynamics,andgravity—onparwithleadingclosed-sourcemodels—whileachievingstronginstruc-
+tionfollowing(2.33/3.0). Itranks1stoverallonEWMBench(4.60),withsubstantiallyleadingmotion
+fidelityinHSD(0.566,+33%overtherunner-up)andtopsceneconsistency(0.914). OnDreamGenBench,
+themodelranks1stoverall(4.952)acrossthreeroboticembodimentsubsets,excellinginobject-level
+compositionalgeneralization. OnPBench,itoutperformsallopen-sourcemodels(0.804),withdomain
+understandingplacing3rdoverall(0.857)andmotionsmoothnessranking2ndamongopen-sourcemod-
+els(0.990). Qualitativeresultsfurthershowcasegeneralizationacrosscross-taskvideoediting—including
+human-to-robottransfer,wherethemodelsynthesizesrealisticrobotexecutionfromahumandemon-
+strationvideowithoutrobot-specificprompting—aswellasautonomousdrivingscenesynthesisand
+room-scaleindoornavigationgeneration;additionalzero-shotperformanceonRoboTwin-IFbenchmark
+furthersupportrobusttransferundercomplexinstructions.
+Ourcontributionsaresummarizedasfollows:
+• Framework. We propose QWEN-ROBOTWORLD, a language-conditioned video world model that
+treatsnaturallanguageasauniversalactioninterfacetounifycross-scenarioandcross-taskembodied
+capabilities. Byjointlytrainingmanipulation,driving,navigation,andhuman-to-robottransferunder
+a shared language interface, the model achieves complementary physical generalization that no
+single-domainmodelcanmatch.
+• Data. Weproposeanaction-languagemappingframeworkthatstandardizes20+robotembodiment
+typesand500+actioncategoriesintoaunifiednaturallanguageinterface,andconstructapproximately
+8.6Mhigh-quality,cross-scenario,cross-taskembodiedvideo-textpairsconstitutingtheEWKdataset.
+• Training. We propose a general + expert joint training paradigm that, under the unified natural
+languageinterface,equipsthemodelwithbothbroadworldmodelingcapabilityanddeepembodied
+domainexpertise,enablingstableandscalableco-trainingacrossdiversescenariosandtasks.
+• Performance. QWEN-ROBOTWORLDachievescomprehensiveimprovementsoncross-scenarioand
+cross-taskembodiedevaluationmetrics,ranking1stoverallonEWMBenchandDreamGenBenchand
+outperformingallopen-sourcemodelsonWorldModelBenchandPBench.
+2 Data
+Thecentralchallengeintrainingauniversalembodiedworldmodelisnotdatascalealone,butrepresenta-
+tionalheterogeneity:roboticmanipulationactionsareexpressedasjointanglesorend-effectorwaypoints,
+drivingassteeringcommandsandvelocityprofiles,andnavigationasheadingvectors—eachrequiringa
+separatemodelorinterfaceperdomain.Weresolvethisthroughanaction-languagemappingframework
+thatconvertsheterogeneousactionsfrom20+robotembodimenttypesand500+actioncategoriesinto
+aunifiednaturallanguageinterface. Underthisunifiedinterface,videosfromaFrankagripper,anau-
+tonomousvehicle,andanindoornavigationagentallbecomeinstancesofthesamelanguage-conditioned
+videogenerationtask,enablingcross-scenarioandcross-taskjointtrainingunderasinglemodelwithout
+anydomain-specificcontrolinterface. AsshowninFigure1,thisframeworkproducesapproximately
+6Mhigh-quality,cross-scenario,cross-taskembodiedvideo–textpairs,whichwefurtheraugmentwith
+generalvideodata(30%ofthetotal)toconstructtheEmbodiedWorldKnowledge(EWK)dataset: a
+corpusof8.6Mvideo–textpairscomprisingover200Mobservationframes.
+2.1 Action-LanguageMapping
+Theaction-languagemappingframeworkaddressesafundamentalasymmetryinembodieddata: the
+visual states (video frames) are already in a common pixel space, but the action representations are
+fragmentedacrossincompatiblemodalities. Ourframeworkresolvesthisbyprojectingallactionsignals
+ontoasharednaturallanguagespace,sothatthesamediffusiontransformercanlearns t+1 = f(s t ,a t )
+regardlessoftheunderlyingphysicaldomain.
+WhyLanguageastheUnifiedActionInterface. Unlikelow-levelactionrepresentations—jointangles,
+end-effectorwaypoints,force-torquecommands—whicharehardware-specificandrequireaseparate
+3
+
+Figure1: OverviewoftheEmbodiedWorldKnowledge(EWK)trainingcorpus. Generalworlddata
+(top)suppliesfoundationalpriorsonappearance,geometry,anddynamicsfrominternet-scalevideo
+and image collections. Structured embodied data (middle) is organized along four complementary
+axes,eachtargetingadistinctsourceofphysicalvariation: Multi-Embodiment(humanhands,diverse
+robotmanipulators,mobileagents);Multi-Task(short-horizonatomicskills,long-horizoncompositional
+planning,specificskillssuchaslocomotionandHRI);Multi-Scenario,areality-first,sim-augmenteddesign
+thatbridgesrealcapturesandthesimulatorswheredownstreamVLApoliciesaretrainedandevaluated;
+andMulti-View(main,wrist,andsynchronizedmulti-viewstreamscoveringbothglobalplanningand
+fine-grainedeffector–objectinteraction). Jointly,thesesignalssupplythesemantics,geometry,physical
+alignment,andcausalrelationships(bottom)requiredforlanguage-conditionedactionunderstanding
+andfuture-stategeneration.
+control interface per embodiment, natural language offers a universal, embodiment-agnostic action
+interface. Asingleinstructionsuchas“grasptheredcupandliftitvertically”implicitlyencodesthefull
+actionsequence,goalstate,andphysicalconstraints,withoutanyknowledgeoftheunderlyingkinematic
+chain. Bytrainingthemodeltopredictthenextvisualstates t+1 fromalanguageaction a t alone,we
+obtainasimulationbackbonethatgeneralizesacrossembodiments—whetheraFrankagripper,anAloha
+dual-armsystem,orahumanoid—withoutretrainingorre-engineeringrobot-specificinterfaces. This
+generality,however,placesdemandingrequirementsonannotationquality: eachcaptionmustfunction
+asacomplete,self-containedactionspecification,preciseenoughthatthemodelcanpredicts t+1 froma t and
+s alone,withoutaccesstoanyrobotmetadataorproprioceptivesignals.
+t
+HierarchicalFive-LayerAnnotation. Toconsistentlyproducesuchaction-richcaptionsacross20+robot
+embodimenttypesand500+actioncategories,wedesignahierarchicalannotationframeworkwithfive
+progressivelayers. Thefirstthreeformastructuredchain-of-thoughtthatdecomposeseachvisualstate
+transitionintointerpretablecomponents:
+1. TaskGoalLayer—inferthehigh-levelintentofthetransition(whatshouldchangebetweens and
+t
+s t+1 ),integratingexternalinstructionswithobservedvideocontent;
+2. ActionDetailLayer—decomposetheactiona intospatio-temporaltrajectories,micro-actions,speed,
+t
+and force, with mandatory explicit declaration of viewpoint information (egocentric main view,
+wristview,externalview,orconcatenatedmulti-viewcombinations);
+3. PhysicalFeedbackLayer—describetheobservableconsequencesoftheactionontheenvironment
+(object displacement, deformation, contact state changes), grounding each transition in verifiable
+physicaloutcomes.
+Basedonthisanalysis,twogranularitiesofactiondescriptionsaregenerated:
+4. ComprehensiveDescription(50–100words)—fullyspecifiestheviewpoint–agent–action–feedback
+quadruple,providingarichactionsignalforprecisestatetransitionprediction;
+5. ConciseDescription(15–30words)—retainsonlytheessentialviewpoint–agent–keyactionelements,
+enablingthemodeltohandlebrief,high-levelcommandsatinferencetime.
+4
+
+Table1: DetailedinventoryoftheEmbodiedWorldKnowledge(EWK)trainingdatamixture,organized
+bydomain.
+Dataset Embodiment Views Tasks Contribution
+A.Manipulation
+EgoHODPeietal.(2025), Humanhands Egocentric Dailygrasping&kitchen Dexterity&coordination
+EPIC-KitchensDamenetal. prior
+(2018),Egocentric-10kBuild
+AI(2025)
+BridgeV2Walkeetal. Single-armgrippers external+wrist Tabletoppick-and-place Interactionprimitives
+(2023),RH20TFangetal.
+(2024),DroidKhazatsky
+etal.(2024)
+RobomindWuetal.(2025a), Single/dual-arm, Ego+external Rigid&deformable Cross-embodiment
+RoboCoinWuetal.(2025b) humanoids objects generalization
+Agibot-WorldAgiBot- Single-arm(gripper+ Syncedego+wrist+ Long-horizonsequential Temporal&multi-view
+World-Contributors(2025), dexteroushand) external consistency
+GalaxeaGalaxeaAI(2025)
+Qwen-Aloha(internal) Dual-armgrippers Head+dualwrist Diversegrasping Multi-viewgraspingprior
+ActionNetFourier Dexteroushands Wrist+external Tooluse&in-hand Fine-graineddexterity
+ActionNetTeam&Mu
+(2025),
+OpenLoongOpenLoong
+BaihuTeam(2025)
+InternData-A1Tianetal. Mixedarms Variable Fluids&deformables Sim-to-realalignment
+(2025),RobotwinChenetal. (simulated)
+(2025b),Groot-XEBjorck
+etal.(2025),RT1Brohan
+etal.(2023)
+B.AutonomousDriving
+WaymoE2EWaymoTeam Egovehicle 5–8surround-view Urbandriving&traffic Large-scalemotion&3D
+(2024),NVIDIA geometry
+PhysicalAI-ADNVIDIA
+(2025b)
+Bench2DriveJiaetal.(2024) Egovehicle(sim) 6surround-view 9.8Ktrafficscenarios Simdiversity&GT
+annotations
+SekaiSekaiTeam(2025) Pedestrian/drone Egocentric Urbanwalking Pedestrian-scalelocomotion
+C.IndoorNavigation
+VLNVerseLinetal.(2025) Mobileagent Egocentric 134indoorscenes, 3Dreasoning&
+lang-guided lang-trajectoryalign
+D.Human-to-RobotTransfer
+PairedH2Rdataset Human→14robot Egocentricbimanual Cross-embodiment Videoeditingsupervision
+arms manipulation
+Weenforcefourqualitycontrolprinciples: operationfocus(onlyagentactionsandobjectinteractions),
+viewpointdefinition(explicitviewpointtypeandsemanticrole),objectivity(onlyvisibledynamics),and
+physicalverifiability(onlyvisuallyverifiableoutcomes). Intraining,wesamplefromcomprehensiveand
+concise descriptions with equal probability (50% each), so the model learns to execute both detailed
+trajectoryspecificationsandbrieftask-levelcommands.
+Coverage: 20+RobotEmbodiments,500+ActionCategories. Theframeworkisappliedacrossalldata
+domains. Ontheembodimentaxis,itcovershumanhands,sevenrobotarmconfigurations(single-arm
+gripper, dual-arm gripper, single-arm dexterous hand, dual-arm dexterous hand, mobile dual-arm,
+half-humanoid,andfullhumanoid),egovehicle(surround-viewcameras),pedestrian/drone,andmobile
+navigationagent—representing20+distinctrobotembodimentsintotal,assourcedfromRoboCoin(15
+robotmodelsacrossthreestructuralcategories),Robomind(4morphologies),InternData-A1(4robot
+models),Groot-XE,andvariousotherdatasets. Ontheactionaxis,itspans500+actioncategoriesderived
+fromtheexplicitmotionprimitivevocabulariesacrossourtrainingdatasets—Agibot-Worldalonedefines
+84distinctmanipulationprimitives(grasp,push,pour,fold,wipe,cut,etc.)—supplementedbyunique
+primitivesfromothermanipulationdatasetsandlocomotion/navigationactions(turning,lane-changing,
+waypointfollowing,obstacleavoidance,etc.),organizedintofourtiers: (1)manipulationprimitives,(2)
+long-horizoncompositions,(3)locomotionandnavigation,and(4)dynamicanddeformableinteractions.
+Thissystematiccoverageensuresthattheresultingembodiedvideo-textpairsspanasemanticallyrich
+andphysicallydiverseactionspacethatnosingledomaincouldprovide.
+5
+
+2.2 DataCollection
+2.2.1 GeneralData
+Generalworlddatalaysthefoundationforthemodeltograspbasicphysicallawsandformaccurate
+visualrepresentations.Thiscategoryencompassesdiversevideosandstillimagesfromtheinternet.Video
+dataarestandardizedto24FPSandsupportmultipleresolutionsandaspectratios(1:1,2:3,3:2,3:4,4:3,
+9:16,16:9,etc.). Imagedataintegrateshigh-qualitystaticphotographs,servingasvisualqualityanchors
+thatestablishpreciserepresentationsofobjectappearance,materialtexture,andspatialcomposition. All
+generaldataisannotatedwithnaturallanguagedescriptionsgeneratedbyQwen2.5-VLBaietal.(2025);
+annotationsomitviewpoint-specificinformationtomaintainflexibilityandgenerality. Notably,weadopt
+aconservativestanceonAI-generatedcontent(AIGC):generaldataexcludesAI-producedimagesand
+videos,astheseoftenintroducevisualartifacts,physicalinconsistencies,andimplicitbiasesthatcould
+underminethemodel’sgeneralizationcapabilities.
+2.2.2 EmbodiedManipulationData
+Toenabletheworldmodeltoacquiregroundedphysicalunderstandingacrossscenariosandtasks,we
+build a structured data mixture spanning manipulation, driving, navigation, and cross-embodiment
+transferdomains,assummarizedinTable1. Forthecoremanipulationdomain,weorganizethedata
+aroundfourdimensions: Multi-Embodiment,Multi-Task,Multi-Scenario,andMulti-View.
+Multi-Embodiment. Manipulationdataspansaspectrumofembodiments—humanhands,single-arm
+grippers,dual-armdexteroussystems,mobilemanipulators,andfull-bodyhumanoids—sothemodel
+learnstoseparatetask-levelintentfromembodiment-specifickinematics. Humanmanipulationdata
+(EgoHODPeietal.(2025),EPIC-KitchensDamenetal.(2018))providesadexterityceiling: themodel
+observeswhatphysicallycapableinteractionlookslike,acquiringpriorsforfluidhand–eyecoordination
+andtooluse. Robotdatathenteachesthemodelhowthosesameintentsmapontodiversemechanical
+morphologies.Byexposingthemodeltobothhumandemonstrationsandrobotexecutionsofoverlapping
+tasks(e.g.,RobomindWuetal.(2025a),RoboCoinWuetal.(2025b)),itlearnsembodiment-invariant
+actionsemantics—theabilitytopredict“whatshouldhappennext”regardlessofwhethertheactorisa
+two-fingergripperoraseven-fingerdexteroushand.
+Multi-Task. The manipulation corpus covers a skill hierarchy from atomic contact-level actions to
+extendedmulti-stepprocedures,teachingthemodeltooperateatmultipletemporalgranularities. Short-
+horizondatasets(BridgeV2Walkeetal.(2023),RH20TFangetal.(2024))providedensecoverageoffunda-
+mentalinteractionprimitives—grasping,pushing,inserting—thatgroundthemodel’sunderstandingof
+contactphysicsandobjectaffordances. Long-horizondatasets(Agibot-WorldAgiBot-World-Contributors
+(2025),GalaxeaGalaxeaAI(2025))chaintheseprimitivesintocoherentsequences,forcingthemodelto
+maintainstatetrackingandcausalreasoningacrossdozensofsteps. Additionally,dynamic-interaction
+datasets(HumanoidEverydayZhaoetal.(2025))introducehigh-velocity,whole-bodymotionsthattest
+themodel’sabilitytopredictoutcomesundersignificantmomentumandbalanceconstraints. Together,
+thisrangeensuresthemodelcanreasonaboutboth“whathappenswhenyoupresshere”and“what
+happensaftertensequentialdecisions.”
+Multi-Scenario. Multi-scenario coverage advances along two complementary axes: breadth across
+realenvironments,andextensiontosimulator-renderedscenarios. Alongthefirstaxis,physicalinteraction
+manifestsdifferentlydependingoncontext—akitchencounterpresentsdifferentlighting,clutterdensity,
+andsurfacepropertiesthanafactoryfloororanoutdoorworksite. Ourmanipulationdataistherefore
+predominantly real-world, spanning domestic kitchens, workshops, laboratories, and unstructured
+outdoorsettings,exposingthemodeltogenuinevariationinillumination,occlusion,materialappearance,
+andbackgroundcomplexity—soitdoesnotbrittlyoverfittoanysingleenvironment. Alongthesecond
+axis, we incorporate photorealistic simulation data (InternData-A1 Tian et al. (2025)) as a first-class
+complement. ThisismotivatedbytheVLAlandscape: asubstantialportionofpolicymodelsaretrained
+insimulators,andvirtuallyallareevaluatedthereusingstandardizedbenchmarkssuchasLIBEROLiu
+etal.(2023),SimplerEnvLietal.(2024),andRLBenchJamesetal.(2020). Aworldmodelintendedasa
+generalsimulationbackbonemustthereforegeneratefaithfullyundersimulator-styleappearancesand
+physics,bridgingthevisualdomaingapbetweenrealandsyntheticobservationssoitcanserveboth
+sim-to-realtransferandclosed-loopevaluationpipelines. Thesimulationportionadditionallysupplies
+preciselycontrolledvariationsinlighting,objectpose,andcameraplacementthatfurtherstrengthen
+visualrobustness.
+6
+
+Multi-View. Single-viewdatateachesthemodeltopredictplausiblefuturesfromafixedperspective,
+butmanyphysicallycriticaleventsarepartiallyorfullyoccludedfromanysinglecamera. Synchronized
+multi-viewrecordings(Agibot-WorldAgiBot-World-Contributors(2025),RobomindWuetal.(2025a))
+expose the model to the same event from head-mounted, wrist-mounted, and external viewpoints
+simultaneously.Thisservestwopurposes:duringtraining,cross-viewcorrespondenceactsasageometric
+regularizer,implicitlyteachingthemodelaboutobjectshape,depth,andspatialrelationships;atinference,
+the model can generate from any individual viewpoint or compose multi-view outputs that remain
+mutuallyconsistent. Approximately1.6Mofour6Membodiedsamplesincludesynchronized2–4view
+concatenations,providingsubstantialmulti-viewsupervisionwithoutdominatingthecorpus.
+2.2.3 AutonomousDrivingData
+While manipulation data captures fine-grained object interactions within a confined workspace, au-
+tonomousdrivingdataexposesthemodeltoasubstantiallylargermotionspacewithdiversemaneuvers
+(turning,lanechanging,acceleration)spanningamuchwiderrangeofvelocitiesandtrajectories. Driving
+scenesalsocontainrichmulti-agentdynamics—surroundingvehicles,pedestrians,andcyclistsinteract-
+ingundertrafficrules—requiringtheworldmodeltolearnhowmultipleobjectsmove,occlude,and
+influenceeachotherovertime. Furthermore,thelargecameradisplacementprovidesdensesupervisory
+signal for 3D scene geometry through parallax and perspective changes, strengthening the model’s
+capacityforviewsynthesisandspatialreasoning.
+Wecuratemulti-viewdrivingvideosfromfourlarge-scaledatasets: WaymoE2EWaymoTeam(2024)
+(real-worlddriving,8surround-viewcameras,7,044clips/11.3h),NVIDIAPhysicalAI-ADNVIDIA
+(2025b)(real-worlddriving,5cameraswith30◦–120◦ FoV,1,342,418clips/1,715.9h),Bench2DriveJia
+etal.(2024)(CARLA-simulateddrivingunder9,881diversetrafficscenarios,6cameras,384,948clips
+/511.2h),andSekaiSekaiTeam(2025)(egocentricpedestrianwalkinganddronevideos,9,995clips/
+166.6hwithsceneandweatherannotations). Intotal,thedrivingdatacomprises1,744,405clipsspanning
+2,405 hours. We apply a unified three-stage processing pipeline: (1) frame extraction with trajectory
+unification into a common waypoint format, (2) action-based clip segmentation (2–8s) according to
+egomaneuvertransitions,and(3)captiongenerationcombiningstructuredtrajectorydescriptionswith
+optionalVLMaugmentation.
+2.2.4 EgocentricIndoorNavigationData
+Egocentric indoor navigation data provides a complementary perspective to both manipulation and
+drivingdata. Unlikemanipulationwhichfocusesonfine-grainedobjectinteractionswithinaconfined
+workspace,anddrivingwhichoperatesinlarge-scaleoutdoorenvironments,indoornavigationrequires
+themodeltounderstandroom-scalespatiallayouts,obstacle-awarepathplanning,andthemapping
+fromtextualnavigationcommandstospatiallycoherentvisualtrajectories.
+FollowingVLNVerseLinetal.(2025),wecollectphysicallygroundedegocentricnavigationdatausing
+NVIDIAIsaacSimNVIDIA(2022)withphotorealisticrenderingandcontinuouscontrol. Wegather6,064
+successfulnavigationepisodesacross134indoorscenes, eachconsistingofanegocentricRGBvideo
+(256×256resolutionat10FPS)pairedwithnaturallanguagenavigationinstructions. Thetrajectories
+averageapproximately8.2minlength(rangingfrom4to17.5m),accumulatingatotaltraversaldistance
+of roughly 49.8km and approximately 5.8 hours of continuous first-person navigation video. The
+instructionsareprovidedintwoformats: single-stringstep-by-stepdirectives(3,031episodes,averaging
+67.2words)andmulti-granularitydescriptionsatformal,natural,andcasualregisters(3,033episodes).
+Video generation models trained on such traversal data can acquire emergent 3D consistency and
+spatialcoherenceacrossframesGaoetal.(2026);Baretal.(2025),whilethephysicallygrounded,action-
+conditionednatureofeachsequenceencouragesthemodeltointernalizedepthreasoning,geometric
+consistency, andobstacle-awareplanningShangetal.(2025);Hanetal.(2025);Zhenetal.(2025). By
+groundinglanguageinstructionsincontinuousegocentrictraversals,thisdataenablestheworldmodel
+tojointlylearnlanguageunderstanding,3Dspatialreasoning,andembodiedactionpredictionwithin
+indoorenvironments.
+2.2.5 Human-to-RobotTransferData
+Totrainthemodeloncross-embodimentvisualcorrespondencewithoutphysicalrobotcollection,we
+curatetwocomplementarysourcesofhuman-to-robottransferdata. Thefirstisalarge-scalehuman-robot
+paireddatasetconstructedfromegocentricbimanualmanipulationrecordingsviaanautomatedpipeline:
+3DhandkeypointsareextractedthroughMANORomeroetal.(2017)reconstructionandretargetedto
+robotend-effectortrajectories,humanhandsareremovedviavideoinpainting,and14robotarmmodels
+7
+
+Figure 2: Overview of the unified data processing pipeline. Stage 1 (Raw Data Collection) collects
+heterogeneousdatafromfivesourcecategoriesspanninggeneralandembodieddomains. Stage2(Video
+Preprocessing)appliesdomain-adaptiveoperations—frameextraction, frameinterpolation, sub-task
+splitting,main-viewselection,andmulti-viewconcatenation—toproduceuniformlystructuredclips.
+Stage3(HierarchicalAnnotation)generatesviewpoint-awarecaptionsthroughafive-layerframework:
+taskgoal,actiondetail,physicalfeedback,comprehensivecaption,andconcisecaption. Stage4(Caption
+QualityFiltering)combinesanautomatedLLM-basedjudgewithhumanevaluation;underperforming
+captionsareroutedbackforscenario-,task-,orembodiment-specificiterativepromptrefinement.
+arerenderedintotheinpaintedsceneusingMuJoCoTodorovetal.(2012)inversekinematics,yielding
+fouralignedvideostreamsperepisode(originalhumanvideo,hand-removedscene,puresimulation,
+androbot-overlaidscene). Thediversityof14embodimentswithinsharedscenesensurestheediting
+capabilitygeneralizesacrossrobotmorphologies.
+Thesecondsourceaddressesafundamentallimitationofdirectrendering: simplifiedrenderersignore
+sceneillumination,castshadows,andmaterial-dependentspecularreflections,creatingaphotometric
+gapbetweenrenderedandrealobservations. Tobridgethis,webuildupontheopen-sourcedInternA1
+datasetTianetal.(2025),whichusesNVIDIAIsaacSimNVIDIA(2022)toprovidephotorealisticRGB
+observationswithenvironmentlightingandaccurateshadows.Usingthesamedynamicsparametersand
+robotURDFs,werendermatchedegocentricviewsinMuJoCoTodorovetal.(2012)—withoutlightingor
+shadoweffects—producingpairedsamplesthatshareidenticalgeometryandviewpointwhiledifferingin
+photometricrealism. Thispaireddataenablesthemodeltolearnthevisualmappingbetweensimplified
+renderingandphotorealisticobservations,coveringFrankaEmikaPanda,AgileXSplitAloha,ARXLift2,
+andAgiBotGenie1acrosssingle-arm,dual-arm,mobiledual-arm,andhumanoidconfigurations,with
+approximately80Kepisodesspanningpick-and-place,articulatedobjectmanipulation,andmulti-object
+rearrangementtasks.
+2.3 DataProcessing
+We design a unified data processing pipeline that transforms heterogeneous raw data from diverse
+embodiedandgeneralvideosourcesintohigh-quality,consistentlyformattedtrainingsamples. Asillus-
+tratedinFigure2,thepipelineconsistsoffourstages: (1)RawDataCollection,(2)VideoPreprocessing,
+(3)HierarchicalAnnotation,and(4)CaptionQualityFilteringwithIterativePromptRefinement. Stages2
+and3applydomain-adaptiveoperationsdependingonsourcedatacharacteristics,whileStage4formsa
+closedfeedbackloopthatroutesunderperformingcaptionsbackfortargetedre-annotation.
+2.3.1 Stage1: RawDataCollection
+The pipeline begins by ingesting raw video data from five source categories spanning both general
+andembodieddomains. GeneralVideoprovidesinternet-scalevisualdiversityfromdocumentaries,
+professional stock libraries, and curated web clips. Manipulation data covers a broad spectrum of
+robotembodiments—single-armgrippers,dual-armsystems,dexteroushands,mobileplatforms,and
+humanoids—from datasets including EgoHOD, Bridge V2, DROID, RoboMind, Agibot-World, and
+others.AutonomousDrivingcontributeslarge-scaleego-motionandmulti-agentdynamicsfromWaymo,
+Bench2Drive,NVIDIAPhysicalAI-AD,andSekai. IndoorNavigationsupplieslanguage-guidedspatial
+reasoningepisodesfromVLNVerseacross134indoorscenes. Human-to-RobotTransferprovidespaired
+humandemonstrationandrobotexecutiondataconstructedviaourautomatedMANO-to-robotpipeline
+across14robottypes.
+2.3.2 Stage2: VideoPreprocessing
+Rawvideosundergodomain-adaptivepreprocessingtoproduceuniformlystructuredclipssuitablefor
+training. Weapplyfivecomplementaryoperationsdependingonthesourcedatacharacteristics:
+8
+
+FrameExtraction. Forshort-horizontaskvideos(typicallysingle-stepmanipulationslasting2–8s),we
+extractframesatatargetratethatcapturestheessentialphasesoftheinteraction—approach,contact,
+manipulation,andresult—ensuringeachsamplecontainsthecompletecausalchainoftheatomicaction.
+FrameInterpolation. Whensourcevideoshaveinsufficientframeratesforsmoothmotionlearning,we
+applytemporalinterpolationtoincreaseframedensity,preservingcontinuousmotiontrajectoriescritical
+formodelingfine-grainedcontactdynamicsandobject-statetransitions.
+Sub-taskSplitting. Forlong-horizonepisodesinvolvingmulti-stepprocedures(e.g.,sequentialpick-and-
+place,complexassembly),wedecomposethevideointosemanticallycoherentsub-tasksegments. Each
+segmentcapturesacompleteatomicactionwithclearstartandendstates,preventingthepartial-execution
+artifactsthatarisefromnaiveuniformtruncation.
+Main-ViewSelection. Formulti-camerarecordingswhereonlyaprimaryviewpointisneeded(e.g.,
+single-viewmanipulationtraining),weselectthemostinformativecamerastream—typicallytheegocen-
+tricorexternalviewthatbestcapturestheinteractionregion—discardingredundantangles.
+Multi-ViewConcatenation. Conversely,formulti-viewco-training,weconcatenatesynchronizedclips
+from2–4cameraviewpointsintoasinglehorizontallayout,preservingtemporalalignmentacrossviews.
+Thisenablesthemodeltolearncross-viewgeometricconsistencyandsynchronizedstatetransitions
+withoutarchitecturalmodifications.
+2.3.3 Stage3: HierarchicalAnnotation
+HierarchicalAnnotationPromptTemplate
+Youareanexpertembodied-AIannotator.Givenavideoclipofa{{embodiment_type}}performingamanipula-
+tiontaskcapturedfroma{{viewpoint_type}}viewpoint,producethefollowingfive-layerannotation.
+—AnalysisPhase—
+Layer1–TaskGoal: Identifythehigh-levelintentofthisinteraction. Whatistheagenttryingtoachieve?
+Describethedesiredstatetransitionfromthecurrentobservationtothegoalstateinonesentence.
+Layer2–ActionDetail:Decomposetheagent’sactionsintoastep-by-stepsequence.Foreachstep,specify:(a)
+themotiontrajectoryanddirection,(b)micro-actions(approach,grasp,lift,rotate,release,etc.),(c)estimated
+speedandforcelevel. Youmustexplicitlystatetheviewpoint(egocentric/wrist/external/multi-view
+concatenation).
+Layer3–PhysicalFeedback:Describetheobservablephysicalconsequencesofeachactionontheenvironment:
+objectdisplacement,deformation,contactstatechanges,andanysecondaryeffects(e.g.,liquidsloshing,cloth
+folding).Onlyincludevisuallyverifiableoutcomes.
+—GenerationPhase—
+Layer4–ComprehensiveCaption(50–100words):SynthesizeLayers1–3intoacohesiveparagraphthatfully
+specifiestheviewpoint–agent–action–feedbackquadruple.Includethecameraperspective,embodimentidentity,
+completeactionsequence,andphysicaloutcomes.
+Layer5–ConciseCaption(15–30words):Condensetoaninstruction-stylesummaryretainingonlytheessential
+viewpoint–agent–keyactionelements,suitableasadirectlanguagecommandfortheworldmodel.
+QualityConstraints:
+•Operationfocus:describeonlyagentactionsandobjectinteractions;omitbackgroundnarration.
+•Viewpointdefinition:explicitlynametheviewpointtypeanditssemanticrole.
+•Objectivity:reportonlyvisibledynamics;donotinferhiddenstates.
+•Physicalverifiability:everyclaimedoutcomemustbevisuallyconfirmablefromthevideo.
+Preprocessedvideospassthroughourfive-layerhierarchicalannotationframework(Section2.1),which
+generatesviewpoint-awarecaptionsattwogranularities—comprehensive(50–100words)andconcise
+(15–30 words)—sampled with equal probability during training. The prompt template used by the
+annotationmodelisshownabove.
+2.3.4 Stage4: CaptionQualityFiltering
+Toensureannotationqualityacrossthediverserangeofscenarios,tasks,andembodimentsinourcorpus,
+we implement a closed-loop quality filtering system combining automated assessment with human
+oversight. CaptionsthatfailqualitychecksareroutedbacktoStage3fortargetedre-annotation,forming
+aniterativerefinementloop.
+Judge Pipeline. An automated LLM-based judge assesses each caption along several dimensions,
+including factual accuracy, specificity, instruction clarity, and viewpoint consistency. Specifically, it
+evaluateswhetherthecaptioncorrectlydescribesthevideocontent,providessufficientdetailbeyond
+9
+
+genericdescriptions,canfunctionasanactionablecommand,andmaintainsspatialreferencesconsistent
+withthecameraperspective. Captionsthatdonotsatisfyanyofthesecriteriaareflaggedforfurther
+review.
+Human Evaluation. A subset of captions—particularly those near judgment thresholds or from un-
+derrepresenteddomains—undergoesmanualreviewbyhumanannotatorswhovalidatecorrectness,
+identifysystematicfailurepatterns,andprovideground-truthcorrectionsthatinformsubsequentprompt
+refinements.
+IterativePromptRefinement.Whenthejudgepipelineidentifiesconsistentunderperformanceinspecific
+categories,wetriggertargetedpromptredesignalongthreeaxes: scenario-specificretries(e.g.,outdoor
+lightingconditions,kitchenenvironments),task-specificretries(e.g.,articulatedobjectmanipulation,
+fluidpouring),andembodiment-specificretries(e.g.,humanoidbimanualcoordination,dexteroushand
+manipulation). Eachretryemploysaspecializedprompttemplatetailoredtothefailuremode,andthe
+refinedcaptionsarere-evaluatedthroughthejudgepipelineuntiltheymeetqualitystandards. This
+iterativeloopensuresthatnoscenario,task,orembodimentcategorysuffersfromsystematicallypoor
+annotationsduetoone-size-fits-allprompting.
+Final Corpus Statistics. After the complete four-stage pipeline, the final training corpus comprises
+approximately8.6Mvideo-textpairs(over200Mobservationframes),withembodieddataaccountingfor
+70%andgeneraldatafor30%. Withintheembodiedportion,single-viewmanipulationdataconstitutes
+themajorityat∼4.3Msamples,followedby∼1.6Mmulti-viewconcatenatedsampleswithsynchronized
+2–4cameraviews,and∼200Knavigationanddrivingsamples.
+3 Model
+3.1 ModelArchitecture
+Double-stream MMDiT Block
+Double-stream MMDiT Block
+Patchify
+!
+Noise
+Qwen2.5-VL VAE Encoder
+Use the right hand to
+pick up pink bottle and
+pour water on flower
+Action Observation Prediction
+…
+UnPatchify
+×N
+Figure3: Overviewofourvideogenerationarchitecturewith60-layerdouble-streamMMDiTbackbone.
+AsshowninFigure3,themodelconsistsofthreecomponents: anMLLMastheactionencoder,aVAEas
+thestateencoder/decoder,andanMMDiTEsseretal.(2024)asthetransitionfunction,organizedina
+10
+
+Double-stream MMDiTBlock
+Double-stream MMDiTBlock
+Patchify
+Noise
+Qwen2.5-VL VAE Encoder
+Given background and
+robot, generate a video
+of a robot pouring
+water, with operational
+details as follows:…
+Action SceneVideo Prediction
+…
+UnPatchify
+×N
+!
+SimulatedRobotVideo
+Figure4: Scene2Robot: multi-segmentconditioningforcross-embodimentvideosynthesis. Theinput
+sequenceisorganizedasthreecontiguoussegments—scenecondition(Fframes),robotreference(F
+frames),andgeneration(Fframes). Anindex-basedmechanismassignsconditiontokenstotimestep
+t = 0 and excludes them from loss computation, so only the generation segment is trainable. Joint
+attention at every MMDiT block enables the generation segment to simultaneously attend to scene
+appearanceandrobotmotiontrajectory,producingsemanticallycoherentcross-embodimentsynthesis.
+double-streamdesign.
+MLLM—ActionEncoder. WeemployafrozenQwen2.5-VLBaietal.(2025)toencodeuserinputsinto
+conditionsignals. ForagiveninputtextS,itextractslast-layerhiddenstatesh = ϕ(S),servingasthe
+actioncondition.
+VAE—StateEncoder/Decoder. TheVAEencodesvideoframesintolatentrepresentations z = E(x)
+anddecodespredictedlatentsbackintovisualobservations. WeadopttheWan-VAEWanetal.(2025)
+architecture,whichhandlesbothimageandvideomodalities.
+MMDiT—TransitionFunction. TheMMDiTadoptsadouble-streamarchitecture: theunderstanding
+streamreceivestheMLLMencodingh(projectedviaatrainableconnector),andthegenerationstream
+receivesnoisystatelatentsfromtheVAE.Ateachblock,thetwostreamsinteractviajointattention. The
+backbonecomprises60double-streamblockswith24attentionheads(headdimension128),hiddensize
+3,072,andpatchsize2×2. Totalparameters:MLLM7B,VAE127M(encoder54M+decoder73M),MMDiT
+20B.Thecontextlengthsupportsupto48,360videotokens.
+3.2 3DRotaryPositionEncoding
+Weemploy3DRoPESuetal.(2024);Heoetal.(2024)toindependentlyencodethetemporal,spatialheight,
+and spatial width dimensions. Rather than allocating dimensions uniformly, we use an asymmetric
+split: 16dimensionsforthetemporalaxisand56dimensionseachforheightandwidth,totaling128
+dimensions(pe_axes_dim=[16,56,56]). Thetemporalaxisreceivesfewerdimensionsasadjacentframes
+arestronglycorrelated;thespatialaxesreceivemoretocapturethegreaterdiversityofobjectpositions
+andscenelayouts. WealsoapplyScalableRoPEWanetal.(2025)tosupportgeneralizationtovarying
+resolutionsanddurationsatinference.
+11
+
+3.3 Scene2Robot
+Buildinguponthedouble-streamMMDiTarchitecture(§3.1)andtheasymmetric3DRoPEencoding
+(§3.2),wedesignSCENE2ROBOT,amulti-segmentconditioningmechanismthatrepurposesthesame
+backboneforcross-embodimentvideosynthesis,asillustratedinFigure4.
+First-Frame Conditioning (TI2V Baseline). For standard text-image-to-video tasks, the first frame
+servesasafixedvisualcondition: itsVAElatentsareassignedtimestept=0inthegenerationstream
+andexcludedfromthedenoisingloss,whilethefrozenQwen2.5-VLencodesthetextinstructioninto
+theunderstandingstream. Becausethedouble-streamjointattention(§3.1)fusesbothsignalsatevery
+layer, the generation tokens can simultaneously attend to the visual anchor and the semantic action
+specification,producingtemporallycoherentcontinuationsgroundedinthelanguagecommand.
+Multi-SegmentExtensionforHuman-to-RobotTransfer. Human-to-robottransferposesavideoediting
+problem: themodelmustreferenceboththescenecontext(background,objectlayout,lighting)andthe
+targetrobot’smotiontrajectoryfromasimulateddemonstration.Weaddressthisbyextendingfirst-frame
+conditioningtoathree-segmentinputsequence,allprocessedwithinthesameVAE–MMDiTpipeline
+withoutanyarchitecturalmodification:
+1. Scenecondition(Fframes): theoriginalhumandemonstrationvideo,withhumanhandsmaskedout,
+encodedbytheVAEtoprovideappearance,spatiallayout,andobjectstateinformation.
+2. Robotreference(Fframes): asimulatedrobotexecutionrenderedviaMuJoCo,encodedbytheVAE,
+supplyingthetargetembodiment’skinematictrajectoryandmorphology.
+3. Generation(Fframes): noisylatentstobedenoisedintothefinalphotorealisticrobotexecutionvideo.
+Segments(1)and(2)sharethesamet=0assignmentasfirst-frameconditioningandareexcludedfrom
+losscomputation;onlysegment(3)receivesgradientupdatesduringtraining. The3DRoPEencoding
+(§3.2)assignseachsegmentitsowntemporalindexrange,allowingthemodeltodistinguishtemporal
+positionsacrosssegments. JointattentionineveryMMDiTblockthenenablesthegenerationtokens
+tosimultaneouslyattendtosceneappearancefromsegment(1),robotmotionfromsegment(2),and
+theMLLMactionsemanticsfromtheunderstandingstream. Thistripartiteconditioningenablesthe
+modeltosynthesizephotorealisticrobotexecutionsthatfaithfullypreserveboththescenecontextand
+theinstructedmanipulationbehavior.
+4 Training
+4.1 TrainingStrategy
+Weproposeajointtrainingparadigminwhichgeneralscenegenerationandrobotmanipulationpredic-
+tionareunifiedunderasinglenaturallanguageinterfaceasthesameconditionalvideogenerationtask,
+withthemodelcontinuouslyreceivinggradientupdatesfrombothdataregimesthroughouttraining.
+Thissharedformulationallowsgeneralworldpriorsandembodiedactionpriorstoreinforceeachother
+throughacommonbackbone,enablingstablecross-scenarioandcross-taskco-training. Thecurriculum
+proceedsintwoprogressivestages: pretrainingestablishesbroadworldfoundations,andSFTdeepens
+embodiedspecializationwhilepreservingthegeneral-expertbalance.
+4.1.1 PretrainingStage: EstablishingGeneralWorldFoundation
+GeneralWorldPriors. Wecurateover200Mreal-worldobservationsamplesfrom14high-qualityvideo
+platforms,coveringnaturalscenes,dailylife,andsports. Thisbreadthallowsthemodeltointernalize
+domain-agnostic world priors—object motion, lighting variation, collision dynamics—that form the
+generalbackboneforlaterembodiedgeneralization. Wefurtherincorporatemulti-camerasynchronized
+observationswith3DRoPEspatialencoding,establishingpreliminarycross-viewgeometricconsistency
+asaspatialfoundationformulti-viewembodiedgeneration.
+HumanInteractionPriors. Weintroducelarge-scalefirst-personhandmanipulationdata(Ego4DGrau-
+manetal.(2022), EPIC-KitchenDamenetal.(2018), etc.). Humandemonstrationservesasanatural
+bridgebetweengeneralandembodied: bylearninggrasping,tooluse,andobjectmanipulationfrom
+everydayhumanbehavior,themodelbuildsactionpriorsandaffordanceunderstandingthattransfer
+directlytorobotoperationinlaterstages.
+Multi-TaskJointTraining. T2I,T2V,andTI2Vtasksaretrainedjointlyonasharedbackbone,serving
+asthecoremechanismthroughwhichgeneralandembodiedcapabilitiescoexistinonemodel. TheT2I
+tasklearnssharpvisualrepresentationsfromgeneralimagedata,actingasavisualqualityanchorwhose
+12
+
+object morphology knowledge automatically transfers to video generation tasks through the shared
+backbone,preventingdeformationandidentityinconsistency. TaskratiosgraduallyshiftfrompureT2I
+towardfullthree-taskjointtraining,sothemodeloperatesstablyacrossmultiplegenerationmodesby
+theendofpretraining.
+4.1.2 SFTStage: EmbodiedSpecialization
+TheSFTstageprogressivelydeepensembodiedexpertisewhilekeepinggeneralworlddatainevery
+trainingbatch,ensuringthatembodiedspecializationandgeneralworldmodelingcapabilityadvance
+togetherratherthantradeoff.
+ProgressiveEmbodiedKnowledgeInjection. Weadoptafour-phasedatamixingschedule. Inearly
+training,multi-embodimentrobotdataandhumanhandmanipulationdataco-dominate: humanaction
+priorsguidethelearningofcross-embodimentoperationcommonalities,whilerobotdatastrengthens
+concreteexecutionrepresentations. Wethengraduallyincreasewrist-viewandthird-personviewdata
+to broaden viewpoint coverage. Building on this, we introduce multi-view concatenated training:
+synchronizedfirstframesfrommultiplecamerasarespatiallyconcatenatedasasingleinput,requiring
+the model to jointly generate subsequent frames for all views simultaneously, forcing the attention
+layerstoestablishcross-viewspatialcorrespondencesandachievegeometricallyconsistentmulti-view
+generation. Inthefinalphase,scarcehigh-complexitytasks(pouring,folding,bimanualcoordination,
+multi-materialinteraction)andlong-horizonreasoningdataaretargetedforsupplementationtopushthe
+frontierofembodiedcapability. Throughoutthisprocess,generalworlddatacontinuouslyparticipates
+ineverytrainingbatch, jointlyactingonthesamebackbonealongsideembodieddatatoensurethat
+embodiedspecializationandgeneralworldmodelingcapabilityadvancetogether.
+4.2 TrainingObjectiveandInfrastructure
+We adopt the flow matching objective Lipman et al. (2023); Liu et al. (2022), where input videos are
+encodedintolatentspaceviatheVAEencoderandnoiseissampledfromastandardnormaldistribu-
+tion. Qwen2.5-VLencodestextinputsasguidancesignal. Timestepsaresampledfromalog-normal
+distributionwithadaptiveshiftingbasedonvideosequencelengthEsseretal.(2024). ForTI2Vtasks,
+thefirst-frametimestepisfixedat0toensurethatthegenerationprocessisconditionedonthegiven
+observationframe. TrainingisconductedwithMegatron-LMShoeybietal.(2019)usingahybridparal-
+lelismstrategy,withselectiveactivationrecomputationKorthikantietal.(2023)appliedtoasubsetof
+dual-streamblockstobalancememoryusageandtrainingthroughput.
+5 Experiments
+Weconductcomprehensiveevaluationsonfourbenchmarksspanningembodiedmanipulation,physical
+reasoning,andgeneralvideoquality. Acrossthesebenchmarks,ourmodeldeliversconsistentlystrong
+results,achievingstate-of-the-artperformanceonEWMBenchforembodiedworldmodeling(Overall
+4.60,+0.55overLVP),ranking1stoverallonDreamGenBench(Total4.952),and1stamongopen-source
+modelsonWorldModelBench(Total8.99).
+QuantitativeEvaluation(§5.1).Weevaluateagainsttwocategoriesofbaselines:(1)generalvideogeneration
+models—Sora2OpenAI(2024),Veo3GoogleDeepMind(2025),Wan2.6WanTeam(2025),KlingKuaishou
+Technology(2024),andLTX-2Lightricks(2025);and(2)embodiedworldmodels—CosmosAgarwaletal.
+(2025),WoWChietal.(2025),LVPChenetal.(2025a),VidarFengetal.(2025),andGigaWorldTeametal.
+(2025).
+QualitativeAnalysis(§5.2). Weevaluatemanipulationcapabilitiesalongthreeprogressivedimensions:
+fine-grainedlanguagegrounding,generalizationacrossembodiments,tasks,andviewpoints,andzero-
+shotrobustnessagainststrongbaselines.
+Cross-DomainGeneralization(§5.3)furthercovershuman-to-robottransfer,autonomousdriving,and
+indoornavigationassupplementarytasks.
+5.1 QuantitativeEvaluation
+Unlessnotedotherwise,quantitativetablesuseboldfaceforthebestvalueineachcolumnandunderline
+forthesecondbest.
+13
+
+| 5.1.1 EWMBench: | EmbodiedMotionFidelity |     |     |     |     |     |     |
+| --------------- | ---------------------- | --- | --- | --- | --- | --- | --- |
+Benchmark. EWMBenchYueetal.(2025)evaluatesembodiedworldmodelsonthreedimensions: scene
+consistency(SceneC),motioncorrectness(HSD,Dyn,nDTW),andsemanticalignment(Diversity,BLEU,CLIP,
+Logics). Thebenchmarkcontains21samplesacross7taskswithclearaction-orderingconstraints.
+|      |       | Table2: | PerformancecomparisononEWMBench. |          |           |                  |         |
+| ---- | ----- | ------- | -------------------------------- | -------- | --------- | ---------------- | ------- |
+|      |       | Scene   |                                  | Motion   |           | Semantics        |         |
+| Type | Model |         |                                  |          |           |                  | Overall |
+|      |       | SceneC  | HSD                              | Dyn nDTW | Diversity | BLEU CLIP Logics |         |
+Veo3 0.8415 0.2130 0.1932 0.1613 0.0221 0.2139 0.8965 0.9474 3.49
+Wan2.6 0.6712 0.2034 0.0900 0.1715 0.0502 0.1616 0.8743 1.0000 3.22
+General Kling26 0.8211 0.3272 0.1822 0.3423 0.0173 0.2591 0.9014 1.0000 3.85
+LTX-2 0.7850 0.2076 0.1283 0.2443 0.0120 0.1425 0.8869 0.5000 3.01
+Sora2 0.8526 0.2807 0.3494 0.2754 0.0314 0.2466 0.9100 0.9474 3.89
+Cosmos 0.7963 0.2500 0.2052 0.2533 0.0803 0.1230 0.8458 0.7333 3.29
+GigaWorld 0.8707 0.3050 0.0849 0.2783 0.0278 0.2048 0.8873 0.9000 3.56
+Embodied LVP 0.8795 0.4248 0.0433 0.6226 0.0093 0.2179 0.8995 0.9524 4.05
+Vidar 0.7341 0.1877 0.1520 0.1769 0.0653 0.1607 0.8821 0.9411 3.30
+Wow 0.8866 0.2494 0.0529 0.2566 0.0266 0.1932 0.9001 0.9524 3.52
+Ours 0.9142 0.5660 0.3429 0.6708 0.0114 0.2079 0.8834 1.0000 4.60
+Results. Table2showsourmodelranks1stoverallwithascoreof4.60,outperformingtherunner-up
+LVP(4.05)by+0.55.
+Weleadinmotionfidelity—HSD(0.566)surpassesLVP(0.425)by33%—andachieve
+topperformanceinsceneconsistency(SceneC:0.914)andlogicconstraintsatisfaction(Logics: 1.00).
+5.1.2 DreamGenBench
+Benchmark. DreamGenBenchZhouetal.(2025)evaluatesthequalityofrobotvideosgeneratedbyvideo
+worldmodels,measuringinstructionfollowing(IF)andphysicsalignment(PA)acrossthreesubsetsof
+theGR1robotembodiment: environmentgeneralization(GR1-Env),objectgeneralization(GR1-Object),
+andbehaviorgeneralization(GR1-Behavior). IFisassessedusingQwen2.5-VLBaietal.(2025)asthe
+evaluator.
+Table3: PerformancecomparisononDreamGenBench.
+|     |            |     | GR1-Env | GR1-Object        | GR1-Behavior |             |     |
+| --- | ---------- | --- | ------- | ----------------- | ------------ | ----------- | --- |
+|     | Model      |     |         |                   |              | Total       |     |
+|     |            |     | PA      | IF PA             | IF PA        | IF          |     |
+|     | Cosmos-sft |     | 0.709   | 0.655 0.775 0.720 | 0.649        | 0.621 4.129 |     |
+|     | LVP        |     | 0.810   | 0.772 0.745 0.829 | 0.713        | 0.889 4.758 |     |
+|     | Vidar      |     | 0.445   | 0.647 0.478 0.726 | 0.394        | 0.651 3.341 |     |
+|     | GigaWorld  |     | 0.621   | 0.933 0.500 0.852 | 0.426        | 0.884 4.216 |     |
+|     | Wow        |     | 0.793   | 0.826 0.755 0.849 | 0.809        | 0.696 4.728 |     |
+|     | Ours       |     | 0.828   | 0.793 0.840 0.878 | 0.781        | 0.832 4.952 |     |
+Results. Table3showsourmodelachievesthehighesttotalscoreof4.952,ranking1stoverall. Weleadin
+GR1-ObjectIF(0.878,1st),demonstratingstrongobject-levelcompositionalgeneralization,andphysics
+alignmentisconsistentacrossallsubsets(PA:0.828/0.840/0.781). GR1-BehaviorIF(0.832)slightlytrails
+LVP(0.889)andGigaWorld(0.884),indicatinglong-horizonbehaviorgeneralizationasadirectionfor
+furtherimprovement.
+| 5.1.3 PBench: | PhysicalBehaviorEvaluation |     |     |     |     |     |     |
+| ------------- | -------------------------- | --- | --- | --- | --- | --- | --- |
+Benchmark. PBench NVIDIA (2025a) evaluates models on two complementary aspects: (1) Domain
+Score,whichmeasuresphysicalbehaviorunderstandingviaQApairsassessedbyQwen2.5-VLacrosssix
+domains(AV,Robot,Industry,Physics,Human,CommonSense);and(2)QualityScore,whichmeasures
+visualqualityviaeightVBenchHuangetal.(2024)metricsincludingimage-to-videoconsistency,aesthetic
+quality,motionsmoothness,andsubjectconsistency. TheOverallScoreistheaverageofthetwo.
+Results. AsshowninTable4,ourmodeloutperformsallamongopen-sourcemodelswithanoverall
+scoreof0.804. Domainunderstandingisourstrongestdimension(0.857,3rdoverall),surpassingmost
+closed-source models. Motion smoothness also stands out (0.990, 2nd among open-source models),
+reflectingconsistenttemporalcoherenceingeneration. Aestheticquality(0.455)andimagingquality
+(0.649)arerelativelylower,primarilybecauseourmodelispurpose-builtforembodiedtasksandoperates
+14
+
+|     |     | Table4: | PerformancecomparisononPBench. |     |     |     |     |
+| --- | --- | ------- | ------------------------------ | --- | --- | --- | --- |
+QualityMetrics(VBench)
+| Type | Model |              |         |        |                   | Qual. Domain | Overall |
+| ---- | ----- | ------------ | ------- | ------ | ----------------- | ------------ | ------- |
+|      |       | I2V-Bg I2V-S | Aes Img | Bg-Con | Mot Sub-Con O-Con |              |         |
+Veo3 0.975 0.980 0.526 0.698 0.938 0.994 0.927 0.128 0.771 0.882 0.827
+Wan2.6 0.856 0.843 0.514 0.719 0.906 0.978 0.843 0.136 0.724 0.832 0.778
+General Sora2 0.981 0.973 0.487 0.672 0.961 0.994 0.954 0.129 0.769 0.841 0.805
+Kling26 0.982 0.979 0.521 0.699 0.920 0.990 0.927 0.124 0.768 0.874 0.821
+LTX-2 0.948 0.955 0.506 0.622 0.932 0.986 0.904 0.118 0.746 0.845 0.796
+Cosmos 0.974 0.973 0.470 0.663 0.940 0.989 0.931 0.160 0.763 0.840 0.802
+LVP 0.979 0.981 0.515 0.679 0.954 0.991 0.962 0.116 0.772 0.812 0.792
+Embodied GigaWorld 0.957 0.944 0.495 0.641 0.925 0.984 0.892 0.128 0.746 0.841 0.794
+Vidar 0.935 0.922 0.501 0.573 0.912 0.982 0.863 0.120 0.726 0.810 0.768
+Wow 0.967 0.957 0.517 0.689 0.941 0.980 0.929 0.111 0.761 0.786 0.774
+Ours 0.956 0.943 0.455 0.649 0.956 0.990 0.933 0.124 0.751 0.857 0.804
+ataloweroutputresolutionthangeneral-purposevideogenerators,whichreducesVBench’spixel-level
+qualityscores;nonetheless,thisresolutionisfullysufficientfordownstreamrobotcontroltasks.
+5.1.4 WorldModelBench: PhysicalReasoningandInstructionFollowing
+Benchmark.WorldModelBenchLietal.(2025)evaluatesmodelsonthreedimensions:instructionfollowing
+(0–3scale),commonsense(frameandtemporalquality),andphysicsadherence(5violationtypes: Newton’s
+laws,massconservation,fluiddynamics,penetration,gravity). Thebenchmarkcontains350instances
+across7domainswith56subdomains.
+Table5: PerformancecomparisononWorldModelBench.
+|      |       | Instr.      | CommonSense  |           | PhysicsAdherence   | Phys.          |       |
+| ---- | ----- | ----------- | ------------ | --------- | ------------------ | -------------- | ----- |
+| Type | Model |             |              |           |                    |                | Total |
+|      |       | (0-3) Frame | Temp Overall | Newton    | Mass Fluid Penetr. | Grav. Overall  |       |
+|      | Veo3  | 2.52 0.98   | 0.95         | 1.93 1.00 | 0.89 0.99          | 0.91 1.00 4.80 | 9.25  |
+Wan2.6 2.50 0.99 0.95 1.94 1.00 0.89 0.99 0.94 1.00 4.83 9.27
+General Sora2 2.21 0.96 0.93 1.88 1.00 0.91 0.99 0.95 1.00 4.84 8.93
+Kling26 1.59 0.97 1.00 1.97 1.00 1.00 1.00 1.00 1.00 5.00 8.55
+|     | LTX-2 | 1.97 0.69 | 0.62 | 1.32 0.99 | 0.60 1.00 | 0.73 1.00 4.32 | 7.61 |
+| --- | ----- | --------- | ---- | --------- | --------- | -------------- | ---- |
+Cosmos 2.14 1.00 0.94 1.94 1.00 0.92 1.00 0.94 1.00 4.86 8.94
+|     | LVP | 2.01 0.89 | 0.91 | 1.80 1.00 | 0.93 0.99 | 0.95 1.00 4.87 | 8.67 |
+| --- | --- | --------- | ---- | --------- | --------- | -------------- | ---- |
+Embodied GigaWorld 2.13 0.59 0.46 1.05 1.00 0.48 0.99 0.69 0.98 4.13 7.31
+|     | Vidar | 1.62 0.54 | 0.45 | 0.99 1.00 | 0.56 1.00 | 0.85 1.00 4.40 | 7.01 |
+| --- | ----- | --------- | ---- | --------- | --------- | -------------- | ---- |
+|     | Wow   | 2.05 0.76 | 0.65 | 1.41 1.00 | 0.65 0.99 | 0.81 1.00 4.45 | 7.91 |
+|     | Ours  | 2.33 0.87 | 0.85 | 1.72 1.00 | 1.00 1.00 | 0.94 1.00 4.94 | 8.99 |
+Results. Table5showsourmodeloutperformsallopen-sourcemodels(8.99,3rdoverall),trailingonly
+closed-sourceWan2.6andVeo3. Weachieveperfectphysicsadherence(1.00)acrossallfourcategories
+andstronginstructionfollowing(2.33/3.0),withthecommon-sensegapattributabletoourloweroutput
+resolution.
+5.2 QualitativeAnalysis
+5.2.1 Fine-GrainedLanguageGrounding
+PrecisegroundingoflanguageinvisualactionsisfoundationaltoQWEN-ROBOTWORLD’sdesignasa
+language-conditionedworldmodel. Figure5evaluatesthiscapabilityattwolevels. (a)Contrastivepairs:
+givenidenticalinitialframes,themodelproducesqualitativelydistinctvideoswhenasinglekeyword
+differs—targetobjectidentity,actiontype,orspatialplacement—demonstratingfine-grainedsemantic
+discriminationbeyondgenericmanipulationpriors. (b)Complexinstructions: themodelhandleslong-
+horizonsequentialtaskswithmulti-stepdependenciesandabstractgoalinstructionsthatrequireinferring
+themanipulationsequencefromcontext,decomposingeachintoatemporallycoherentexecutionwithout
+explicitsub-taskprompts.
+5.2.2 GeneralizationacrossEmbodiments,Tasks,andViewpoints
+Figure6demonstratesthreecomplementarydimensionsofQWEN-ROBOTWORLD’smanipulationcapa-
+bility. (A)Cross-embodiment: asingleinstructiondrivesfourdistinctrobotmorphologies—single-arm
+gripper,dual-armsystem,humanoid,anddexteroushand—withoutembodiment-specificadaptation,
+validatingnaturallanguageasauniversalactioninterface;eachcellshowsthreekeyframes(initial,mid,
+15
+
+Figure5: Fine-grainedlanguagegrounding. (a)Contrastive: eachpairofcolumnssharesanidentical
+initialframe(coloredborder);onlythehighlightedkeyworddiffersbetweenthetwoinstructions. Pair1:
+target object identity. Pair 2: destination. Pair 3: action type. In every case the generated motion is
+preciselygroundedtothediscriminatingkeyword. (b)Complex: twoexamplesrequiringmulti-step
+executionorabstractgoalinference. Coloredlabelsmarkkeyactionmilestoneswithineachgenerated
+sequence.
+final). (B)Cross-task×cross-environment: generationsacrossfruitpick-and-place,bowlretrieval,cloth
+folding,andhuman–robothandovereachexhibittask-appropriatecontactdynamics,reflectinggrounded
+physicalknowledgeacrossdiversereal-worldenvironments;eachrowshowsaninitialframefollowedby
+fourevenly-spacedgeneratedframes. (C)Multi-viewconsistency: threesynchronizedcamerastreams
+(main,wrist-left,wrist-right)arejointlygeneratedfromthesamesupermarketpick-and-placeepisode
+as(B,row1),withobjectidentityandmotiontrajectoryremaininggeometricallyconsistentacrossall
+viewpoints.
+5.2.3 Zero-ShotRobustnessonRoboTwin-IF
+Buildingonthesingle-modelcapabilitiesdemonstratedabove,wenextexaminewhetherthesegains
+persistundercontrolledmodel-to-modelcomparisons. Aggregateembodied-world-modelscorescan
+entangle three different failure sources: instruction mismatch, cross-view inconsistency, and generic
+visualdegradation. Toisolatethesefactors,weperformazero-shotside-by-sidecomparisononfour
+UnitreeG1tasksagainsttwostrongembodiedbaselines,LVPandCosmos2.5-14B.Figure7showsthat
+16
+
+Figure6: Generalizationacrossembodiments,tasks,andviewpoints. (A)Cross-embodiment: one
+instruction drives four morphologies (single-arm, dual-arm, humanoid, dexterous hand); three key
+framespercell. (B)Cross-task × cross-environment: initialframe(orangeborder)followedbyfour
+generatedframesacrossfourtasks. (C)Multi-view: mainandwristcamerasjointlygeneratedfromthe
+sameepisodeas(B,row1).
+QWEN-ROBOTWORLDmoreconsistentlypreserveslanguage-groundedexecution(correctobject/action
+correspondenceandcleanergoalcompletion)whilemaintainingcoherentmulti-viewtrajectories. The
+two baselines show different failure patterns. LVP more often produces incomplete task execution,
+while Cosmos2.5-14B tends to exhibit weaker alignment between the instruction and the generated
+manipulationoutcomesinmorecomplexcases.
+Tovalidatethisbehaviorunderabenchmarksetting,weevaluatezero-shotperformanceonRoboTwin-IF
+(InstructionFollowing),anewlyproposedbenchmarkbuiltontheRoboTwinsimulatorwithmanynewly
+constructed complex tasks. Notably, although QWEN-ROBOTWORLD mixes only a small amount of
+open-sourceRoboTwindataduringtraining,itstillshowsstrongzero-shotperformanceonRoboTwin-IF
+togetherwithstablemulti-viewconsistencyacrosssynchronizedcamerastreams. Theseresultssuggest
+thatthemodel’sgainsarenotlimitedtoafewqualitativeexamples,butgeneralizetomorechallenging
+unseenembodiedtasks. Overall,QWEN-ROBOTWORLDdemonstratesstrongerzero-shotrobustnessthan
+priorbaselinesbybetteraligninginstructionfollowing,actionrealism,andcross-viewcoherenceina
+unifiedgenerationframework.
+17
+
+Figure7: Zero-shotqualitativecomparisononlanguage–actionalignmentandmulti-viewcoherence.
+Side-by-side grids under identical conditioning (same initial frame(s), prompt, and camera layout),
+comparingQWEN-ROBOTWORLDagainstLVPandCosmos2.5-14B.
+Figure8providesrepresentativeRoboTwin-IFzero-shotcasesasqualitativeevidenceforthisbenchmark
+result. Eachtaskisvisualizedwithtenuniformlysampledframesanchoredbythefirstandlastframe,
+making intermediate progress and final completion directly visible. Across these newly constructed
+complextasks,QWEN-ROBOTWORLDpreservescoherentexecutionandcross-viewconsistency,whichis
+consistentwiththequantitativeRoboTwin-IFfinding.
+18
+
+Figure8: RoboTwin-IFzero-shotqualitativecases. ThebenchmarkisbuiltontheRoboTwinsimulator
+withnewlyconstructedcomplextasks.
+5.3 Cross-DomainGeneralization
+Beyondmanipulation-centricevaluation,weassessthemodel’sgeneralizationtosupplementarytask
+familiesbeyondthecoremanipulationdomain. Figure9showshuman-to-robottransferacrosseight
+targetembodiments,wherethemodelpreservestaskintentfromhumandemonstrationswhileadapting
+motiontoembodiment-specifickinematicconstraints. Figure10coversmobilityscenarios,including
+autonomous driving episodes from Bench2Drive, NVIDIA PhysicalAI-AD, Sekai, and Waymo, and
+egocentricindoornavigationepisodesfromVLNVerse. Together,theseresultsindicatethatthelearned
+language-conditionedtransitionmodelgeneralizesbeyondasingleembodimentorscenariofamily.
+19
+
+Figure 9: Human-to-robot transfer. Across eight target embodiments, each row compares a human
+demonstration(left)withthesynthesizedrobotexecution(right)forthesametask,usingfiveuniformly
+sampled frames per video. The generated trajectories preserve task intent while adapting motion to
+embodiment-specifickinematicconstraints.
+Figure10: Mobilitygeneration. Pairedcolumnswithfiverows: (left)Autonomousdrivingepisodes
+fromBench2Drive,NVIDIAPhysicalAI-AD,Sekai,andWaymo;(right)Egocentricindoornavigation
+fromVLNVersewithlanguage-guidedfirst-persontraversal. Eachepisodeusesfiveuniformlysampled
+frames.
+6 Conclusion
+Inthisreport,wepresentQWEN-ROBOTWORLD,alanguage-conditionedworldmodelframeworkfor
+embodiedintelligencethatunifiesroboticmanipulation,autonomousdriving,indoornavigation,and
+human-to-robot transfer under a shared natural language action interface. To realize this objective,
+we develop a three-part system: a double-stream MMDiT architecture with MLLM action encoding
+forsemanticallypreciseandphysicallygroundedgeneration,theEmbodiedWorldKnowledge(EWK)
+datasetwithlarge-scalecross-embodimentaction-languagealignment,andageneral+expertprogressive
+curriculum that couples broad visual priors with embodied specialization. This design enables one
+20
+
+commonbackbonethatcanbeadaptedtowardthreerepresentativeembodiedworldmodelapplications—
+syntheticdatageneration,policyevaluation,andactionplanning. Acrossbothbenchmarkevaluations
+andzero-shotanalyses,QWEN-ROBOTWORLDdemonstratesstrong,consistentperformanceandrobust
+multi-viewinstruction-followinggeneralization. Wehopethisworkprovidesapracticalfoundationfor
+buildingembodiedworldmodelsthatarenotonlyperceptuallystrong,butalsofunctionallyusefulfor
+downstreamroboticlearningandcontrol.
+Authors
+JieZhang*,XiaoyueChen*,AnzheChen,DayihengLiu,DeqingLi,GengzeZhou,HaleYin,HaoqiYuan,
+HaoyangLi,JiahaoLi,JiazhaoZhang,JingrenZhou,KaiyuanGao,KunYan,LihanJiang,NingyuanTang,
+PeiLin,QihangPeng,ShengmingYin,TianheWu,TianyiYan,XiaoXu,YanShu,YanranZhang,YeWang,
+YiWang,YileiChen,YixianXu,YiyangHuang,YuxiangChen,ZekaiZhang,ZhendongWang,ZixingLei,
+ZhixuanLiang,ZihaoLiu,ZikaiZhou,ChenxuLv†,Xiong-HuiChen†,ChenfeiWu†
+*Equalcontribution.
+†Correspondingauthor.
+21
+
+References
+NiketAgarwal,ArslanAli,MaciejBala,YogeshBalaji,ErikBarker,TiffanyCai,PrithvijitChattopadhyay,
+YongxinChen,YinCui,YifanDing,etal. CosmosworldfoundationmodelplatformforphysicalAI.
+arXivpreprintarXiv:2501.03575,2025.
+AgiBot-World-Contributors. AgiBotWorldColosseo: Alarge-scalemanipulationplatformforscalable
+andintelligentembodiedsystems. arXivpreprintarXiv:2503.06669,2025.
+ShuaiBai,KeqinChen,XuejingLiu,JialinWang,WenbinGe,SiboSong,KaiDang,PengWang,Shijie
+Wang,JunTang,HumenZhong,YuanzhiZhu,MingkunYang,ZhaohaiLi,JianqiangWan,Pengfei
+Wang,WeiDing,ZherenFu,YihengXu,JiaboYe,XiZhang,TianbaoXie,ZesenCheng,HangZhang,
+ZhiboYang,HaiyangXu,andJunyangLin.Qwen2.5-vltechnicalreport.arXivpreprintarXiv:2502.13923,
+2025.
+AmirBar,GaoyueZhou,DannyTran,TrevorDarrell,andYannLeCun. Navigationworldmodels. In
+ProceedingsoftheIEEE/CVFConferenceonComputerVisionandPatternRecognition(CVPR),pp.15791–
+15801,2025.
+JohanBjorck,FernandoCastaneda,LinxiFan,DieterFox,etal. GR00TN1: Anopenfoundationmodel
+forgeneralisthumanoidrobots. arXivpreprintarXiv:2503.14734,2025.
+AnthonyBrohan,NoahBrown,JusticeCarbajal,YevgenChebotar,etal. RT-1: Roboticstransformerfor
+real-worldcontrolatscale. InRobotics: ScienceandSystems(RSS),2023.
+Build AI. Egocentric-10k. Hugging Face Datasets, 2025. URL https://huggingface.co/datasets/
+builddotai/Egocentric-10K.
+BoyuanChen,TianyuanZhang,HaoranGeng,KiwhanSong,CaiyiZhang,PeihaoLi,WilliamT.Freeman,
+JitendraMalik,PieterAbbeel,RussTedrake,VincentSitzmann,andYilunDu. Largevideoplanner
+enablesgeneralizablerobotcontrol,2025a. URLhttps://arxiv.org/abs/2512.15840.
+TianxingChen,ZanxinChen,BaijunChen,ZijianCai,YibinLiu,ZixuanLi,QiweiLiang,XianliangLin,
+YihengGe,ZhenyuGu,etal. Robotwin2.0: Ascalabledatageneratorandbenchmarkwithstrong
+domain randomization for robust bimanual robotic manipulation. arXiv preprint arXiv:2506.18088,
+2025b.
+XiaoweiChi,PeidongJia,Chun-KaiFan,XiaozhuJu,WeishiMi,KevinZhang,ZhiyuanQin,WanxinTian,
+KuangzhiGe,HaoLi,ZezhongQian,AnthonyChen,QiangZhou,YueruJia,JiamingLiu,YongDai,
+QingpoWuwu,ChengyuBai,Yu-KaiWang,YingLi,LizhangChen,YongBao,ZhiyuanJiang,Jiacheng
+Zhu,KaiTang,RuichuanAn,YulinLuo,QiuxuanFeng,SiyuanZhou,ChiminChan,ChengkaiHou,
+WeiXue,SiruiHan,YikeGuo,ShanghangZhang,andJianTang. Wow: Towardsaworldomniscient
+worldmodelthroughembodiedinteraction,2025. URLhttps://arxiv.org/abs/2509.22642.
+Dima Damen, Hazel Doughty, Giovanni Maria Farinella, Sanja Fidler, Antonino Furnari, Evangelos
+Kazakos, DavideMoltisanti, JonathanMunro, TobyPerrett, WillPrice, andMichaelWray. Scaling
+egocentricvision: TheEPIC-KITCHENSdataset. InEuropeanConferenceonComputerVision(ECCV),
+2018.
+PatrickEsser,SumithKulal,AndreasBlattmann,RahimEntezari,JonasMüller,HarrySaini,YamLevi,
+Dominik Lorenz, Axel Sauer, Frederic Boesel, et al. Scaling rectified flow transformers for high-
+resolutionimagesynthesis. InICML,2024.
+Hao-ShuFang, HongjieFang, ZhenyuTang, JirongLiu, ChenxiWang, JunboWang, HaoyiZhu, and
+CewuLu. RH20T:Acomprehensiveroboticdatasetforlearningdiverseskillsinone-shot. InIEEE
+InternationalConferenceonRoboticsandAutomation(ICRA),2024.
+Yao Feng, Hengkai Tan, Xinyi Mao, Chendong Xiang, Guodong Liu, Shuhe Huang, Hang Su, and
+Jun Zhu. Vidar: Embodied video diffusion model for generalist manipulation, 2025. URL https:
+//arxiv.org/abs/2507.12898.
+FourierActionNetTeamandYaoMu. Actionnet: Adatasetfordexterousbimanualmanipulation. 2025.
+GalaxeaAI. Galaxeaopen-worlddatasetandG0dual-systemVLAmodel. arXivpreprintarXiv:2509.00576,
+2025.
+ZelinGao, QiuyuWang, YanhongZeng, etal. Advancingopen-sourceworldmodels. arXivpreprint
+arXiv:2601.20540,2026.
+22
+
+Google DeepMind. Veo 3. https://deepmind.google/technologies/veo/veo-3/, 2025. URL https:
+//deepmind.google/technologies/veo/veo-3/.
+KristenGrauman,AndrewWestbury,EugeneByrne,etal. Ego4D:Aroundtheworldin3,000hoursof
+egocentricvideo. InIEEE/CVFConferenceonComputerVisionandPatternRecognition(CVPR),2022.
+MingfeiHan,LiangMa,KamilaZhumakhanova,EkaterinaRadionova,JingyiZhang,XiaojunChang,
+XiaodanLiang,andIvanLaptev.RoomTour3D:Geometry-awarevideo-instructiontuningforembodied
+navigation. InProceedingsoftheIEEE/CVFConferenceonComputerVisionandPatternRecognition(CVPR),
+2025.
+ByeonghoHeo,SongPark,DongyoonHan,andSangdooYun. Rotarypositionembeddingforvision
+transformer. InEuropeanConferenceonComputerVision,pp.289–305.Springer,2024.
+ZiqiHuang,YinanHe,JiashuoYu,FanZhang,ChenyangSi,YumingJiang,YuanhanZhang,TianxingWu,
+QingyangJin,NattapolChanpaisit,YaohuiWang,XinyuanChen,LiminWang,DahuaLin,YuQiao,
+andZiweiLiu. VBench: Comprehensivebenchmarksuiteforvideogenerativemodels. InIEEE/CVF
+ConferenceonComputerVisionandPatternRecognition(CVPR),2024.
+StephenJames,ZicongMa,DavidRovickArrojo,andAndrewJ.Davison. RLBench: Therobotlearning
+benchmark. IEEERoboticsandAutomationLetters,5(2):3019–3026,2020.
+XiaosongJia,ZhenjieYang,QifengLi,ZhiyuanZhang,andJunchiLi. Bench2drive: Towardsmulti-ability
+benchmarkingofclosed-loopend-to-endautonomousdriving. InNeurIPSDatasetsandBenchmarks
+Track,2024.
+AlexanderKhazatsky,KarlPertsch,SurajNair,etal.DROID:Alarge-scalein-the-wildrobotmanipulation
+dataset. InRobotics: ScienceandSystems(RSS),2024.
+VijayAnandKorthikanti,JaredCasper,SangkugLym,LawrenceMcAfee,MichaelAndersch,Mohammad
+Shoeybi, and Bryan Catanzaro. Reducing activation recomputation in large transformer models.
+ProceedingsofMachineLearningandSystems,5:341–353,2023.
+Kuaishou Technology. Kling: A progressive framework for video generation. https://klingai.com,
+2024. URLhttps://klingai.com.
+DachengLi,YunhaoFang,YukangChen,ShuoYang,ShiyiCao,JustinWong,MichaelLuo,Xiaolong
+Wang,HongxuYin,JosephE.Gonzalez,IonStoica,SongHan,andYaoLu. Worldmodelbench: Judging
+videogenerationmodelsasworldmodels,2025. URLhttps://arxiv.org/abs/2502.20694.
+Xuanlin Li, Kyle Hsu, Jiayuan Liu, Ken Goldberg, and Sergey Levine. Evaluating real-world robot
+manipulationpoliciesinsimulation. InConferenceonRobotLearning(CoRL),2024.
+Lightricks. LTX-Video: Realtime video latent diffusion. https://github.com/Lightricks/LTX-Video,
+2025. URLhttps://github.com/Lightricks/LTX-Video.
+SihaoLin,ZeruiLi,XunyiZhao,GengzeZhou,LiuyiWang,RongWei,RuiTang,JunchengLi,Hanqing
+Wang,JiangmiaoPang,AntonvandenHengel,JiajunLiu,andQiWu. VLNVerse: Abenchmarkfor
+vision-languagenavigationwithversatile,embodied,realisticsimulationandevaluation. arXivpreprint
+arXiv:2512.19021,2025.
+YaronLipman,RickyT.Q.Chen,HeliBen-Hamu,MaximilianNickel,andMattLe. Flowmatchingfor
+generativemodeling. InInternationalConferenceonLearningRepresentations(ICLR),2023.
+Bo Liu, Yifeng Zhu, Chongkai Gao, Yihao Feng, Qiang Liu, Yuke Zhu, and Peter Stone. LIBERO:
+Benchmarking knowledge transfer for lifelong robot learning. In Advances in Neural Information
+ProcessingSystems(NeurIPS),2023.
+XingchaoLiu,ChengyueGong,andQiangLiu. Flowstraightandfast: Learningtogenerateandtransfer
+datawithrectifiedflow. arXivpreprintarXiv:2209.03003,2022.
+NVIDIA. NVIDIAIsaacSim. https://developer.nvidia.com/isaac-sim,2022.
+NVIDIA. PBench: Aphysicalaibenchmarkforworldmodels,2025a. URLhttps://huggingface.co/
+datasets/nvidia/PBench.
+NVIDIA. Nvidia physicalai autonomous driving dataset. 2025b. https://developer.nvidia.com/
+physicalai.
+23
+
+OpenAI. Sora: Creatingvideofromtext. https://openai.com/sora,2024. URLhttps://openai.com/
+sora.
+OpenLoong Baihu Team. OpenLoongData-v1.0. https://www.openloong.org.cn/en/datasets/baihu,
+2025.
+BaoqiPei,YifeiHuang,JilanXu,GuoChen,YupingHe,LijinYang,YaliWang,WeidiXie,YuQiao,Fei
+Wu,andLiminWang. Modelingfine-grainedhand-objectdynamicsforegocentricvideorepresentation
+learning. InInternationalConferenceonLearningRepresentations(ICLR),2025.
+AlecRadford,JongWookKim,ChrisHallacy,AdityaRamesh,GabrielGoh,SandhiniAgarwal,Girish
+Sastry,AmandaAskell,PamelaMishkin,JackClark,etal. Learningtransferablevisualmodelsfrom
+naturallanguagesupervision. InICML,2021.
+ColinRaffel,NoamShazeer,AdamRoberts,KatherineLee,SharanNarang,MichaelMatena,YanqiZhou,
+WeiLi,andPeterJLiu. Exploringthelimitsoftransferlearningwithaunifiedtext-to-texttransformer.
+JMLR,2020.
+JavierRomero,DimitriosTzionas,andMichaelJ.Black. Embodiedhands:Modelingandcapturinghands
+andbodiestogether. ACMTransactionsonGraphics(Proc.SIGGRAPHAsia),36(6),2017.
+Sekai Team. Sekai: Real-world egocentric walking videos for world model training. 2025. https:
+//huggingface.co/datasets/sekai.
+Yu Shang, Xin Zhang, Yinzhou Tang, Lei Jin, Chen Gao, Wei Wu, and Yong Li. RoboScape: Physics-
+informedembodiedworldmodel. arXivpreprintarXiv:2506.23135,2025.
+MohammadShoeybi,MostofaPatwary,RaulPuri,PatrickLeGresley,JaredCasper,andBryanCatanzaro.
+Megatron-lm: Training multi-billion parameter language models using model parallelism. arXiv
+preprintarXiv:1909.08053,2019.
+JianlinSu,MurtadhaAhmed,YuLu,ShengfengPan,WenBo,andYunfengLiu. RoFormer: Enhanced
+transformerwithrotarypositionembedding. Neurocomputing,568:127063,2024.
+GigaWorld Team, Angen Ye, Boyuan Wang, Chaojun Ni, Guan Huang, Guosheng Zhao, Haoyun Li,
+JiagangZhu,KeruiLi,MengyuanXu,QiupingDeng,SitingWang,WenkangQin,XinzeChen,Xiaofeng
+Wang,YankaiWang,YuCao,YifanChang,YuanXu,YunYe,YangWang,YukunZhou,Zhengyuan
+Zhang, Zhehao Dong, and Zheng Zhu. Gigaworld-0: World models as data engine to empower
+embodiedai,2025. URLhttps://arxiv.org/abs/2511.19861.
+YangTian,YuyinYang,YimanXie,ZetaoCai,XuShi,NingGao,HangxuLiu,XuekunJiang,ZheruiQiu,
+FengYuan,YapingLi,PingWang,JunhaoCai,JiaZeng,HaoDong,andJiangmiaoPang.InternData-A1:
+Pioneeringhigh-fidelitysyntheticdataforpre-traininggeneralistpolicy.arXivpreprintarXiv:2511.16651,
+2025.
+EmanuelTodorov,TomErez,andYuvalTassa. MuJoCo: Aphysicsengineformodel-basedcontrol. In
+IEEE/RSJInternationalConferenceonIntelligentRobotsandSystems(IROS),pp.5026–5033,2012.
+HomerWalke,KevinBlack,AbrahamLee,MooJinKim,MaxDu,ChongyiZheng,TonyZhao,Philippe
+Hansen-Estruch,QuanVuong,AndreHe,VivekMyers,KuanFang,ChelseaFinn,andSergeyLevine.
+BridgeDataV2: Adatasetforrobotlearningatscale. InConferenceonRobotLearning(CoRL),2023.
+TeamWan,AngWang,BaoleAi,BinWen,ChaojieMao,Chen-WeiXie,DiChen,FeiwuYu,Haiming
+Zhao,JianxiaoYang,etal.Wan:Openandadvancedlarge-scalevideogenerativemodels.arXivpreprint
+arXiv:2503.20314,2025.
+WanTeam. Wan: Openandadvancedlarge-scalevideogenerativemodels. https://wanxai.com,2025.
+URLhttps://wanxai.com.
+WaymoTeam. Waymoopendataset: End-to-enddriving. 2024. https://waymo.com/open/.
+Kun Wu, Chengkai Hou, Jiaming Liu, Zhengping Che, et al. RoboMIND: Benchmark on multi-
+embodiment intelligence normative data for robot manipulation. In Robotics: Science and Systems
+(RSS),2025a.
+ShihanWuetal. RoboCOIN:Anopen-sourcedbimanualroboticdatacollectionforintegratedmanipula-
+tion. arXivpreprintarXiv:2511.17441,2025b.
+24
+
+SeonghyeonYe,YunhaoGe,KaiyuanZheng,ShenyuanGao,SihyunYu,GeorgeKurian,SuneelIndupuru,
+YouLiangTan,ChuningZhu,JiannanXiang,AyaanMalik,KyungminLee,WilliamLiang,Nadun
+Ranawaka,JiashengGu,YinzhenXu,GuanzhiWang,FengyuanHu,AvnishNarayan,JohanBjorck,
+JingWang,GwanghyunKim,DantongNiu,RuijieZheng,YuqiXie,JimmyWu,QiWang,RyanJulian,
+DanfeiXu,YilunDu,YevgenChebotar,ScottReed,JanKautz,YukeZhu,Linxi"Jim"Fan,andJoelJang.
+Worldactionmodelsarezero-shotpolicies,2026. URLhttps://arxiv.org/abs/2602.15922.
+Hu Yue, Siyuan Huang, Yue Liao, Shengcong Chen, Pengfei Zhou, Liliang Chen, Maoqing Yao, and
+Guanghui Ren. EWMBench: Evaluating scene, motion, and semantic quality in embodied world
+models,2025. URLhttps://arxiv.org/abs/2505.09694.
+Zhenyu Zhao, Hongyi Jing, Xiawei Liu, Jiageng Mao, Abha Jha, Hanwen Yang, Rong Xue, Sergey
+Zakharov,VitorGuizilini,andYueWang. Humanoideveryday: Acomprehensiveroboticdatasetfor
+open-worldhumanoidmanipulation. arXivpreprintarXiv:2510.08807,2025.
+HaoyuZhen,QiaoSun,HongxinZhang,JunyanLi,SiyuanZhou,YilunDu,andChuangGan. TesserAct:
+Learning 4D embodied world models. In Proceedings of the IEEE/CVF International Conference on
+ComputerVision(ICCV),2025.
+JoelZhou,JordanJuravsky,SanjaFidler,UmarBhatt,andNimaFazeli. DreamGen: Unlockinggeneral-
+izationinrobotlearningthroughneuraltrajectories. arXivpreprintarXiv:2505.12705,2025.
+25
