@@ -1,6 +1,22 @@
 # Awesome Robot Papers
 
-Robotics paper notes and practical analysis for robot projects.
+Robotics paper notes and practical analysis for robot projects. Each paper has
+English and Chinese notes covering the research question, method, experiments,
+limitations, and practical impact.
+
+## Repository Guide
+
+- `notes/`: actionable English and Chinese paper analyses
+- `papers/`: source PDFs and converted Markdown copies
+- `data/`: paper metadata
+- `assets/`: figures and other supporting materials
+- `scripts/`: utilities for conversion and README maintenance
+
+To refresh the Chinese note index after adding a note, run:
+
+```bash
+python scripts/update_readme_zh_notes.py
+```
 
 <!-- ZH_NOTES_LIST_START -->
 ## 中文论文笔记
