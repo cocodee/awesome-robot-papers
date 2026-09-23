@@ -554,3 +554,83 @@ RTC 负责“不断流、接得上”；Edit Policy 负责“根据最新状态�
 - Dong et al., _Reinforcement Learning for Real-Time Vision-Language-Action Policies_, arXiv:2609.18207v1, 2026。
 - 关键公式：论文 Eq. (4)–(11)，分别对应异步候选、最新状态编辑、chunk-level critic、noise-space filtering 和训练目标。
 - 论文真实任务结果：SFT 12.5/30，SFT+RTC 18/30，EXPO-FT 18.8/30，EXPO-FT+RTC 25/30，Real-Time EXPO-FT 29/30。
+
+## 问题分析
+
+### Critic 的设计、训练与推理
+
+#### 1. Critic 的设计
+
+论文中的 Critic 是一个对完整 action chunk 评分的 chunk-level Q-function，而不是单步动作价值函数：
+
+$$
+Q_\phi(s_t,a_{t:t+C}).
+$$
+
+输入包括多视角图像、机器人 proprioception 和展平后的 action chunk，输出一个标量 Q 值。真实机器人中，图像经过 ResNetV2 编码为 512 维 embedding，proprioception 编码为 64 维向量，再与 action chunk 拼接，输入 3 层、每层 256 维的 Q 网络。Critic 使用 REDQ 风格的 10 个 Q-network ensemble，并在计算 target 时随机抽取两个网络取最小值，以降低 Q 过估计。
+
+动作块级评价适合抓取、滚球平衡和踢球等任务，因为成功取决于连续动作的时序效果，而不是某一个控制步。
+
+#### 2. Critic 的训练
+
+Replay transition 跨越完整的执行窗口，包含当前状态、当前 action chunk、执行后的状态和 reward。TD target 为：
+
+$$
+y_t=r_t+\gamma Q_{\phi'}(s_{t+C},\tilde a^*_{t+C:t+2C}).
+$$
+
+Critic 的损失为：
+
+$$
+\mathcal L_Q=\mathbb E\left[\left(y_t-Q_\phi(s_t,a_{t:t+C})\right)^2\right].
+$$
+
+其中，$$\tilde a^*_{t+C:t+2C}$$ 是下一状态下由 target Critic 选出的最佳候选 chunk。真实机器人实验主要使用稀疏二值成功奖励；终止 transition 不再加入 bootstrap 项。Target Critic 通过 Polyak averaging 更新，论文设置 $$\tau_Q=5\times10^{-3}$$。
+
+Critic 使用离线专家示范和在线 replay 数据训练。真实实验中 Critic 的 batch size 为 64，update-to-data ratio 为 20，优化器为 Adam，学习率为 $$3\times10^{-4}$$。
+
+#### 3. Critic 如何训练 Edit Policy
+
+Edit Policy 生成有界残差：
+
+$$
+\hat a\sim\pi_{edit}(\cdot|s,a),\qquad \tilde a=a+\hat a.
+$$
+
+它通过最大化 edited action 的 Q 值进行训练：
+
+$$
+\mathcal L_{edit}=-\mathbb E\left[Q_\phi(s,a+\hat a)-\alpha\log\pi_{edit}(\hat a|s,a)\right].
+$$
+
+因此 Critic 不直接输出修正量，而是为 Edit Policy 提供“哪些局部修正会提高整段动作成功率”的学习信号。熵温度项只出现在 Edit Policy 目标中，不进入 Critic 的 Bellman backup。
+
+#### 4. 推理时 Critic 如何选择动作
+
+VLA 在旧状态 $$s_t$$ 上异步生成 $$N$$ 个候选 chunk。到达执行边界后，系统读取最新状态 $$s_{t+d}$$，由 Edit Policy 为每个候选生成修正版：
+
+$$
+\tilde a^i=a^i+\hat a^i,
+\qquad
+\hat a^i\sim\pi_{edit}(\cdot|s_{t+d},a^i).
+$$
+
+Critic 同时评价原始候选和修正候选：
+
+$$
+\tilde a^*=\arg\max_{a\in\{a^i,\tilde a^i\}}Q_\phi(s_{t+d},a).
+$$
+
+论文真实机器人实验通常使用 32 个 base candidates 和 32 个 edited candidates，总共评价 64 个候选。动作通过 target Q ensemble 中两个网络的最小值确定性地 argmax 选择，不使用 softmax。如果原始 VLA action 的 Q 值更高，Critic 可以拒绝 Edit Policy 的修正。
+
+#### 5. Noise-level filter Critic
+
+为避免 Bellman backup 时对大量候选逐一完整 denoising，论文还提供可选的 noise-level filter：
+
+$$
+Q^{dn}_\psi(s',\epsilon).
+$$
+
+它先对 VLA 的噪声种子评分，只保留最高分的种子，再执行一次完整 denoising。Filter Critic 是 2 个网络的 ensemble，用外层 target Q 的值进行 MSE 回归，target 停止梯度，因此不需要单独的 target network。它只用于训练时的候选筛选，不改变 rollout 时最终由主 Critic 进行的动作选择。
+
+总体上，VLA 负责生成复杂行为候选，Edit Policy 负责基于最新状态做局部补偿，Critic 负责判断原始或修正后的整段 action chunk 哪一个最值得执行。

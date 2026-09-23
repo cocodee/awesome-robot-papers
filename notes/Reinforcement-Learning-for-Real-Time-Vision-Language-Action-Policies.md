@@ -51,3 +51,51 @@ For a dynamic dual-arm or mobile-manipulation system, VLA should generate coarse
 - [Paper PDF](../papers/Reinforcement-Learning-for-Real-Time-Vision-Language-Action-Policies.pdf)
 - [Extracted paper text](../papers/Reinforcement-Learning-for-Real-Time-Vision-Language-Action-Policies.md)
 - [arXiv page](https://arxiv.org/abs/2609.18207)
+
+## Question Analysis
+
+### Critic design, training, and inference
+
+The paper uses a chunk-level Q-function rather than a single-step action-value function:
+
+$$
+Q_\phi(s_t,a_{t:t+C}).
+$$
+
+The critic receives multi-view images, proprioception, and a flattened action chunk. In the real-robot setting, images are encoded into a 512-dimensional embedding, proprioception into a 64-dimensional embedding, and the result is combined with the action chunk before entering a three-layer, 256-wide Q network. The critic is a REDQ-style ensemble of 10 Q networks. For target estimation, two target networks are subsampled and their minimum is used to reduce Q overestimation.
+
+The critic is trained from offline demonstrations and online replay data with a chunk-level TD target:
+
+$$
+y_t=r_t+\gamma Q_{\phi'}(s_{t+C},\tilde a^*_{t+C:t+2C}).
+$$
+
+$$
+\mathcal L_Q=\mathbb E\left[\left(y_t-Q_\phi(s_t,a_{t:t+C})\right)^2\right].
+$$
+
+The next chunk $$\tilde a^*_{t+C:t+2C}$$ is selected by the target critic. Real-robot rewards are mainly sparse binary success rewards; terminal transitions do not bootstrap. The target critic is updated with Polyak averaging using $$\tau_Q=5\times10^{-3}$$. The reported real-robot settings use Adam with learning rate $$3\times10^{-4}$$, batch size 64, and an update-to-data ratio of 20.
+
+The edit policy uses the critic as its optimization signal. It samples a bounded residual:
+
+$$
+\hat a\sim\pi_{edit}(\cdot|s,a),\qquad \tilde a=a+\hat a,
+$$
+
+and is trained to increase the value of the edited chunk:
+
+$$
+\mathcal L_{edit}=-\mathbb E\left[Q_\phi(s,a+\hat a)-\alpha\log\pi_{edit}(\hat a|s,a)\right].
+$$
+
+At inference, the VLA asynchronously proposes $$N$$ chunks from the old state $$s_t$$. At the execution boundary, the edit policy uses the latest state $$s_{t+d}$$ to produce edited candidates. The critic scores both original and edited candidates:
+
+$$
+\tilde a^*=\arg\max_{a\in\{a^i,\tilde a^i\}}Q_\phi(s_{t+d},a).
+$$
+
+The real-robot experiments typically evaluate 32 base candidates and 32 edited candidates, select deterministically using the minimum of two subsampled target-Q values, and do not apply a softmax. The original action can therefore win if its Q value is higher than the edited version.
+
+The paper also describes an optional noise-level filter critic, $$Q^{dn}_\psi(s',\epsilon)$$, which scores VLA noise seeds before full denoising during Bellman backups. It is a two-network ensemble trained by MSE regression to the outer target critic with stop-gradient targets. It reduces training compute only and does not replace the main critic during rollout action selection.
+
+In short, the VLA proposes behavior, the edit policy makes a fast latest-state correction, and the critic chooses which complete action chunk is most valuable to execute.
