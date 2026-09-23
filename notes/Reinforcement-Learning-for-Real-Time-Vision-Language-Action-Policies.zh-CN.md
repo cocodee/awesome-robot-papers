@@ -17,9 +17,9 @@ VLA 把图像、语言和机器人动作统一在一个生成策略中，擅长�
 
 若 VLA 在 (s_t) 开始推理，经过 (d) 个控制步才输出动作，那么该动作实际要在 (s_{t+d}) 执行。朴素系统执行的是
 
-\[
+$$
 a_{t+d}=\pi_{VLA}(s_t),
-\]
+$$
 
 而不是理想的 \(\pi(s_{t+d})\)。在动态任务中，这会造成观测—动作分布错位、抓取时机错过、平衡误差累积和 RL credit assignment 偏差。
 
@@ -40,9 +40,9 @@ a_{t+d}=\pi_{VLA}(s_t),
 
 设控制频率为 (f) Hz，VLA 推理耗时为 (T) 秒，则离散延迟近似为
 
-\[
+$$
 d=\lfloor Tf\rfloor+1.
-\]
+$$
 
 VLA 通常一次预测长度为 (H) 的动作块，每轮执行 (C\le H) 步。论文假设 (1\le d\le C)：推理延迟不超过一轮 chunk 的执行长度。系统需要在当前 chunk 尚未结束时就启动下一次 VLA 推理。
 
@@ -68,9 +68,9 @@ EXPO 使用两个策略：表达能力强但昂贵的 base flow policy，以及�
 
 给定状态和动作噪声 \(\epsilon_i\)，VLA 产生多个候选 chunk：
 
-\[
+$$
 a^i_{t:t+H}=\pi_{VLA}(s_t,a^{prev}_{t:t+d},\epsilon_i).
-\]
+$$
 
 RTC prefix 中前 (d) 步是推理窗口内已经承诺执行的动作，因此真正保留的是 \(a^i_{t+d:t+d+C}\)。多噪声采样提供行为多样性，但每个候选都可能带有旧观测造成的误差。
 
@@ -78,9 +78,9 @@ RTC prefix 中前 (d) 步是推理窗口内已经承诺执行的动作，因此�
 
 Edit Policy 输入状态和 base action，输出有界残差：
 
-\[
+$$
 \hat a\sim\pi_{edit}(\cdot|s,a),\qquad \tilde a=a+\hat a.
-\]
+$$
 
 它不是重新规划整段行为，而是利用小网络快速把已有 chunk 推向更可靠的局部动作。Real-Time EXPO-FT 中，(s) 使用动作真正要执行前的最新观测 (s_{t+d})。
 
@@ -88,9 +88,9 @@ Edit Policy 输入状态和 base action，输出有界残差：
 
 Critic 估计 chunk 在状态下的价值。候选集合包含原始动作和修正动作，执行最高价值者：
 
-\[
+$$
 \tilde a^*=\arg\max_{a\in\{a_i,\tilde a_i\}}Q_\phi(s,a).
-\]
+$$
 
 论文采用 chunk-level Q，而非单步 Q；真实机器人部分使用轻量 ResNet-50 风格视觉编码器、proprioception 和展平后的动作块。
 
@@ -138,11 +138,11 @@ VLA 在 50 cm 生成朝向 50 cm 的 chunk；推理期间目标到 55 cm。Real-
 
 这是全文最重要的工程抽象：
 
-\[
+$$
 \underbrace{a^i=\pi_{VLA}(s_t,\epsilon_i)}_{\text{旧状态下的强先验}}
 \quad\rightarrow\quad
 \underbrace{\tilde a^i=a^i+\pi_{edit}(s_{t+d},a^i)}_{\text{最新状态下的快速反应}}.
-\]
+$$
 
 旧状态并不等于无用状态：它提供完整的任务意图和长时行为结构；最新状态则负责弥补延迟造成的局部变化。
 
@@ -194,9 +194,9 @@ RTC 是一种异步 action chunking 方法：当前 chunk 执行时，后台预�
 
 形式上：
 
-\[
+$$
 a_{t+d:t+d+H}\sim\pi(\cdot|s_t,a^{prev}_{t:t+d}).
-\]
+$$
 
 它学习的是“给定已经会执行的动作，如何产生连贯的后续”。因此不会发生动作 chunk 的硬切换或明显不连续。
 
@@ -242,19 +242,19 @@ RTC 使策略能在固定频率持续输出，但 base VLA 和编辑逻辑仍可
 
 ### 9.2 动作修正公式
 
-\[
+$$
 \hat a_{t+d:t+d+C}\sim\pi_{edit}(\cdot|s_{t+d},a_{t+d:t+d+C}),
 \quad
 \tilde a=a+\hat a.
-\]
+$$
 
 ### 9.3 RL Action Refinement
 
 EXPO-FT 的原始目标是让 edit 后动作获得更高 Q：
 
-\[
+$$
 \mathcal L_{edit}=-\mathbb E[Q_\phi(s,a+\hat a)-\alpha\log\pi_{edit}(\hat a|s,a)].
-\]
+$$
 
 它通过 reward/critic 学到“哪些局部偏移有益”，而不是依赖人工写出每个目标速度或抓取提前量。
 
@@ -306,9 +306,9 @@ EXPO-FT 的原始目标是让 edit 后动作获得更高 Q：
 
 把一段 (C) 步动作视为宏动作：
 
-\[
+$$
 Q_\phi(s_t,a_{t:t+C}).
-\]
+$$
 
 它接收当前视觉、本体状态和展平后的 action chunk，输出一个价值。
 
@@ -316,9 +316,9 @@ Q_\phi(s_t,a_{t:t+C}).
 
 论文使用跨越完整执行窗口的 TD：
 
-\[
+$$
 \mathcal L_Q=\mathbb E[(r_t+\gamma Q'_{\phi}(s_{t+C},\tilde a^*_{t+C:t+2C})-Q_\phi(s_t,a_{t:t+C}))^2].
-\]
+$$
 
 ### 11.4 从 (s_t) 到 (s_{t+C}) 的价值传播
 

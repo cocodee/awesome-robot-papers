@@ -16,19 +16,19 @@ Real-Time EXPO-FT separates two time scales:
 
 The central computation is:
 
-\[
+$$
 a^i=\pi_{VLA}(s_t,a^{prev}_{t:t+d},\epsilon_i),
 \quad
 \tilde a^i=a^i+\hat a^i,
 \quad
 \hat a^i\sim\pi_{edit}(\cdot|s_{t+d},a^i).
-\]
+$$
 
 The critic uses a chunk-level TD target spanning the execution horizon (C):
 
-\[
+$$
 Q(s_t,a_{t:t+C})\leftarrow r_t+\gamma Q(s_{t+C},a^*_{t+C:t+2C}).
-\]
+$$
 
 ## Main lessons
 
