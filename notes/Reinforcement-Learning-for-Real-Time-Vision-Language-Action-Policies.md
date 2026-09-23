@@ -6,7 +6,7 @@ This note accompanies the full Chinese tutorial: [中文精讲教程](Reinforcem
 
 ## Core idea
 
-Large VLAs provide strong behavior priors but are too slow for highly dynamic control. If inference starts at (s_t) and finishes (d) control steps later, a naive system executes an action generated from (s_t) at (s_{t+d}). This State-Action Temporal Mismatch breaks the usual Markov assumption and can severely reduce reliability.
+Large VLAs provide strong behavior priors but are too slow for highly dynamic control. If inference starts at $$s_t$$ and finishes $$d$$ control steps later, a naive system executes an action generated from $$s_t$$ at $$s_{t+d}$$. This State-Action Temporal Mismatch breaks the usual Markov assumption and can severely reduce reliability.
 
 Real-Time EXPO-FT separates two time scales:
 
@@ -24,7 +24,7 @@ a^i=\pi_{VLA}(s_t,a^{prev}_{t:t+d},\epsilon_i),
 \hat a^i\sim\pi_{edit}(\cdot|s_{t+d},a^i).
 $$
 
-The critic uses a chunk-level TD target spanning the execution horizon (C):
+The critic uses a chunk-level TD target spanning the execution horizon $$C$$:
 
 $$
 Q(s_t,a_{t:t+C})\leftarrow r_t+\gamma Q(s_{t+C},a^*_{t+C:t+2C}).

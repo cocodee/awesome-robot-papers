@@ -15,13 +15,13 @@ VLA 把图像、语言和机器人动作统一在一个生成策略中，擅长�
 
 ### 1.2 这篇论文试图解决什么问题
 
-若 VLA 在 (s_t) 开始推理，经过 (d) 个控制步才输出动作，那么该动作实际要在 (s_{t+d}) 执行。朴素系统执行的是
+若 VLA 在 $$s_t$$ 开始推理，经过 $$d$$ 个控制步才输出动作，那么该动作实际要在 $$s_{t+d}$$ 执行。朴素系统执行的是
 
 $$
-a_{t+d}=\pi_{VLA}(s_t),
+a_{t+d}=\pi_{VLA}$$s_t$$,
 $$
 
-而不是理想的 \(\pi(s_{t+d})\)。在动态任务中，这会造成观测—动作分布错位、抓取时机错过、平衡误差累积和 RL credit assignment 偏差。
+而不是理想的 $$\pi(s_{t+d})$$。在动态任务中，这会造成观测—动作分布错位、抓取时机错过、平衡误差累积和 RL credit assignment 偏差。
 
 ### 1.3 为什么 VLA 的推理延迟会影响机器人控制
 
@@ -38,13 +38,13 @@ $$
 
 ### 2.1 机器人控制频率与 VLA 推理速度的矛盾
 
-设控制频率为 (f) Hz，VLA 推理耗时为 (T) 秒，则离散延迟近似为
+设控制频率为 $$f$$ Hz，VLA 推理耗时为 $$T$$ 秒，则离散延迟近似为
 
 $$
 d=\lfloor Tf\rfloor+1.
 $$
 
-VLA 通常一次预测长度为 (H) 的动作块，每轮执行 (C\le H) 步。论文假设 (1\le d\le C)：推理延迟不超过一轮 chunk 的执行长度。系统需要在当前 chunk 尚未结束时就启动下一次 VLA 推理。
+VLA 通常一次预测长度为 $$H$$ 的动作块，每轮执行 $$C\le H$$ 步。论文假设 $$1\le d\le C$$：推理延迟不超过一轮 chunk 的执行长度。系统需要在当前 chunk 尚未结束时就启动下一次 VLA 推理。
 
 ### 2.2 状态滞后：为什么动作生成完成时世界已经变了
 
@@ -52,11 +52,11 @@ VLA 通常一次预测长度为 (H) 的动作块，每轮执行 (C\le H) 步。�
 
 ### 2.3 静态任务与动态任务的本质区别
 
-静态任务中，(s_t\approx s_{t+d})，延迟主要降低效率。动态任务中，状态转移量 \(\|s_{t+d}-s_t\|\) 与任务容错范围同量级，延迟直接降低成功率。平衡、接球、动态抓取和踢球都要求“在正确的时间采取正确的动作”。
+静态任务中，$$s_t\approx s_{t+d}$$，延迟主要降低效率。动态任务中，状态转移量 $$\|s_{t+d}-s_t\|$$ 与任务容错范围同量级，延迟直接降低成功率。平衡、接球、动态抓取和踢球都要求“在正确的时间采取正确的动作”。
 
 ### 2.4 State-Action Temporal Mismatch
 
-State-Action Temporal Mismatch 指动作由旧状态生成，却在新状态执行。标准 MDP 里通常假设 \(a_t\sim\pi(\cdot|s_t)\)；存在延迟时，实际是 \(a_t\sim\pi(\cdot|s_{t-d})\)。只把延迟当成实现细节，会让 critic 把收益错误归因给旧状态，破坏 Markov 性和 credit assignment。Real-Time EXPO-FT 让最终执行的 edit policy 显式条件于最新状态，从而使“修正后策略”重新接近当前状态上的 Markov 决策。
+State-Action Temporal Mismatch 指动作由旧状态生成，却在新状态执行。标准 MDP 里通常假设 $$a_t\sim\pi(\cdot|s_t)$$；存在延迟时，实际是 $$a_t\sim\pi(\cdot|s_{t-d})$$。只把延迟当成实现细节，会让 critic 把收益错误归因给旧状态，破坏 Markov 性和 credit assignment。Real-Time EXPO-FT 让最终执行的 edit policy 显式条件于最新状态，从而使“修正后策略”重新接近当前状态上的 Markov 决策。
 
 ## 3. EXPO-FT 基础方法
 
@@ -66,13 +66,13 @@ EXPO 使用两个策略：表达能力强但昂贵的 base flow policy，以及�
 
 ### 3.2 Base VLA：生成候选动作
 
-给定状态和动作噪声 \(\epsilon_i\)，VLA 产生多个候选 chunk：
+给定状态和动作噪声 $$\epsilon_i$$，VLA 产生多个候选 chunk：
 
 $$
 a^i_{t:t+H}=\pi_{VLA}(s_t,a^{prev}_{t:t+d},\epsilon_i).
 $$
 
-RTC prefix 中前 (d) 步是推理窗口内已经承诺执行的动作，因此真正保留的是 \(a^i_{t+d:t+d+C}\)。多噪声采样提供行为多样性，但每个候选都可能带有旧观测造成的误差。
+RTC prefix 中前 $$d$$ 步是推理窗口内已经承诺执行的动作，因此真正保留的是 $$a^i_{t+d:t+d+C}$$。多噪声采样提供行为多样性，但每个候选都可能带有旧观测造成的误差。
 
 ### 3.3 Edit Policy：对 VLA 动作进行局部修正
 
@@ -82,7 +82,7 @@ $$
 \hat a\sim\pi_{edit}(\cdot|s,a),\qquad \tilde a=a+\hat a.
 $$
 
-它不是重新规划整段行为，而是利用小网络快速把已有 chunk 推向更可靠的局部动作。Real-Time EXPO-FT 中，(s) 使用动作真正要执行前的最新观测 (s_{t+d})。
+它不是重新规划整段行为，而是利用小网络快速把已有 chunk 推向更可靠的局部动作。Real-Time EXPO-FT 中，$$s$$ 使用动作真正要执行前的最新观测 $$s_{t+d}$$。
 
 ### 3.4 Critic / Q-function：评价并选择动作
 
@@ -96,7 +96,7 @@ $$
 
 ### 3.5 为什么要限制 Edit Policy 的修正幅度
 
-论文把 \(\hat a\) 限制在 \([ -\beta,\beta]\)（实现中为 tanh 输出乘 task-specific edit scale）。限制有三层作用：保留 VLA 的行为先验、避免 critic 梯度反向推动大型 VLA 脱离已学分布、降低 edit policy 产生灾难性动作的风险。它表达的是“在 base action 附近做可靠改进”，不是“从零替换 base policy”。
+论文把 $$\hat a$$ 限制在 $$[ -\beta,\beta]$$（实现中为 tanh 输出乘 task-specific edit scale）。限制有三层作用：保留 VLA 的行为先验、避免 critic 梯度反向推动大型 VLA 脱离已学分布、降低 edit policy 产生灾难性动作的风险。它表达的是“在 base action 附近做可靠改进”，不是“从零替换 base policy”。
 
 ### 3.6 EXPO-FT 的强化学习思想
 
@@ -106,15 +106,15 @@ Edit policy 通过最大化编辑后动作的 Q 值训练，同时保留熵正�
 
 ### 4.1 EXPO-FT 隐含的时间同步假设
 
-普通 EXPO-FT 的关键计算容易写成“在状态 (s_t) 生成动作，再在同一时刻评价/执行”。大型 VLA 的现实延迟破坏了这个假设：候选动作生成时看到的是旧图像，编辑与评价若仍使用旧状态，整个 RL 闭环仍然是滞后的。
+普通 EXPO-FT 的关键计算容易写成“在状态 $$s_t$$ 生成动作，再在同一时刻评价/执行”。大型 VLA 的现实延迟破坏了这个假设：候选动作生成时看到的是旧图像，编辑与评价若仍使用旧状态，整个 RL 闭环仍然是滞后的。
 
 ### 4.2 VLA 推理延迟带来的旧观测问题
 
-延迟期间机器人继续执行已排队 chunk。状态从 (s_t) 变到 (s_{t+d})，但候选 action 仍由 (s_t) 产生。RTC 的 prefix conditioning 能让新 chunk 接上旧 chunk，却不会自动知道目标在延迟窗口内移动了多少。
+延迟期间机器人继续执行已排队 chunk。状态从 $$s_t$$ 变到 $$s_{t+d}$$，但候选 action 仍由 $$s_t$$ 产生。RTC 的 prefix conditioning 能让新 chunk 接上旧 chunk，却不会自动知道目标在延迟窗口内移动了多少。
 
 ### 4.3 为什么“修正旧动作”仍然可能失败
 
-若 edit policy 也接收 (s_t)，它只能修正“当时看来合理”的动作；目标已经偏移时，修正方向本身就是错的。解决方式不是让旧状态下的修正更激进，而是把修正时刻推迟到动作执行前，并输入 (s_{t+d})。
+若 edit policy 也接收 $$s_t$$，它只能修正“当时看来合理”的动作；目标已经偏移时，修正方向本身就是错的。解决方式不是让旧状态下的修正更激进，而是把修正时刻推迟到动作执行前，并输入 $$s_{t+d}$$。
 
 ### 4.4 动态抓取示例：目标从 50 cm 移动到 55 cm
 
@@ -128,11 +128,11 @@ VLA 在 50 cm 生成朝向 50 cm 的 chunk；推理期间目标到 55 cm。Real-
 
 ### 5.2 Slow Asynchronous Generation
 
-当当前 action queue 还剩 (d) 步时，后台启动 VLA。它基于当时状态和 RTC prefix 采样 (N) 个候选，推理期间机器人不停止。候选生成可以慢，因为它不在关键的同步执行路径上。
+当当前 action queue 还剩 $$d$$ 步时，后台启动 VLA。它基于当时状态和 RTC prefix 采样 $$N$$ 个候选，推理期间机器人不停止。候选生成可以慢，因为它不在关键的同步执行路径上。
 
 ### 5.3 Fast Synchronous Editing
 
-到达新 chunk 切换点时，读取最新 (s_{t+d})，用轻量 edit policy 对所有保留候选做修正。这个路径只需小网络前向和 critic 评估，目标是足够快地跟上固定控制频率。
+到达新 chunk 切换点时，读取最新 $$s_{t+d}$$，用轻量 edit policy 对所有保留候选做修正。这个路径只需小网络前向和 critic 评估，目标是足够快地跟上固定控制频率。
 
 ### 5.4 Proposal from Old State + Correction from Current State
 
@@ -152,29 +152,29 @@ $$
 
 ## 6. Real-Time EXPO-FT 的时间轴
 
-### 6.1 VLA 在 (s_t) 时刻开始推理
+### 6.1 VLA 在 $$s_t$$ 时刻开始推理
 
-当前 chunk 还剩 (d) 步时，系统记录 (s_t)，将已承诺 prefix 输入 VLA，异步采样多个候选。
+当前 chunk 还剩 $$d$$ 步时，系统记录 $$s_t$$，将已承诺 prefix 输入 VLA，异步采样多个候选。
 
 ### 6.2 推理期间机器人继续执行动作
 
 机器人执行 queue 中的 prefix；控制线程不能阻塞等待 VLA。这保证动作流连续，也避免因推理停顿造成轨迹断裂。
 
-### 6.3 状态从 (s_t) 演化到 (s_{t+d})
+### 6.3 状态从 $$s_t$$ 演化到 $$s_{t+d}$$
 
-机器人和环境经过 (d) 个动作后产生新图像和本体状态。目标位姿、速度、接触关系和可见性都可能变化。
+机器人和环境经过 $$d$$ 个动作后产生新图像和本体状态。目标位姿、速度、接触关系和可见性都可能变化。
 
-### 6.4 Edit Policy 使用最新状态 (s_{t+d})
+### 6.4 Edit Policy 使用最新状态 $$s_{t+d}$$
 
-对每个候选的剩余执行段计算 \(\hat a^i_{t+d:t+d+C}\sim\pi_{edit}(\cdot|s_{t+d},a^i)\)。注意它编辑的是将要执行的剩余 chunk，不是已执行 prefix。
+对每个候选的剩余执行段计算 $$\hat a^i_{t+d:t+d+C}\sim\pi_{edit}(\cdot|s_{t+d},a^i)$$。注意它编辑的是将要执行的剩余 chunk，不是已执行 prefix。
 
 ### 6.5 Critic 在最新状态下重新评价动作
 
-计算 (Q_\phi(s_{t+d},a^i)) 与 (Q_\phi(s_{t+d},\tilde a^i))，保留最高价值动作。这一步让动作选择也对齐最新状态，而不是只让 edit policy 对齐。
+计算 $$Q_\phi(s_{t+d},a^i)$$ 与 $$Q_\phi(s_{t+d},\tilde a^i)$$，保留最高价值动作。这一步让动作选择也对齐最新状态，而不是只让 edit policy 对齐。
 
 ### 6.6 新 Action Chunk 的执行
 
-执行选出的 (C) 步，再在接近队列尾部时启动下一轮 VLA。整个系统像流水线：生成、编辑、评价、执行持续重叠。
+执行选出的 $$C$$ 步，再在接近队列尾部时启动下一轮 VLA。整个系统像流水线：生成、编辑、评价、执行持续重叠。
 
 ## 7. RTC：为什么机器人不能停下来等 VLA
 
@@ -188,7 +188,7 @@ RTC 是一种异步 action chunking 方法：当前 chunk 执行时，后台预�
 
 ### 7.3 Action Prefix Conditioning
 
-训练时把 ground-truth chunk 划为 (d) 步 prefix 和剩余 postfix；prefix 使用干净动作、flow timestep 设为 1，仅对 postfix 计算 flow-matching loss。部署时同理把在途动作 inpaint 到新 chunk 的前端。
+训练时把 ground-truth chunk 划为 $$d$$ 步 prefix 和剩余 postfix；prefix 使用干净动作、flow timestep 设为 1，仅对 postfix 计算 flow-matching loss。部署时同理把在途动作 inpaint 到新 chunk 的前端。
 
 ### 7.4 VLA 如何预测已提交动作之后的未来动作
 
@@ -224,7 +224,7 @@ RTC 使策略能在固定频率持续输出，但 base VLA 和编辑逻辑仍可
 
 ### 8.4 Real-Time EXPO-FT：补偿推理期间的环境变化
 
-它把快速编辑和 Q 选择放到 (s_{t+d}) 下；论文实验显示，即使 base flow policy 仍有 4/5 步延迟，整体性能也能超过零延迟的轻量 RLPD 基线。
+它把快速编辑和 Q 选择放到 $$s_{t+d}$$ 下；论文实验显示，即使 base flow policy 仍有 4/5 步延迟，整体性能也能超过零延迟的轻量 RLPD 基线。
 
 ### 8.5 三种方法的结构与能力对比
 
@@ -238,7 +238,7 @@ RTC 使策略能在固定频率持续输出，但 base VLA 和编辑逻辑仍可
 
 ### 9.1 Edit Policy 的输入与输出
 
-输入是最新视觉/本体状态和 base action chunk；输出是与动作块同维度的有界残差。真实实验中 action chunk 为 (C\times7)（末端位置、姿态、夹爪等 7 维），(C=8) 时 edit 输出维度为 56。
+输入是最新视觉/本体状态和 base action chunk；输出是与动作块同维度的有界残差。真实实验中 action chunk 为 $$C\times7$$（末端位置、姿态、夹爪等 7 维），$$C=8$$ 时 edit 输出维度为 56。
 
 ### 9.2 动作修正公式
 
@@ -268,13 +268,13 @@ $$
 
 ### 9.6 “最新观测”究竟指哪个时刻的观测
 
-不是 VLA 启动时的 (s_t)，而是候选动作即将接管执行时的 (s_{t+d})。如果系统有图像采集、传输和预处理额外延迟，应将时间戳和有效状态延迟纳入工程定义；论文公式中的最新状态是算法语义，不等于传感器绝对零延迟。
+不是 VLA 启动时的 $$s_t$$，而是候选动作即将接管执行时的 $$s_{t+d}$$。如果系统有图像采集、传输和预处理额外延迟，应将时间戳和有效状态延迟纳入工程定义；论文公式中的最新状态是算法语义，不等于传感器绝对零延迟。
 
 ## 10. Edit Policy 是否每个控制周期都执行
 
 ### 10.1 论文中的 Chunk-Level Editing
 
-论文明确以 chunk 为基本决策单元。VLA 候选的剩余 (C) 步在切换点被 edit 一次，随后执行这一段；不是对每个图像帧都重新编辑。
+论文明确以 chunk 为基本决策单元。VLA 候选的剩余 $$C$$ 步在切换点被 edit 一次，随后执行这一段；不是对每个图像帧都重新编辑。
 
 ### 10.2 动作块切换时的反馈修正
 
@@ -304,7 +304,7 @@ $$
 
 ### 11.2 Action Chunk 级 Q-function
 
-把一段 (C) 步动作视为宏动作：
+把一段 $$C$$ 步动作视为宏动作：
 
 $$
 Q_\phi(s_t,a_{t:t+C}).
@@ -320,21 +320,21 @@ $$
 \mathcal L_Q=\mathbb E[(r_t+\gamma Q'_{\phi}(s_{t+C},\tilde a^*_{t+C:t+2C})-Q_\phi(s_t,a_{t:t+C}))^2].
 $$
 
-### 11.4 从 (s_t) 到 (s_{t+C}) 的价值传播
+### 11.4 从 $$s_t$$ 到 $$s_{t+C}$$ 的价值传播
 
-当前 chunk 执行完才到 (s_{t+C})，下一个 chunk 的最佳原始/编辑候选作为 bootstrap。这样价值会传播到“这一段动作是否把系统带入更好状态”，比单步 reward 更贴近实际任务成功。
+当前 chunk 执行完才到 $$s_{t+C}$$，下一个 chunk 的最佳原始/编辑候选作为 bootstrap。这样价值会传播到“这一段动作是否把系统带入更好状态”，比单步 reward 更贴近实际任务成功。
 
 ### 11.5 Critic 如何比较原始动作和 Edited Action
 
-对每个候选同时评估 (Q(s,a)) 和 (Q(s,a+\hat a))，不强制 edit 必须生效；如果最新状态表明 base action 已经足够好，critic 可以选择不编辑的原始候选。这是安全的保守机制。
+对每个候选同时评估 $$Q(s,a)$$ 和 $$Q(s,a+\hat a)$$，不强制 edit 必须生效；如果最新状态表明 base action 已经足够好，critic 可以选择不编辑的原始候选。这是安全的保守机制。
 
 ## 12. Real-Time EXPO-FT 完整执行流程
 
 1. 执行当前 action chunk。
-2. 当队列剩余 (d) 步时异步启动大型 VLA。
+2. 当队列剩余 $$d$$ 步时异步启动大型 VLA。
 3. 机器人持续运动，不等待 VLA。
-4. VLA 生成 (N) 个候选 chunk，并利用 RTC prefix 保证衔接。
-5. 到达切换点，获取最新观测 (s_{t+d})。
+4. VLA 生成 $$N$$ 个候选 chunk，并利用 RTC prefix 保证衔接。
+5. 到达切换点，获取最新观测 $$s_{t+d}$$。
 6. Edit Policy 对每个候选的剩余段做有界修正。
 7. Critic 在最新状态下比较原始和修正候选。
 8. 执行最优 chunk，进入下一轮流水线。
@@ -345,11 +345,11 @@ $$
 
 ### 13.1 仿真实验设置
 
-Kinetix 10 个动态环境：Car Launch、Cartpole Thrust、Catapult、Catcher、H17 Unicycle、Hard Lunar Lander、Half-Cheetah、Trampoline、Chain Lander、Grasp。预训练 flow policy 使用 (H=8)，RL 在线训练 100k environment steps，延迟 4 步。
+Kinetix 10 个动态环境：Car Launch、Cartpole Thrust、Catapult、Catcher、H17 Unicycle、Hard Lunar Lander、Half-Cheetah、Trampoline、Chain Lander、Grasp。预训练 flow policy 使用 $$H=8$$，RL 在线训练 100k environment steps，延迟 4 步。
 
 ### 13.2 真实机器人实验平台
 
-单臂 DROID setup，30 Hz，侧视和腕视两路 224×224 RGB，输入末端位置/姿态本体状态，控制为空间笛卡尔和夹爪速度。VLA 约 67 ms；Ball Balancing、Object Passing、Soccer Kicking 加 100 ms，总延迟约 167 ms、(d=5)；Dynamic Picking 使用约 67 ms、(d=3)。
+单臂 DROID setup，30 Hz，侧视和腕视两路 224×224 RGB，输入末端位置/姿态本体状态，控制为空间笛卡尔和夹爪速度。VLA 约 67 ms；Ball Balancing、Object Passing、Soccer Kicking 加 100 ms，总延迟约 167 ms、$$d=5$$；Dynamic Picking 使用约 67 ms、$$d=3$$。
 
 ### 13.3 Dynamic Picking
 
