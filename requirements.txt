@@ -1,1 +1,3 @@
 markitdown[all]
+pymupdf
+pyarrow>=18,<23

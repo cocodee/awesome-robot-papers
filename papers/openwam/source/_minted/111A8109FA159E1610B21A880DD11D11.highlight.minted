@@ -1,0 +1,24 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{displacement\PYGZus{}world}\PYG{p}{(}\PYG{n}{obj}\PYG{p}{,} \PYG{n}{frame\PYGZus{}start}\PYG{p}{,} \PYG{n}{frame\PYGZus{}end}\PYG{p}{,} \PYG{n}{scene}\PYG{p}{)}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} sample world\PYGZhy{}space positions at start and end}
+    \PYG{n}{loc\PYGZus{}start} \PYG{o}{=} \PYG{n}{get\PYGZus{}world\PYGZus{}location\PYGZus{}at\PYGZus{}frame}\PYG{p}{(}\PYG{n}{obj}\PYG{p}{,} \PYG{n}{frame\PYGZus{}start}\PYG{p}{,} \PYG{n}{scene}\PYG{p}{)}
+    \PYG{n}{loc\PYGZus{}end}   \PYG{o}{=} \PYG{n}{get\PYGZus{}world\PYGZus{}location\PYGZus{}at\PYGZus{}frame}\PYG{p}{(}\PYG{n}{obj}\PYG{p}{,} \PYG{n}{frame\PYGZus{}end}\PYG{p}{,} \PYG{n}{scene}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} displacement vector}
+    \PYG{n}{disp\PYGZus{}vec} \PYG{o}{=} \PYG{n}{loc\PYGZus{}end} \PYG{o}{\PYGZhy{}} \PYG{n}{loc\PYGZus{}start}
+    \PYG{n}{dx}\PYG{p}{,} \PYG{n}{dy}\PYG{p}{,} \PYG{n}{dz} \PYG{o}{=} \PYG{n}{disp\PYGZus{}vec}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{disp\PYGZus{}vec}\PYG{o}{.}\PYG{n}{y}\PYG{p}{,} \PYG{n}{disp\PYGZus{}vec}\PYG{o}{.}\PYG{n}{z}
+
+    \PYG{c+c1}{\PYGZsh{} 3D displacement and horizontal (XY) displacement}
+    \PYG{n}{D\PYGZus{}3D} \PYG{o}{=} \PYG{n}{disp\PYGZus{}vec}\PYG{o}{.}\PYG{n}{length}                 \PYG{c+c1}{\PYGZsh{} sqrt(dx*dx + dy*dy + dz*dz)}
+    \PYG{n}{D\PYGZus{}XY} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dx}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n}{dy}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*}\PYG{o}{*} \PYG{l+m+mf}{0.5}          \PYG{c+c1}{\PYGZsh{} sqrt(dx*dx + dy*dy)}
+
+    \PYG{k}{return} \PYG{p}{\PYGZob{}}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{frame\PYGZus{}start}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{frame\PYGZus{}start}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{frame\PYGZus{}end}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{frame\PYGZus{}end}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{loc\PYGZus{}start}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}  \PYG{n}{loc\PYGZus{}start}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{loc\PYGZus{}end}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}    \PYG{n}{loc\PYGZus{}end}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{dx}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{dx}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{dy}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{dy}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{dz}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{dz}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{D\PYGZus{}3D}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{D\PYGZus{}3D}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{D\PYGZus{}XY}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{D\PYGZus{}XY}\PYG{p}{,}
+    \PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

@@ -1,0 +1,25 @@
+\usepackage{booktabs}
+\usepackage[capitalize]{cleveref}
+\usepackage{wrapfig}
+
+% Allow unfilled bottoms rather than justifying pages vertically.
+% Prevents LaTeX from padding page bottoms with whitespace when
+% floats push content off a page.
+\raggedbottom
+
+\newcommand{\todo}[1]{\textbf{\color{red}[TODO: #1]}}
+\newcommand{\daniel}[1]{\textbf{\color{blue}[Daniel: #1]}}
+% LLM-authored revisions/additions, rendered inline in orange for review.
+\definecolor{orange}{rgb}{0.85,0.45,0.0}
+\definecolor{cyan}{rgb}{0.0,0.8,0.8}
+\newcommand{\llm}[1]{{\color{orange}#1}}
+\newcommand{\jm}[1]{{\color{cyan}#1}}
+
+% Name of your proposed approach (used as the method section title).
+\newcommand{\methodname}{Temporal Encoding for Motion-aware Policy (TEMPO)}
+% Short name for prose / comparisons (avoid over-stylizing; revise for camera-ready anonymity rules).
+\newcommand{\ours}{TEMPO}
+\newcommand{\TEMPOMOT}{TEMPO\textsubscript{MOT}}
+\newcommand{\TEMPOACT}{TEMPO\textsubscript{ACT}}
+% Name of the released object-motion benchmark; rename here to propagate.
+\newcommand{\benchname}{TEMPO-Bench}

@@ -1,0 +1,47 @@
+\section{Discussion and Conclusion}
+\label{sec:discussion}
+
+We presented \ours, an open framework and pretrained foundation spanning
+video prediction, robot control, and local dynamics modeling. Its shared
+causal backbone supports joint, sequential, and decoupled video--action
+generation within a common training and evaluation stack. Strong performance
+across four LIBERO suites and real-world bimanual tasks demonstrates the
+framework's control capabilities, while the initialization ablation
+establishes the substantial benefit of robot-video pretraining. \ours
+thus supports multiple effective modeling configurations rather than a
+single specialized policy.
+
+% Beyond native control, the framework enables independently trained
+% inverse and forward dynamics components. Our controlled simulation study
+% shows that local conditioning and counterfactual supervision jointly
+% support substantially stronger frozen-executor reuse after visual task
+% adaptation than either choice alone, while retaining strong source-task
+% performance. Counterfactual supervision also improves prediction of
+% alternative action outcomes, connecting broader interaction data to useful
+% forward modeling.
+Beyond native control, the framework supports independently trained
+inverse and forward dynamics components. In the transfer study,
+counterfactual-only and mixed supervision both substantially improve the
+reuse of local-context IDMs after visual task adaptation, while retaining
+strong source-task performance. Counterfactual FDM supervision also improves both visual prediction accuracy and
+identification of action-dependent outcomes.
+
+Several questions remain open. Composability is established primarily in
+simulation; demonstrating comparable reuse on real robots will require more
+data-efficient physical dynamics supervision. Our target-task experiments
+adapt the video predictor and therefore do not establish zero-shot transfer of
+the complete video--action model. Appendix~E shows that policy, IDM, and FDM
+objectives can be trained jointly in one checkpoint, but we have not yet shown
+that a single multi-objective model can match the strongest specialized
+\ours variants across all modes. The present FDM study also focuses on local,
+short-horizon prediction, leaving long-horizon planning and physical deployment
+as natural extensions.
+
+
+\ours brings these capabilities into one open foundation: strong
+policies, configurable prediction--action interaction, and independently
+reusable dynamics. It provides both capable world--action models and a
+common basis for building, comparing, and composing the next generation.
+
+
+\FloatBarrier

@@ -1,0 +1,37 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{bpy}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{mathutils}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Vector}
+
+\PYG{n}{scene} \PYG{o}{=} \PYG{n}{bpy}\PYG{o}{.}\PYG{n}{context}\PYG{o}{.}\PYG{n}{scene}
+\PYG{n}{fps}   \PYG{o}{=} \PYG{n}{scene}\PYG{o}{.}\PYG{n}{render}\PYG{o}{.}\PYG{n}{fps}
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{world\PYGZus{}pos}\PYG{p}{(}\PYG{n}{obj\PYGZus{}or\PYGZus{}bone}\PYG{p}{)}\PYG{p}{:}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Return world\PYGZhy{}space translation of an object or a specific bone.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{c+c1}{\PYGZsh{} For regular objects:}
+    \PYG{k}{if} \PYG{n+nb}{hasattr}\PYG{p}{(}\PYG{n}{obj\PYGZus{}or\PYGZus{}bone}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{matrix\PYGZus{}world}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{obj\PYGZus{}or\PYGZus{}bone}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}world}\PYG{o}{.}\PYG{n}{to\PYGZus{}translation}\PYG{p}{(}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} For pose bones (e.g., armature.pose.bones[\PYGZdq{}Hips\PYGZdq{}]):}
+    \PYG{k}{return} \PYG{n}{obj\PYGZus{}or\PYGZus{}bone}\PYG{o}{.}\PYG{n}{matrix}\PYG{o}{.}\PYG{n}{to\PYGZus{}translation}\PYG{p}{(}\PYG{p}{)}
+
+\PYG{k}{for} \PYG{n}{f} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{f\PYGZus{}min}\PYG{p}{,} \PYG{n}{f\PYGZus{}max} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{scene}\PYG{o}{.}\PYG{n}{frame\PYGZus{}set}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} Example: distance between entities A and B}
+    \PYG{n}{p\PYGZus{}a} \PYG{o}{=} \PYG{n}{world\PYGZus{}pos}\PYG{p}{(}\PYG{n}{entity\PYGZus{}a}\PYG{p}{)}
+    \PYG{n}{p\PYGZus{}b} \PYG{o}{=} \PYG{n}{world\PYGZus{}pos}\PYG{p}{(}\PYG{n}{entity\PYGZus{}b}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} Full 3D distance in world coordinates}
+    \PYG{n}{dist\PYGZus{}3d} \PYG{o}{=} \PYG{p}{(}\PYG{n}{p\PYGZus{}a} \PYG{o}{\PYGZhy{}} \PYG{n}{p\PYGZus{}b}\PYG{p}{)}\PYG{o}{.}\PYG{n}{length}
+
+    \PYG{c+c1}{\PYGZsh{} Example planar distance in the XY plane (horizontal separation):}
+    \PYG{c+c1}{\PYGZsh{} other planes (XZ, YZ) are obtained analogously in the full script.}
+    \PYG{n}{p\PYGZus{}a\PYGZus{}xy} \PYG{o}{=} \PYG{n}{Vector}\PYG{p}{(}\PYG{p}{(}\PYG{n}{p\PYGZus{}a}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{p\PYGZus{}a}\PYG{o}{.}\PYG{n}{y}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{)}\PYG{p}{)}
+    \PYG{n}{p\PYGZus{}b\PYGZus{}xy} \PYG{o}{=} \PYG{n}{Vector}\PYG{p}{(}\PYG{p}{(}\PYG{n}{p\PYGZus{}b}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{p\PYGZus{}b}\PYG{o}{.}\PYG{n}{y}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{)}\PYG{p}{)}
+    \PYG{n}{dist\PYGZus{}xy} \PYG{o}{=} \PYG{p}{(}\PYG{n}{p\PYGZus{}a\PYGZus{}xy} \PYG{o}{\PYGZhy{}} \PYG{n}{p\PYGZus{}b\PYGZus{}xy}\PYG{p}{)}\PYG{o}{.}\PYG{n}{length}
+
+    \PYG{c+c1}{\PYGZsh{} Timestamp (seconds), assuming t = 0 at f\PYGZus{}min}
+    \PYG{n}{t} \PYG{o}{=} \PYG{p}{(}\PYG{n}{f} \PYG{o}{\PYGZhy{}} \PYG{n}{f\PYGZus{}min}\PYG{p}{)} \PYG{o}{/} \PYG{n}{fps}
+
+    \PYG{c+c1}{\PYGZsh{} Log one line (frame, time, 3D distance, XY\PYGZhy{}plane distance, ...)}
+    \PYG{n}{write\PYGZus{}to\PYGZus{}text\PYGZus{}block}\PYG{p}{(}\PYG{n}{f}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{dist\PYGZus{}3d}\PYG{p}{,} \PYG{n}{dist\PYGZus{}xy}\PYG{p}{)}
+\end{MintedVerbatim}

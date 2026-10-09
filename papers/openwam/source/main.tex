@@ -1,0 +1,136 @@
+% CVPR 2026 Paper Template; see https://github.com/cvpr-org/author-kit
+\documentclass[10pt,twocolumn,letterpaper]{stanford}
+
+%%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
+%\usepackage{cvpr}              % To produce the CAMERA-READY version
+%\usepackage[review]{cvpr}      % To produce the REVIEW version
+\usepackage{bbm}
+\usepackage[pagenumbers]{cvpr} % To force page numbers, e.g. for an arXiv version
+\usepackage{tcolorbox}
+\usepackage{longtable}
+% Import additional packages in the preamble file, before hyperref
+\input{preamble}
+
+% It is strongly recommended to use hyperref, especially for the review version.
+% hyperref with option pagebackref eases the reviewers' job.
+% Please disable hyperref *only* if you encounter grave issues, 
+% e.g. with the file validation for the camera-ready version.
+%
+% If you comment hyperref and then uncomment it, you should delete *.aux before re-running LaTeX.
+% (Or just hit 'q' on the first LaTeX run, let it finish, and you should be clear).
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\definecolor{stanfordblue}{HTML}{006CB8}
+\definecolor{todo}{rgb}{0.9,0.1,0.1}
+\definecolor{row_color}{HTML}{F3F8FC}
+\definecolor{human_color}{rgb}{0.9,0.9,0.9}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=stanfordblue]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%% TABLE COLOR  %%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{balance}
+\usepackage{flushend}
+
+% Use your own theme colors here
+\definecolor{QuantiDark}{RGB}{169,183,163}   % example: dark green for best overall
+\definecolor{QuantiLight}{RGB}{227,232,224} % example: light green for best open
+\definecolor{QuantiDarkYellow}{RGB}{227,209,169}   % example: dark yellow for best overall
+\definecolor{QuantiLightYellow}{RGB}{249,242,228} % example: light yellow for best open
+\definecolor{QuantiDarkRed}{RGB}{181,106,69}   % example: dark red for best overall
+\definecolor{QuantiLightRed}{RGB}{239,225,216} % example: light red for best open
+\definecolor{QuantiDarkBlue}{RGB}{34,59,61}   % example: dark red for best overall
+\definecolor{QuantiLighBlue}{RGB}{210,216,215} % example: light red for best open
+
+\newcommand{\best}[1]{\cellcolor{QuantiDark}\textbf{#1}}
+\newcommand{\bestopen}[1]{\cellcolor{QuantiLight}\textbf{#1}}
+\newcommand{\bestsub}[1]{\cellcolor{QuantiDarkYellow}\textbf{#1}}
+\newcommand{\bestopensub}[1]{\cellcolor{QuantiLightYellow}\textbf{#1}}
+
+\newcommand{\worldwideweb}{\raisebox{-1.5pt}{\includegraphics[height=1.05em]{sec/images/icons/internet-icon.pdf}}\xspace}
+\newcommand{\github}{\raisebox{-1.5pt}{\includegraphics[height=1.05em]{sec/images/icons/github-logo.pdf}}\xspace}
+\newcommand{\huggingface}{\raisebox{-1.5pt}{\includegraphics[height=1.05em]{sec/images/icons/hf-logo.pdf}}\xspace}
+
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+% \def\paperID{5284} % *** Enter the Paper ID here
+\def\paperID{****} % *** Enter the Paper ID here
+\def\confName{CVPR}
+\def\confYear{2026}
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+
+% \usepackage{minted}
+% \usepackage[cachedir=minted-cache]{minted}
+\usepackage[draft]{minted}
+
+\usepackage{xspace}
+\newcommand{\ours}{\textsc{OpenWAM}\xspace}
+\newcommand{\dummy}[1]{\textcolor{red}{#1}}
+
+%%%%%%%%% TITLE - PLEASE UPDATE
+
+\title{
+    \textsc{OpenWAM}: An Open Framework for Composable World-Action Models
+}
+\author[*]{\text{Heng Yu}}
+% \author[1,*]{\text{Heng Yu}}
+\author[*]{\text{David D. Yuan}}
+\author[*]{\text{Juze Zhang}}
+% \authorbreak
+\author{\text{Changan Chen}}
+\author{\text{Yao Feng}}
+% \author[1]{\text{Ehsan Adeli}}
+% \author[2]{\text{Adnan Masood}}
+\authorbreak
+% \author[1,\dagger]{\text{Li Fei-Fei}}
+% \author[1,\dagger]{\text{Ehsan Adeli}}
+\author{\text{Michelle Baldonado}}
+\author{\text{Steve Cousins}}
+\author{\text{Li Fei-Fei}}
+\author{\text{Jiajun Wu}}
+\author{\text{Ehsan Adeli}}
+\affiliation{Stanford University}
+% \affiliation[1]{Stanford University}
+% \affiliation[2]{UST}
+\contribution{\textsuperscript{*}Equal contribution}
+% $\quad$\textsuperscript{$\dagger$}Equal Last Authorship}
+
+\metadata[Project Page]{\url{https://openwam.stanford.edu}}
+\metadata[Code]{\url{https://github.com/OpenWAM/OpenWAM}}
+\metadata[Release]{Project page \& code: June 4, 2026 \qquad Paper: October 6, 2026}
+
+% \code{\url{https://github.com/OpenWAM/OpenWAM} \; (first publicly released on June 4, 2026)}
+
+% \footnote{
+% The OpenWAM project page and code were first publicly released in June 2026.
+% }} 
+
+
+% if you don't have a dataset open-sourced at Huggingface, plz comment out the following line
+% \metadata[Correspondence to]{\texttt{\{puyinli, xtiange, eadeli\}@stanford.edu}}
+
+
+\begin{document}
+
+\input{sec/0_abstract}    
+
+\maketitle
+
+\input{sec/1_introduction}
+\input{sec/2_related_work}
+\input{sec/3_methodology}
+\input{sec/4_experiments}
+\input{sec/5_discussion}
+
+
+{
+    \small
+    \bibliographystyle{ieeenat_fullname}
+    \bibliography{main}
+}
+
+\input{sec/X_suppl}
+
+\end{document}

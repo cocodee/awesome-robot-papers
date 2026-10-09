@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{disp\PYGZus{}y} \PYG{o}{=} \PYG{n}{VEL} \PYG{o}{*} \PYG{n}{t}
+\PYG{n}{new\PYGZus{}y}  \PYG{o}{=} \PYG{n}{start\PYGZus{}loc}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n}{disp\PYGZus{}y}
+\end{MintedVerbatim}

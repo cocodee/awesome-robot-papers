@@ -1,0 +1,33 @@
+%===============================================================================
+
+\begin{abstract}
+% \todo{revisit, pick 1 of the 2 versions}
+%     Vision-language-action (VLA) models have become capable generalists for
+%     manipulation, but they are conditioned on a single observation captured when
+%     inference begins. We show, through analysis, that this single-frame design
+%     leaves the policy unable to perceive how a scene is moving. Lacking any sense
+%     of motion, the policy tends to associate static configurations with
+%     demonstrated actions rather than learn the relationship between object motion
+%     and the action it requires, which limits it on tasks for which targets are in
+%     motion. \ours\ addresses this by augmenting a pretrained VLA with two
+%     additional inputs, a compact summary of recent scene motion and the policy's
+%     own recent joint positions, which break the single-observation Markov assumption.
+%     Across four dynamic tasks, \ours\ outperforms strong single-frame
+%     and asynchronous baselines, and our analysis traces these gains to a
+%     representation that captures real scene motion and a policy that learns to
+%     act on it rather than on appearance alone.
+  % Vision-language-action (VLA) models have become capable generalists for manipulation, but they are conditioned on a single observation captured when inference begins. We identify two failure modes this single-observation design produces in dynamic settings: \emph{motion ambiguity}, where the policy cannot perceive how the scene is moving, and \emph{state aliasing}, where perceptually identical frames at different points in a task sequence demand different actions. \ours\ addresses both by augmenting any pretrained VLA with two minimal inputs, a compact summary of recent scene motion and a compact summary of the robot's own recent joint history, attached without modifying the backbone and adding minimal compute overhead at training or deployment. Across four dynamic tasks, \ours\ outperforms strong asynchronous baselines by \todo{x amount}. 
+
+Vision-language-action (VLA) models have achieved impressive performance in quasi-static manipulation, but struggle in dynamic manipulation tasks because they operate on a single observation at inference time. We identify two representational failures that underlie this limitation. The first is \emph{motion ambiguity}, where a single observation does not include scene dynamics and therefore cannot anticipate the future state of moving objects. The second is \emph{state aliasing}, where visually similar observations from different points in a task require different actions. We argue that these failures persist regardless of model scale and inference latency, showing that the bottleneck is missing temporal context rather than model capacity. Based on this insight, we propose \ours, which augments a pretrained VLA with two temporal inputs: a motion summary extracted from a frozen video foundation model to resolve motion ambiguity and a compact proprioceptive history to resolve state aliasing. \ours\ requires no modification to the backbone and adds minimal compute overhead at training or deployment. Across four dynamic manipulation tasks, it improves Bottle Handover success from 44\% to 74\% and is the only method that solves state aliasing. Probing and ablation studies confirm that each temporal signal independently addresses its corresponding failure. We further release \benchname, a benchmark of over 50k annotated frames for evaluating motion-aware robot perception in both regression and multiple-choice formats.
+Project Website: \url{https://tempo-robot.github.io/}
+  
+  
+%   VLA models are conditioned on a single observation at inference time, a design that suffices for quasi-static manipulation but creates two representational failures in dynamic settings. We show these failures persist independent of model scale and inference latency, and identify the temporal context each requires. The first is \emph{motion ambiguity}: a snapshot encodes configuration, not how the scene is evolving, so the policy cannot anticipate where a moving target will be. The second is \emph{state aliasing}: perceptually similar observations at different task phases can demand opposite actions, causing asynchronous baselines to fail every rollout on the tasks where these collisions occur. We show that these two failures are separable and that each has a natural fix: a motion summary from a frozen video foundation model separates scene dynamics from appearance without task-specific supervision, while a compact proprioceptive history disambiguates sequential task phases without per-task engineering. \ours\ adds these as minimal inputs to a pretrained VLA without architectural modification. On four dynamic bimanual tasks, \ours\ improves Bottle Handover success from 44\% to 74\% and is the only system to succeed on tasks where state-of-the-art asynchronous baselines score 0\% due to unresolved state aliasing. Probing and ablation analyses confirm that each signal is individually necessary, suggesting that what limits VLAs in dynamic settings is not model capacity but the right temporal context. To support further work on motion-aware policies, we release \benchname, an object-motion benchmark of over 50k annotated frames of human-robot dynamic manipulation, in both a per-frame velocity regression format and a multiple-choice format compatible with MVBench and VLM4D.
+% Project Website: \url{https://tempo-robot.github.io/}
+    \vspace{-0.75em}
+\end{abstract}
+
+% Two or three meaningful keywords should be added here
+\keywords{VLA Models; Dynamic manipulation; Representation Learning}
+
+%===============================================================================

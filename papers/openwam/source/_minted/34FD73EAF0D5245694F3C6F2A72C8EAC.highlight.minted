@@ -1,0 +1,16 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{avg\PYGZus{}speed}   \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{speeds}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{speeds}\PYG{p}{)}
+\PYG{n}{max\PYGZus{}dev}     \PYG{o}{=} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{s} \PYG{o}{\PYGZhy{}} \PYG{n}{avg\PYGZus{}speed}\PYG{p}{)} \PYG{k}{for} \PYG{n}{s} \PYG{o+ow}{in} \PYG{n}{speeds}\PYG{p}{)}
+\PYG{n}{max\PYGZus{}rel\PYGZus{}dev} \PYG{o}{=} \PYG{n}{max\PYGZus{}dev} \PYG{o}{/} \PYG{n}{avg\PYGZus{}speed} \PYG{k}{if} \PYG{n}{avg\PYGZus{}speed} \PYG{o}{!=} \PYG{l+m+mi}{0} \PYG{k}{else} \PYG{l+m+mf}{0.0}
+
+\PYG{k}{if} \PYG{n}{avg\PYGZus{}speed} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} almost no motion}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{max\PYGZus{}rel\PYGZus{}dev} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{UNIFORM\PYGZus{}SPEED\PYGZus{}TOLERANCE}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} approximately uniform speed}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} not uniform\PYGZhy{}speed}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{MintedVerbatim}

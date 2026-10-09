@@ -1,0 +1,41 @@
+\begin{tabular}{@{} c c c C{2.0cm} L{5.0cm} C{1.4cm} L{3.2cm} @{}}
+\toprule
+\textbf{\#} & \textbf{Video Type} & \textbf{Inference Type} & \textbf{GT Posterior} & \textbf{Raw Response} & \textbf{Parsed Value} & \textbf{Model} \\
+\midrule
+1 & A3MS & DS & 30.8 & Looking at the video frames, I can see a table $\dots$ Length $= 0.1530\text{m} = 15.30\text{cm}$ & 15.30 & Claude-4.5 Sonnet \\
+2 & A3SS & DS & 1.565 & $1.5640 \text{m}$ & 1.564 & Claude-4.5 Sonnet \\
+3 & A3SS & DS & 1.565 & $[1.5640]$ & 1.564 & CogVLM2 Video \\
+4 & A3SS & DD & 208.76 & $[\text{velocity\_at\_the\_end\_of\_the\_slope}]$ $[\text{unit}]$ & None & CogVLM2 Video \\
+5 & A3SS & DD & 2.7968 & $1.5 \text{m/s}$ \textbackslash n In the given video, the soccer ball is flying $\dots$ at 1.5 m/s. & 1.5 & Fuyu-8B \\
+6 & A3MC & DD & 542.82 & $2.002\text{m/s}$ \textbackslash n In the image, $\dots$ Therefore, its velocity is 2.002m/s. & 2.002 & Fuyu-8B \\
+7 & S3SC & SD & 1086.09 & $0.0 \text{cm/s}^2$ & 0 & Gemini-2.5 Flash \\
+8 & A2MC & DS & 39 & $39.8 \text{cm}$ & 39.8 & Gemini-2.5 Flash \\
+9 & A3SS & DS & 23.2 & $23.9 \text{cm}$ & 23.9 & Gemini-2.5 Pro \\
+10 & A2MS & DD & 357 & $0 \text{cm/s}$ & 0 & Gemini-2.5 Pro \\
+11 & A2MX & DD & 357 & $-2549 \text{cm/s}$ & 2549 & ChatGPT-5.1 \\
+12 & A3MC & DS & 6.7 & $6.5 \text{cm}$ & 6.5 & ChatGPT-5.1 \\
+13 & S2MC & SS & 9.9 & $10 \text{cm}$ & 10 & ChatGPT-5 \\
+14 & S3SS & SD & 3.604 & $0 \text{m/s}^2$ & 0 & ChatGPT-5 \\
+15 & S2SS & SD & 6.129 & $9.8 \text{m/s}^2$ & 9.8 & InternVL-3.5-30B \\
+16 & A2MC & DS & 0.075 & $0.05 \text{m}$ & 0.05 & InternVL-3.5-30B \\
+17 & A3SS & DD & 208.76 & $[4.05]$ $[\text{m/s}^2]$ & 4.05 & LLaVA-13B \\
+18 & A3MX & DS & 17.5 & $[0.31]$ $[0.28]$ & 0.28 & LLaVA-13B \\
+19 & A3MX & DS & 325 & $[3.2370]$ $[\text{m}]$ & 3.237 & LLaVA-13B \\
+20 & A2MC & DS & 170 & <think>
+So, let's try to $\dots$ maybe the person's height is around $170 \text{cm}$. & 170 & MiniCPM-V 4.5-8B \\
+21 & A2MX & DS & 14 & $<\text{think}>$ Okay, so I need to $\dots$ If I can determine the time it & None & MiniCPM-V 4.5-8B \\
+22 & A3MX & DS & 7.2 & $0.000000000000000000000\dots$ & 0 & Molmo-7B \\
+23 & A3MS & DS & 14 & $15.2 \text{cm}$ & 15.2 & Molmo-7B \\
+24 & A3SS & DS & 23.2 & $23.9 \text{cm}<|\text{end}|>$ & 23.9 & Phi-3-Mini-128K-Instruct \\
+25 & V2MC & DS & 1.71 & Cannot be determined from given information. & None & Phi-3-Mini-128K-Instruct \\
+26 & S2MC & SS & 4.8 & $[\text{Value missing due to insufficient information}]$ & None & Phi-3-Mini-128K-Instruct \\
+27 & A3SS & DS & 30 & $34.02 \text{cm}$ & 34.02 & Phi-4-Multimodal-Instruct \\
+28 & A3MC & DS & 207.9 & $-22.8 \text{cm}$ & 22.8 & Phi-4-Multimodal-Instruct \\
+29 & A3SC & DS & 1.5835 & $1.5835 \text{m}$ & 1.5835 & Qwen3-VL-Instruct-8B \\
+30 & A3MC & DD & 542.82 & $0.0 \text{m/s}$ & 0 & Qwen3-VL-Instruct-8B \\
+31 & A3SS & DS & 4.939 & $0.000000000000000000000\dots$ & 0 & VILA-7B \\
+32 & A3MX & DS & 857.9 & $1.2100 \text{m}$ & 1.21 & VILA-7B \\
+33 & A3MS & DS & 30.8 & $13450$ & 13450 & SmolVLM-Instruct \\
+34 & A3MC & DS & 19.5 & $1.50000000000000004$ & 1.5 & SmolVLM-Instruct \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{ratio}  \PYG{o}{=} \PYG{p}{(}\PYG{n}{target\PYGZus{}dist} \PYG{o}{\PYGZhy{}} \PYG{n}{distances}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{o}{/} \PYG{p}{(}\PYG{n}{distances}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{distances}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{new\PYGZus{}loc} \PYG{o}{=} \PYG{n}{positions}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{lerp}\PYG{p}{(}\PYG{n}{positions}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{,} \PYG{n}{ratio}\PYG{p}{)}
+\PYG{n}{obj}\PYG{o}{.}\PYG{n}{location} \PYG{o}{=} \PYG{n}{new\PYGZus{}loc}
+\PYG{n}{obj}\PYG{o}{.}\PYG{n}{keyframe\PYGZus{}insert}\PYG{p}{(}\PYG{n}{data\PYGZus{}path}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{location}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{frame}\PYG{o}{=}\PYG{n}{f}\PYG{p}{)}
+\end{MintedVerbatim}

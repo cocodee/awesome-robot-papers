@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{positions} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+\PYG{k}{for} \PYG{n}{f} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{frame\PYGZus{}start}\PYG{p}{,} \PYG{n}{frame\PYGZus{}end} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{scene}\PYG{o}{.}\PYG{n}{frame\PYGZus{}set}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+    \PYG{n}{pos} \PYG{o}{=} \PYG{n}{obj}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}world}\PYG{o}{.}\PYG{n}{translation}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{(}\PYG{p}{)}
+    \PYG{n}{positions}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{pos}\PYG{p}{)}
+\end{MintedVerbatim}

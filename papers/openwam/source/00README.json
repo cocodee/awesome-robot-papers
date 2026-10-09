@@ -1,0 +1,449 @@
+{
+   "sources" : [
+      {
+         "usage" : "toplevel",
+         "filename" : "main.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_FAD58DE7366495DB4650CFEFAC2FCD61.index.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/111A8109FA159E1610B21A880DD11D11.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/20E8A2D2B60EFCF38B2F29AFAFD17198.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/2331C19CC78564E7601AF6B0B42D2A46.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/33E6BB1B90559BD8397F3CDFF76CF520.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/34FD73EAF0D5245694F3C6F2A72C8EAC.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/3916253502C2DCFA456B39F105CC5805.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/505C58B34F87DAFA2D3FFBE9688AB20A.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/5D5527D1F3E0A8DC8394212CA9FF2675.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/84DFB995ACDD948E4CD218218AFA71A3.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/8C03BDA8C337DED6FECB39544F6AAD5F.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/8E88DD8F996F6AB8D2FBB5760B1F6648.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/C8403E0F6B1E690E024A67061A50A245.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/CBA6AFA9E5FC26332E7EBA4395433344.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/D8DA53F849F93A4138F54FA9535E7DF9.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/_FAD58DE7366495DB4650CFEFAC2FCD61.index.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "_minted/default.style.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "assets/Optimistic.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "assets/QuantiPhy_logo_pure.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "assets/optimistic.tfm"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "assets/stanford_logo.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "cvpr.sty"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "default.style.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "ieeenat_fullname.bst"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "main.bib"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "main.brf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "main_bk.bib"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/111A8109FA159E1610B21A880DD11D11.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/20E8A2D2B60EFCF38B2F29AFAFD17198.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/2331C19CC78564E7601AF6B0B42D2A46.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/33E6BB1B90559BD8397F3CDFF76CF520.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/34FD73EAF0D5245694F3C6F2A72C8EAC.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/3916253502C2DCFA456B39F105CC5805.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/505C58B34F87DAFA2D3FFBE9688AB20A.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/5D5527D1F3E0A8DC8394212CA9FF2675.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/84DFB995ACDD948E4CD218218AFA71A3.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/8C03BDA8C337DED6FECB39544F6AAD5F.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/8E88DD8F996F6AB8D2FBB5760B1F6648.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/C8403E0F6B1E690E024A67061A50A245.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/CBA6AFA9E5FC26332E7EBA4395433344.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/D8DA53F849F93A4138F54FA9535E7DF9.highlight.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/_FAD58DE7366495DB4650CFEFAC2FCD61.index.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/default.style.minted"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "preamble.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "reduce_image.py"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/0_abstract.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/1_introduction.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/2_related_work.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/3_methodology.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/4_experiments.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/5_discussion.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/X_suppl.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/appendix/a_results.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/appendix/b_collect.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/appendix/c_annotation.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/appendix/d_design.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/appendix/f_human.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/appendix/g_assetcitation.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/SVA.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/VA-paradigm.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/XSC1.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/XSC2.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/XSC3.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/data_distribution.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/data_distribution2.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/data_distribution2.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/data_illustration.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/depth_annotator.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/human_height_measure.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/human_mra_boxplots.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/icons/github-logo.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/icons/hf-logo.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/icons/internet-icon.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/icons/medal1.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/icons/medal2.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/icons/medal3.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/indoor_scene.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/internet_parsing_ui.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/internet_showcase1.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/internet_showcase2.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-fig1-combined-v4.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-fig2-arch-v1.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-fig3-masks-v1.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-fig3-tasks-v1.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-framework-hero-crop.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-framework-hero.svg"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-modes-structure-crop.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-modes-structure.svg"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/openwam-real-setup.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/outdoor_scene.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/parsing-examples1.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/parsing-examples2.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/rigidbody.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/s_m.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/scaled_scene.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/segmentation_ui.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/segmented_blender.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/segmented_internet.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/segmented_lab.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/simple_red_blood_cell.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/simplify_scene_x.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/simplify_to_s_bg.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/simplify_to_x_bg.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/swimring.jpg"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/images/teaser.pdf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/tables/main_results_v2.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/tables/tab_parsing-examples1.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "sec/tables/tab_parsing-examples2.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "stanford.cls"
+      }
+   ],
+   "spec_version" : 1,
+   "texlive_version" : "2023",
+   "process" : {
+      "compiler" : "pdflatex"
+   }
+}

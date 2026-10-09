@@ -1,0 +1,25 @@
+{
+  "title": "OpenWAM: An Open Framework for Composable World-Action Models",
+  "authors": [
+    "Heng Yu",
+    "David D. Yuan",
+    "Juze Zhang",
+    "Changan Chen",
+    "Yao Feng",
+    "Michelle Baldonado",
+    "Steve Cousins",
+    "Li Fei-Fei",
+    "Jiajun Wu",
+    "Ehsan Adeli"
+  ],
+  "venue": "arXiv preprint",
+  "year": 2026,
+  "arxiv_id": "2610.07922v1",
+  "paper_url": "https://arxiv.org/abs/2610.07922",
+  "project_url": "https://openwam.stanford.edu/",
+  "code_url": "https://github.com/OpenWAM/OpenWAM",
+  "local_pdf": "papers/openwam/paper.pdf",
+  "local_markdown": "papers/openwam/paper.md",
+  "english_note": "notes/openwam-an-open-framework-for-composable-world-action-models.md",
+  "chinese_note": "notes/openwam-an-open-framework-for-composable-world-action-models.zh-CN.md"
+}

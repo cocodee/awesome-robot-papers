@@ -1,0 +1,26 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{avg\PYGZus{}accel}   \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{accels}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{accels}\PYG{p}{)}
+\PYG{n}{max\PYGZus{}dev\PYGZus{}a}   \PYG{o}{=} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{a} \PYG{o}{\PYGZhy{}} \PYG{n}{avg\PYGZus{}accel}\PYG{p}{)} \PYG{k}{for} \PYG{n}{a} \PYG{o+ow}{in} \PYG{n}{accels}\PYG{p}{)}
+\PYG{k}{if} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{avg\PYGZus{}accel}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{n}{MIN\PYGZus{}ABS\PYGZus{}ACCEL}\PYG{p}{:}
+    \PYG{n}{max\PYGZus{}rel\PYGZus{}dev\PYGZus{}a} \PYG{o}{=} \PYG{n}{max\PYGZus{}dev\PYGZus{}a} \PYG{o}{/} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{avg\PYGZus{}accel}\PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{n}{max\PYGZus{}rel\PYGZus{}dev\PYGZus{}a} \PYG{o}{=} \PYG{l+m+mf}{0.0}
+
+\PYG{k}{if} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{avg\PYGZus{}accel}\PYG{p}{)} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{MIN\PYGZus{}ABS\PYGZus{}ACCEL}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} acceleration is very small \PYGZhy{}\PYGZgt{} closer to uniform speed / almost static}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{max\PYGZus{}rel\PYGZus{}dev\PYGZus{}a} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{UNIFORM\PYGZus{}ACCEL\PYGZus{}TOLERANCE}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n}{avg\PYGZus{}accel} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} approximately uniformly accelerating}
+            \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+        \PYG{k}{elif} \PYG{n}{avg\PYGZus{}accel} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{0}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} approximately uniformly decelerating}
+            \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} numerically close to zero}
+            \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} not uniformly accelerated}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{MintedVerbatim}

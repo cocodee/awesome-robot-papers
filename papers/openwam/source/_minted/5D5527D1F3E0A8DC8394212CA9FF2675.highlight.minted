@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{scene}\PYG{o}{.}\PYG{n}{frame\PYGZus{}set}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)}
+\PYG{n}{loc} \PYG{o}{=} \PYG{n}{obj}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}world}\PYG{o}{.}\PYG{n}{translation}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{(}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} (x, y, z) in world space}
+\end{MintedVerbatim}

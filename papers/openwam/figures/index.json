@@ -1,0 +1,394 @@
+[
+ {
+  "kind": "figure",
+  "num": "1",
+  "page": 2,
+  "caption": "Figure 1. Overview of OPENWAM. Left: Starting from Wan2.2 [75], causal pretraining on robot and human-interaction video builds a predictive backbone without action labels, followed by video–action training on simulated and real-robot demonstrations. Top right: A shared Mixture-of-Transformers couples temporally aligned video and action streams through joint attention while retaining modality- specific experts. Middle right: Configurable cross-modal attention and generation order support joint, video-then-action, action-then-video, and decoupled prediction within the same architecture. Bottom right: Local-context inverse and forward dynamics models are trained independently using demonstrations and counterfactual transitions. A frozen IDM translates predictions from compatible task-adapted video models into actions, while an FDM predicts the visual consequences of candidate actions.",
+  "file": "figures/fig-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.121,
+   0.049,
+   0.919,
+   0.377
+  ],
+  "label": "fig:openwam-teaser",
+  "source_files": [
+   "sec/images/openwam-fig1-combined-v4.pdf"
+  ],
+  "tex_line": 35,
+  "refs": [
+   "§1 Introduction (L61)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "2",
+  "page": 5,
+  "caption": "Figure 2. Shared MoT architecture. Two modality-specific branches keep their own normalization, projection and feed-forward parameters and meet in a single attention over the packed video and action tokens; a separate cross-attention consumes the task text. Noisy future tokens enter at the bottom and the preceding chunks sit behind as history context.",
+  "file": "figures/fig-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.095,
+   0.09,
+   0.482,
+   0.36
+  ],
+  "label": "fig:openwam-mot-programs",
+  "source_files": [
+   "sec/images/openwam-fig2-arch-v1.pdf"
+  ],
+  "tex_line": 318,
+  "refs": [
+   "§3.3 Configurable Video--Action Interaction P (L314)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "3",
+  "page": 5,
+  "caption": "Figure 3. Attention masks the shared architecture exposes: four interaction programs (A–D) and the two local-context dynamics programs (E–F). Columns are the streams a row may condition on, cell colour gives what it attends to there, and the numeral marks the generation pass. E and F carry one row each because each predicts a single stream: the inverse model produces actions, the forward model observations.",
+  "file": "figures/fig-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.096,
+   0.495,
+   0.481,
+   0.58
+  ],
+  "label": "fig:openwam-masks",
+  "source_files": [
+   "sec/images/openwam-fig3-masks-v1.pdf"
+  ],
+  "tex_line": 344,
+  "refs": [
+   "§3.3 Configurable Video--Action Interaction P (L315)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "4",
+  "page": 6,
+  "caption": "Figure 4. Evaluation tasks. Left: the three real-world bimanual tasks of Table 2, each shown as frames sampled along one successful rollout. Right: the four LIBERO-90 targets of Table 1 used for component transfer, which lie outside the LIBERO-Long source-task set.",
+  "file": "figures/fig-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.108,
+   0.093,
+   0.895,
+   0.303
+  ],
+  "label": "fig:tasks",
+  "source_files": [
+   "sec/images/openwam-fig3-tasks-v1.pdf"
+  ],
+  "tex_line": 385,
+  "refs": [
+   "§4.1 Experimental Setup (L666)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "5",
+  "page": 15,
+  "caption": "Figure 5. Real-world bimanual setup with two Franka FR3 arms, Flexiv Grav grippers, bimanual GELLO teleoperation [83], two wrist-mounted RealSense D405 cameras, and a central Orbbec Femto Mega camera.",
+  "file": "figures/fig-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.517,
+   0.087,
+   0.905,
+   0.275
+  ],
+  "label": "fig:real_robot_setup",
+  "source_files": [
+   "sec/images/openwam-real-setup.png"
+  ],
+  "tex_line": 1221,
+  "refs": [
+   "§A.5 Real Robot Setup (L1228)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "1",
+  "page": 5,
+  "caption": "Table 1. LIBERO-90 targets used for component-transfer evalua- tion.",
+  "file": "figures/tab-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.513,
+   0.128,
+   0.909,
+   0.203
+  ],
+  "label": "tab:transfer-tasks",
+  "source_files": [],
+  "tex_line": 357,
+  "refs": [
+   "§3.3 Configurable Video--Action Interaction P (L390)",
+   "§4.1 Experimental Setup (L634)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "2",
+  "page": 7,
+  "caption": "Table 2. Real-world bimanual manipulation tasks.",
+  "file": "figures/tab-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.513,
+   0.114,
+   0.909,
+   0.173
+  ],
+  "label": "tab:real-world-tasks",
+  "source_files": [],
+  "tex_line": 637,
+  "refs": [
+   "§3.3 Configurable Video--Action Interaction P (L389)",
+   "§4.1 Experimental Setup (L666)",
+   "§4.2 Native Policy Performance (L972)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "3",
+  "page": 8,
+  "caption": "Table 3. Closed-loop success (%) on four LIBERO suites. Baselines are previously reported results.",
+  "file": "figures/tab-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.092,
+   0.128,
+   0.485,
+   0.286
+  ],
+  "label": "tab:libero-broad",
+  "source_files": [],
+  "tex_line": 689,
+  "refs": [
+   "§4.2 Native Policy Performance (L956)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "4",
+  "page": 8,
+  "caption": "Table 4. Closed-loop success (%) on real-world bimanual manipu- lation tasks.",
+  "file": "figures/tab-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.122,
+   0.335,
+   0.452,
+   0.397
+  ],
+  "label": "tab:real-world-native",
+  "source_files": [],
+  "tex_line": 761,
+  "refs": [
+   "§4.2 Native Policy Performance (L971)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "5",
+  "page": 9,
+  "caption": "Table 5. Frozen inverse dynamics transfer to four LIBERO-90 targets. Target rows use task-tuned video predictors while source-trained IDMs remain frozen. Mean is averaged over the four target tasks.",
+  "file": "figures/tab-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.142,
+   0.128,
+   0.854,
+   0.289
+  ],
+  "label": "tab:component-transfer",
+  "source_files": [],
+  "tex_line": 785,
+  "refs": [
+   "§4.3 Component Composability (L991)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "6",
+  "page": 9,
+  "caption": "Table 6. Source-task composition on LIBERO-Long, all action components evaluated with LIBERO-Long video predictor.",
+  "file": "figures/tab-06.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.113,
+   0.338,
+   0.464,
+   0.437
+  ],
+  "label": "tab:component-source",
+  "source_files": [],
+  "tex_line": 875,
+  "refs": [
+   "§4.3 Component Composability (L987)",
+   "§4.3 Component Composability (L991)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "7",
+  "page": 9,
+  "caption": "Table 7. Local-context FDM prediction on counterfactual transi- tions. MSE values are reported in units of 10−3. Outcome accuracy measures identification of the matching realized future by RGB MSE among K same-state outcomes.",
+  "file": "figures/tab-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.092,
+   0.514,
+   0.482,
+   0.591
+  ],
+  "label": "tab:fdm",
+  "source_files": [],
+  "tex_line": 916,
+  "refs": [
+   "§4.4 Action-Conditioned Forward Dynamics (L1018)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "8",
+  "page": 16,
+  "caption": "Table 8. Data used for causal robot-video pretraining.",
+  "file": "figures/tab-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.151,
+   0.114,
+   0.849,
+   0.26
+  ],
+  "label": "tab:pretraining-corpus",
+  "source_files": [],
+  "tex_line": 1236,
+  "refs": [
+   "§B.1 Pretraining Corpus (L1308)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "9",
+  "page": 16,
+  "caption": "Table 9. Scale of LIBERO-Long-CF and the source LIBERO-Long demonstration corpus.",
+  "file": "figures/tab-09.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.52,
+   0.318,
+   0.902,
+   0.436
+  ],
+  "label": "tab:libero-cf-scale",
+  "source_files": [],
+  "tex_line": 1364,
+  "refs": []
+ },
+ {
+  "kind": "table",
+  "num": "10",
+  "page": 17,
+  "caption": "Table 10. Intervention composition of LIBERO-Long-CF. Cat- egories denote generation recipes and may induce overlapping physical effects.",
+  "file": "figures/tab-10.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.101,
+   0.142,
+   0.476,
+   0.269
+  ],
+  "label": "tab:libero-cf-composition",
+  "source_files": [],
+  "tex_line": 1403,
+  "refs": [
+   "§C.1 Scale and Intervention Coverage (L1401)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "11",
+  "page": 17,
+  "caption": "Table 11. Physical interaction statistics for LIBERO-Long-CF. Categories overlap.",
+  "file": "figures/tab-11.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.153,
+   0.326,
+   0.424,
+   0.402
+  ],
+  "label": "tab:libero-cf-interaction",
+  "source_files": [],
+  "tex_line": 1458,
+  "refs": [
+   "§C.2 State and Interaction Coverage (L1453)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "12",
+  "page": 17,
+  "caption": "Table 12. Effect of video-backbone initialization on closed-loop LIBERO-Long success. Downstream architecture and training are held fixed within each interaction program.",
+  "file": "figures/tab-12.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.56,
+   0.142,
+   0.863,
+   0.218
+  ],
+  "label": "tab:init-program-ablation",
+  "source_files": [],
+  "tex_line": 1513,
+  "refs": [
+   "§D.1 Effect of Video-Backbone Initialization (L1505)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "13",
+  "page": 17,
+  "caption": "Table 13. Effect of the Mixture-of-Transformers architecture on closed-loop LIBERO-Long success. All variants use robot-video- pretrained initialization.",
+  "file": "figures/tab-13.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.589,
+   0.292,
+   0.834,
+   0.355
+  ],
+  "label": "tab:mot-ablation",
+  "source_files": [],
+  "tex_line": 1541,
+  "refs": [
+   "§D.2 Effect of the Mixture-of-Transformers Ar (L1686)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "14",
+  "page": 18,
+  "caption": "Table 14. Policy and dynamics accuracy on LIBERO-Long. LC-IDM and LC-FDM are independently trained specialist checkpoints; the multi-objective model trains policy, IDM, and FDM within a single checkpoint. Lower is better for MSE and IDM error; higher is better for success and SSIM.",
+  "file": "figures/tab-14.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.093,
+   0.142,
+   0.907,
+   0.25
+  ],
+  "label": "tab:external-dynamics",
+  "source_files": [],
+  "tex_line": 1566,
+  "refs": [
+   "§E External Dynamics Comparison (L1697)"
+  ]
+ }
+]

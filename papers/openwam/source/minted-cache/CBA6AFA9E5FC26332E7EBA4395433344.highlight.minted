@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{disp\PYGZus{}y} \PYG{o}{=} \PYG{l+m+mf}{0.5} \PYG{o}{*} \PYG{n}{ACCEL} \PYG{o}{*} \PYG{p}{(}\PYG{n}{t} \PYG{o}{*}\PYG{o}{*} \PYG{l+m+mi}{2}\PYG{p}{)}
+\PYG{n}{new\PYGZus{}y}  \PYG{o}{=} \PYG{n}{start\PYGZus{}loc}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n}{disp\PYGZus{}y}
+\PYG{n}{obj}\PYG{o}{.}\PYG{n}{location} \PYG{o}{=} \PYG{n}{Vector}\PYG{p}{(}\PYG{p}{(}\PYG{n}{start\PYGZus{}loc}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{new\PYGZus{}y}\PYG{p}{,} \PYG{n}{start\PYGZus{}loc}\PYG{o}{.}\PYG{n}{z}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{obj}\PYG{o}{.}\PYG{n}{keyframe\PYGZus{}insert}\PYG{p}{(}\PYG{n}{data\PYGZus{}path}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{location}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{index}\PYG{o}{=}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{frame}\PYG{o}{=}\PYG{n}{f}\PYG{p}{)}
+\end{MintedVerbatim}

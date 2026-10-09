@@ -21,7 +21,7 @@ python scripts/update_readme_zh_notes.py
 <!-- ZH_NOTES_LIST_START -->
 ## 中文论文笔记
 
-共 27 篇中文笔记。此列表由 `python scripts/update_readme_zh_notes.py` 生成。
+共 30 篇中文笔记。此列表由 `python scripts/update_readme_zh_notes.py` 生成。
 
 | 论文 | 会议/年份 | 链接 |
 | --- | --- | --- |
@@ -44,6 +44,7 @@ python scripts/update_readme_zh_notes.py
 | Qwen-RobotWorld 技术报告：通过语言条件视频生成统一具身世界建模 | arXiv，2026 | [笔记](notes/Qwen-RobotWorld-Technical-Report-Unifying-Embodied-World-Modeling-through-Language-Conditioned-Video-Generation.zh-CN.md) / [来源](https://arxiv.org/pdf/2606.17030) / [项目](https://qwen.ai/blog?id=qwen-robotworld) |
 | Qwen-VLA: 统一任务、环境和机器人本体的视觉-语言-动作建模 | - | [笔记](notes/Qwen-VLA-Unifying-Vision-Language-Action-Modeling-across-Tasks-Environments-and-Robot-Embodiments.zh-CN.md) / [来源](https://arxiv.org/pdf/2605.30280) / [代码](https://github.com/QwenLM/Qwen-VLA) |
 | RISE：基于组合式世界模型的机器人策略自我提升 | arXiv，2026 | [笔记](notes/RISE-Self-Improving-Robot-Policy-with-Compositional-World-Model.zh-CN.md) / [来源](https://arxiv.org/pdf/2602.11075) / [项目](https://opendrivelab.com/RISE) / [代码](https://github.com/OpenDriveLab/RISE) |
+| Real-Time EXPO-FT 精讲教程：面向实时机器人的 VLA 强化学习微调 | - | [笔记](notes/Reinforcement-Learning-for-Real-Time-Vision-Language-Action-Policies.zh-CN.md) |
 | SmoothRL：异步执行下的在线强化学习 | arXiv，2026 | [笔记](notes/SmoothRL-Online-Reinforcement-Learning-During-Asynchronous-Execution.zh-CN.md) / [来源](https://arxiv.org/pdf/2608.29768) / [项目](https://www.astribot.com/research/SmoothRL) |
 | StarVLA: 面向 VLA 模型开发的乐高式代码库 | - | [笔记](notes/StarVLA-A-Lego-like-Codebase-for-Vision-Language-Action-Model-Developing.zh-CN.md) / [来源](https://arxiv.org/pdf/2604.05014) / [项目](https://starvla.github.io) / [代码](https://github.com/starVLA/starVLA) |
 | Tuna-2：像素嵌入在多模态理解与生成中超过视觉编码器 | arXiv，2026 | [笔记](notes/Tuna-2-Pixel-Embeddings-Beat-Vision-Encoders-for-Multimodal-Understanding-and-Generation.zh-CN.md) / [来源](https://arxiv.org/pdf/2604.24763) / [项目](https://tuna-ai.org/tuna-2/) / [代码](https://github.com/facebookresearch/tuna-2) |
@@ -52,6 +53,8 @@ python scripts/update_readme_zh_notes.py
 | World Action Models 综述：少做梦，多行动 | arXiv，2026 | [笔记](notes/World-Action-Models-A-Survey.zh-CN.md) / [来源](https://arxiv.org/pdf/2606.20781) / [项目](https://world-action-models.github.io/) |
 | XRZero-G0：用接口、质量与比例推进灵巧机器人操作前沿 | arXiv，2026 | [笔记](notes/XRZero-G0-Pushing-the-Frontier-of-Dexterous-Robotic-Manipulation-with-Interfaces-Quality-and-Ratios.zh-CN.md) / [来源](https://arxiv.org/pdf/2604.13001) / [代码](https://github.com/X-Square-Robot/XRZero-G0) |
 | Xiaomi-Robotics-1：用超过 10 万小时真实轨迹扩展视觉-语言-动作模型 | arXiv，2026 | [笔记](notes/Xiaomi-Robotics-1-Scaling-Vision-Language-Action-Models-with-over-100K-Hours-of-Real-World-Trajectories.zh-CN.md) / [来源](https://arxiv.org/pdf/2607.15330) / [项目](https://robotics.xiaomi.com/xiaomi-robotics-1.html) |
+| OpenWAM：可组合世界动作模型的开放框架 | arXiv，2026 | [笔记](notes/openwam-an-open-framework-for-composable-world-action-models.zh-CN.md) / [来源](https://arxiv.org/abs/2610.07922) / [项目](https://openwam.stanford.edu/) / [代码](https://github.com/OpenWAM/OpenWAM) |
+| TEMPO：为动态机器人操作学习时间上下文 | CoRL 2026；arXiv:2609.16864v1。 | [笔记](notes/tempo-learning-temporal-context-for-dynamic-robot-manipulation.zh-CN.md) / [来源](https://arxiv.org/abs/2609.16864) / [项目](https://tempo-robot.github.io/) / [代码](https://github.com/tempo-robot/TEMPO) |
 
 <!-- ZH_NOTES_LIST_END -->
 

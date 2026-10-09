@@ -1,0 +1,16 @@
+\begin{wraptable}{r}{0.45\columnwidth}
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+Method & Flick Catch & Wine Pour \\
+\midrule
+RTC~\cite{rtc} & 0\% & 0\% \\
+VLASH~\cite{vlash} & 0\% & 0\% \\
+\ours~(Ours) & \textbf{68\%} & \textbf{97.6\%} \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Success on the untrimmed Flick Catch and Wine Pour}, where each episode retains the release-and-retract phase that produces state aliasing. Both asynchronous baselines fail every rollout; \ours\ completes the task by using \TEMPOACT\ to disambiguate phases the current frame cannot.}
+\label{tab:state_alias}
+\end{wraptable}

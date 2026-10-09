@@ -1,0 +1,29 @@
+% \section{Related Work}
+% \label{sec:related-work}
+
+% \noindent\textbf{Dynamic Tasks for Robotics.}
+% Dynamic tasks have been a long-studied problem in the robotics field for more than a decade, and have produced plentiful impressive results on complex, fast-moving tasks: Table Tennis~\cite{tabletennis, mstennis}, Object Tossing~\cite{zeng2020tossingbot, flingbot, dynamichandover}, and Object Catching~\cite{catchit, dynamichandover}. However, prior work mostly focuses on explicitly tracking and modeling object physics and translating it into the corresponding robot actions. Although this line of work achieves impressive results, it is far from generalizable: each system is typically an entire pipeline designed for a single task and does not transfer to other dynamic tasks. This brings us to Vision-Language-Action models, which are pretrained on much larger datasets and designed to be generalizable.
+
+% \noindent\textbf{Vision-Language-Action Model for Dynamic Tasks.} Vision-Language-Action (VLA) models have recently seen significant advances in the robotics field. Many state-of-the-art models can be fine-tuned in dozens of GPU-hours to perform complex, long-horizon tasks~\cite{openvla, rt2, octo, vla-adapter, pi05}. Within this fast-moving field, dynamic tasks stands apart from typical VLA benchmarks: they often involve a constantly evolving environment and moving objects, and require the VLA to react in order to succeed. So far, research has focused on reducing the delay between action-chunk executions, known as asynchronous inference, as detailed below.
+
+% \noindent\textbf{Asynchronous Inference for Dynamic Tasks.} 
+% In an effort to adapt VLA models to dynamic tasks, research began exploring ways to cut the inference delay between action-chunk executions~\cite{leave_no, rtc,smolvla}. SmolVLA~\cite{smolvla} introduced an asynchronous-inference pipeline that begins policy inference preemptively, before the current action chunk finishes executing. This hides the idle gap in which a standard VLA waits for the next chunk to be predicted after the current one ends. However, the observation that launches inference is stale by the time the new chunk begins, and this mismatch produces jittery motion at chunk transitions. RTC~\cite{rtc} and VLASH~\cite{vlash} each introduce a way to smooth this transition, followed by many other works~\cite{dynamicvla, f2fap}. However, to date, no VLA has addressed a crucial aspect of dynamic tasks: motion understanding.
+
+
+% %===============================================================================
+
+
+\section{Related Work}
+\label{sec:related-work}
+
+\noindent\textbf{Dynamic Tasks for Robotics.}
+Dynamic manipulation has a long research history, with compelling results on table tennis~\cite{tabletennis, mstennis}, object tossing~\cite{zeng2020tossingbot, flingbot}, and aerial catching~\cite{catchit, dynamichandover}. These systems achieve strong performance by explicitly modeling object physics and designing task-specific controllers, but each is an end-to-end pipeline for a single scenario that does not transfer to other tasks. In contrast, pretrained VLA models~\cite{brohan2022rt, driess2023palm, openvla, rt2, octo, pi0, pi05} generalize across tasks without per-task engineering; extending them to dynamic settings is the focus of this work.
+
+\noindent\textbf{Asynchronous Inference for Dynamic Tasks.}
+A prominent line of work addresses the \emph{execution timing} problem: inference latency of VLA models causes the executed chunk~\cite{chi2023diffusion,zhao2023act} to be conditioned on a stale observation. SmolVLA~\cite{smolvla}, RTC~\cite{rtc}, VLASH~\cite{vlash}, and Leave No Observation Behind~\cite{leave_no} each reduce or correct for this staleness. DynamicVLA~\cite{dynamicvla} co-designs a compact VLA architecture with continuous inference and latent-aware streaming for lower-latency dynamic control. F2F-AP~\cite{f2fap} takes a different route within the same problem: it predicts optical flow to synthesize an anticipated future frame, giving the policy visual context that compensates for latency. \ours\ is orthogonal to all of these: asynchronous inference addresses \emph{when} a prediction is applied; \ours\ addresses \emph{what} the policy is conditioned on. Even with a fresh or anticipated observation, a snapshot cannot encode how the scene is evolving or disambiguate sequential task phases. We build \ours\ on the asynchronous backbone of~\cite{vlash} so our experiments directly isolate the contribution of motion-aware representation; the two approaches are complementary and can be combined.
+
+\noindent\textbf{Visual and Visuomotor Representations in Robot Learning.}
+A parallel line of work asks what \emph{static} representation a policy should be conditioned on. Visual pretraining from large-scale ego-centric or robot video~\cite{r3m, mvp, sensorimotor} learns transferable features~\cite{data4robotics} before any downstream policy fine-tuning. RoboAffordances~\cite{roboaffordances} instead distills task-agnostic affordance priors from human videos, and HPT~\cite{hpt} scales pretraining across heterogeneous embodiments. UVT~\cite{uvt} and Anchor-Align~\cite{anchoralign} shape the training \emph{signal} rather than the input. All of these methods condition the policy on a single frame. \ours\ instead supplying the temporal context that no single frame can carry.
+
+
+%===============================================================================

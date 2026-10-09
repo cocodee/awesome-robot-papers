@@ -1,0 +1,22 @@
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+Method & Bottle Handover & Drop Catch & Flick Catch & Wine Pour & Average \\
+\midrule
+% $\pi_{0.5}$ & & & & \\
+RTC~\cite{rtc} & 44\% & 80\% & 48\% & 80.8\% & 63.2\% \\
+VLASH~\cite{vlash} & 38\% & 38\% & 20\% & 94.0\% & 47.5\% \\
+\ours~(Ours)  & 74\% & 66\% & 66\% & \textbf{98.1\%} & 76.0\% \\
+TEMPO+UVT~\cite{uvt} & \textbf{88\%} & \textbf{88\%} & \textbf{76\%} & 96.7\% & \textbf{87.2\%}\\
+\bottomrule
+\end{tabular}
+\vspace{1em}
+\caption{\textbf{Success rates across the four dynamic tasks.} Each
+entry is the percentage of $50$ real-world rollouts in which the policy completes
+the task, evaluated under varied object speeds, appearances,
+and approach directions. For Wine Pour task, instead of recording binary success or failure, we measure the percentage of the "wine" mass retained in the pot at the end of the pour.}
+\label{tab:success_rates}
+\vspace{-4mm}
+\end{table}

@@ -1,0 +1,95 @@
+\backcite {driess2023palm}{{2}{1}{section.1}}
+\backcite {vuong2023open}{{2}{1}{section.1}}
+\backcite {grauman2022ego4d}{{2}{1}{section.1}}
+\backcite {mangalam2023egoschema}{{2}{1}{section.1}}
+\backcite {xiang2023wild2avatar}{{2}{1}{section.1}}
+\backcite {xiang2025neuhmr}{{2}{1}{section.1}}
+\backcite {tian2024drivevlm}{{2}{1}{section.1}}
+\backcite {wen2024foundationpose}{{2}{1}{section.1}}
+\backcite {yiCLEVRERCOLLISIONEVENTS2020}{{2}{1}{section.1}}
+\backcite {xu2025deepphy}{{2}{1}{section.1}}
+\backcite {chowPhysBenchBenchmarkingEnhancing2025}{{2}{1}{section.1}}
+\backcite {vsi}{{2}{1}{section.1}}
+\backcite {bakhtinPHYRENewBenchmark2019}{{2}{2.1}{subsection.2.1}}
+\backcite {yiCLEVRERCOLLISIONEVENTS2020}{{2}{2.1}{subsection.2.1}}
+\backcite {tungPhysionEvaluatingPhysical}{{2}{2.1}{subsection.2.1}}
+\backcite {chowPhysBenchBenchmarkingEnhancing2025}{{2}{2.1}{subsection.2.1}}
+\backcite {wu2024star}{{2}{2.1}{subsection.2.1}}
+\backcite {grunde2021agqa}{{2}{2.1}{subsection.2.1}}
+\backcite {zheng2024contphy}{{2}{2.1}{subsection.2.1}}
+\backcite {antol2015vqa}{{2}{2.1}{subsection.2.1}}
+\backcite {tapaswi2016movieqa}{{2}{2.1}{subsection.2.1}}
+\backcite {xiao2021next}{{2}{2.1}{subsection.2.1}}
+\backcite {yi2018neural}{{2}{2.1}{subsection.2.1}}
+\backcite {vsi}{{2}{2.1}{subsection.2.1}}
+\backcite {yang2025cambrian}{{2}{2.1}{subsection.2.1}}
+\backcite {chowPhysBenchBenchmarkingEnhancing2025}{{3}{2.2}{subsection.2.2}}
+\backcite {bansal2025videophy}{{3}{2.2}{subsection.2.2}}
+\backcite {kangHowFarVideo2024}{{3}{2.2}{subsection.2.2}}
+\backcite {azzolini2025cosmos}{{3}{2.2}{subsection.2.2}}
+\backcite {beauchemin1995computation}{{3}{2.3}{subsection.2.3}}
+\backcite {horn1981determining}{{3}{2.3}{subsection.2.3}}
+\backcite {redmon2016you}{{3}{2.3}{subsection.2.3}}
+\backcite {zhang2022bytetrack}{{3}{2.3}{subsection.2.3}}
+\backcite {giachetti2002use}{{3}{2.3}{subsection.2.3}}
+\backcite {sangsuwan2024video}{{3}{2.3}{subsection.2.3}}
+\backcite {resnick2017using}{{3}{2.3}{subsection.2.3}}
+\backcite {allen2020rapid}{{3}{2.3}{subsection.2.3}}
+\backcite {gerstenberg2021counterfactual}{{3}{2.3}{subsection.2.3}}
+\backcite {li2022learning}{{3}{2.3}{subsection.2.3}}
+\backcite {chowPhysBenchBenchmarkingEnhancing2025}{{4}{3.1}{figure.caption.2}}
+\backcite {vsi}{{4}{3.1}{figure.caption.2}}
+\backcite {ravi2024sam2}{{5}{3.2}{subsection.3.2}}
+\backcite {Sketchfab}{{5}{3.2}{subsection.3.2}}
+\backcite {OpenAIgpt5.1}{{6}{4.1}{subsection.4.1}}
+\backcite {OpenAIgpt5}{{6}{4.1}{subsection.4.1}}
+\backcite {google2025gemini25flash}{{6}{4.1}{subsection.4.1}}
+\backcite {google2025gemini25pro}{{6}{4.1}{subsection.4.1}}
+\backcite {grok41}{{6}{4.1}{subsection.4.1}}
+\backcite {anthropic2025claude45sonnet}{{6}{4.1}{subsection.4.1}}
+\backcite {vsi}{{6}{4.1}{subsection.4.1}}
+\backcite {OpenAIgpt5.1}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {google2025gemini25pro}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {google2025gemini25flash}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {grok41}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {OpenAIgpt5}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {anthropic2025claude45sonnet}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {bai2025qwen25vl}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {chen2024internvl}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {bai2025qwen25vl}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {chen2024internvl}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {allenai2025molmo}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {microsoft2025phi4multi}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {bai2025qwen25vl}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {marafioti2025smolvlm}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {chen2024internvl}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {lin2023vila}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {wang2024cogvlm2}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {microsoft2024phi3}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {liu2023visual}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {yao2024minicpmv}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {adept2023fuyu}{{8}{\caption@xref {??}{ on input line 56}}{table.caption.4}}
+\backcite {yang2025thinking}{{4}{A.2}{equation.1}}
+\backcite {cai2025holistic}{{4}{A.2}{equation.1}}
+\backcite {sridhar2025vreason}{{4}{A.2}{equation.1}}
+\backcite {ravi2024sam2}{{20}{C.4}{subsection.C.4}}
+\backcite {ren2024grounding}{{21}{C.4}{subsection.C.4}}
+\backcite {wen2024foundationpose}{{29}{D.2}{subsection.D.2}}
+\backcite {OpenAIgpt5.1}{{31}{E}{figure.caption.46}}
+\backcite {OpenAIgpt5}{{31}{E}{figure.caption.46}}
+\backcite {google2025gemini25pro}{{31}{E}{figure.caption.46}}
+\backcite {google2025gemini25flash}{{31}{E}{figure.caption.46}}
+\backcite {anthropic2025claude45sonnet}{{31}{E}{figure.caption.46}}
+\backcite {xai2025grok41}{{31}{E}{figure.caption.46}}
+\backcite {liu2023visual}{{31}{E}{figure.caption.46}}
+\backcite {lin2023vila}{{31}{E}{figure.caption.46}}
+\backcite {bai2025qwen25vl}{{31}{E}{figure.caption.46}}
+\backcite {bai2025qwen25vl}{{31}{E}{figure.caption.46}}
+\backcite {chen2024internvl}{{31}{E}{figure.caption.46}}
+\backcite {adept2023fuyu}{{31}{E}{figure.caption.46}}
+\backcite {allenai2025molmo}{{31}{E}{figure.caption.46}}
+\backcite {marafioti2025smolvlm}{{31}{E}{figure.caption.46}}
+\backcite {microsoft2025phi4multi}{{31}{E}{figure.caption.46}}
+\backcite {microsoft2024phi3}{{31}{E}{figure.caption.46}}
+\backcite {yao2024minicpmv}{{31}{E}{figure.caption.46}}
+\backcite {wang2024cogvlm2}{{31}{E}{figure.caption.46}}

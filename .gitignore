@@ -1,0 +1,5 @@
+# The official OpenWAM checkout is retained locally for paper reading.
+papers/openwam/code/
+# Official TEMPO checkouts are retained locally for paper reading.
+papers/tempo-learning-temporal-context-for-dynamic-robot-manipulation/code/
+papers/tempo-learning-temporal-context-for-dynamic-robot-manipulation/benchmark/

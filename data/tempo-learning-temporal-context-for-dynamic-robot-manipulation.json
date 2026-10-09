@@ -1,0 +1,15 @@
+{
+  "title": "TEMPO: Learning Temporal Context for Dynamic Robot Manipulation",
+  "authors": ["Zhenyang Feng", "Jimin Heo", "Erik B. Sudderth", "Unnat Jain"],
+  "venue": "CoRL 2026",
+  "arxiv_id": "2609.16864",
+  "source": "https://arxiv.org/abs/2609.16864",
+  "project": "https://tempo-robot.github.io/",
+  "code": "https://github.com/tempo-robot/TEMPO",
+  "benchmark": "https://github.com/tempo-robot/TempoBench",
+  "pdf": "../papers/tempo-learning-temporal-context-for-dynamic-robot-manipulation/paper.pdf",
+  "converted_markdown": "../papers/tempo-learning-temporal-context-for-dynamic-robot-manipulation/paper.md",
+  "notes_en": "../notes/tempo-learning-temporal-context-for-dynamic-robot-manipulation.md",
+  "notes_zh": "../notes/tempo-learning-temporal-context-for-dynamic-robot-manipulation.zh-CN.md",
+  "checked_on": "2026-10-09"
+}

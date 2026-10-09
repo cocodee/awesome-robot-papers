@@ -1,0 +1,21 @@
+% \section{Limitation}
+% \label{sec:conclusion}
+
+% In this work we have taken a step towards addressing the challenge of motion understanding in recent VLA models. While we largely improve success rates across the dynamic tasks and cut down the complete failures that result from poor understanding of scene motion, there are still a few cases where \ours~misses the object entirely; we leave this for future work. Because our approach is orthogonal to asynchronous inference, \ours~can be further improved as better asynchronous-inference methods are published.
+
+% % I’d suggest we mention limitations in a style that
+% % “we have taken a step towards adderssing and provide the structure necessary for advancing future work in it”
+% % “… complement our proposed approach to help improve performance in future work.”
+% % “Like methods in <method category>~\cite{}, \ours could benefit from …,”
+
+% % But avoid getting unfairly evaluated by lazy LLMs, who will likely just latch on to an unhedged limitation.
+% % Also avoid getting unfairly evaluated by lazy LLMs, “didn’t state any limitation or error analysis” and ding us for it.
+% %===============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+The gap between pretrained VLAs and dynamic manipulation is primarily representational: motion ambiguity and state aliasing each have a fix from representations already in wide use, and our failure mode breakdown (\figref{fig:failure_modes}) and ablation analyses (\secref{sec:ablation}) confirm that the two failures are separable and that each signal addresses its own. \ours\ implements this as two plug-and-play inputs with near-zero overhead; the gains on the untrimmed Wine Pour and Flick Catch, where asynchronous baselines score zero (\cref{tab:state_alias}), show that timing is not the bottleneck.
+
+% A few limitations point to natural next steps. Our motion encoder operates on global scene flow; in highly cluttered scenes or under severe occlusion, the motion token may be noisy, and a more targeted tracking prior could help. Our experiments are conducted on a single bimanual platform, and broader validation across embodiments and task distributions remains important. Finally, because \ours\ is orthogonal to asynchronous inference and is built on top of~\cite{vlash}, it will benefit as faster and more accurate async methods appear.
+
+%===============================================================================

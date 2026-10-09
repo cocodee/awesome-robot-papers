@@ -1,0 +1,28 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{prev\PYGZus{}speed} \PYG{o}{=} \PYG{k+kc}{None}
+\PYG{n}{prev\PYGZus{}frame} \PYG{o}{=} \PYG{k+kc}{None}
+
+\PYG{k}{for} \PYG{n}{frame} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{frame\PYGZus{}start}\PYG{p}{,} \PYG{n}{frame\PYGZus{}end} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{scene}\PYG{o}{.}\PYG{n}{frame\PYGZus{}set}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{)}
+    \PYG{n}{loc} \PYG{o}{=} \PYG{n}{obj}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}world}\PYG{o}{.}\PYG{n}{translation}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{if} \PYG{n}{prev\PYGZus{}frame} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n}{dt}    \PYG{o}{=} \PYG{l+m+mf}{0.0}
+        \PYG{n}{speed} \PYG{o}{=} \PYG{l+m+mf}{0.0}
+        \PYG{n}{accel} \PYG{o}{=} \PYG{k+kc}{None}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{dt}      \PYG{o}{=} \PYG{p}{(}\PYG{n}{frame} \PYG{o}{\PYGZhy{}} \PYG{n}{prev\PYGZus{}frame}\PYG{p}{)} \PYG{o}{/} \PYG{n}{fps}
+        \PYG{n}{disp}    \PYG{o}{=} \PYG{n}{loc} \PYG{o}{\PYGZhy{}} \PYG{n}{prev\PYGZus{}loc}
+        \PYG{n}{vel\PYGZus{}vec} \PYG{o}{=} \PYG{n}{disp} \PYG{o}{/} \PYG{n}{dt}
+        \PYG{n}{speed}   \PYG{o}{=} \PYG{n}{vel\PYGZus{}vec}\PYG{o}{.}\PYG{n}{length}
+
+        \PYG{k}{if} \PYG{n}{prev\PYGZus{}speed} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n}{accel} \PYG{o}{=} \PYG{k+kc}{None}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{accel} \PYG{o}{=} \PYG{p}{(}\PYG{n}{speed} \PYG{o}{\PYGZhy{}} \PYG{n}{prev\PYGZus{}speed}\PYG{p}{)} \PYG{o}{/} \PYG{n}{dt}   \PYG{c+c1}{\PYGZsh{} a\PYGZus{}i}
+
+    \PYG{n}{write\PYGZus{}per\PYGZus{}frame\PYGZus{}entry}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{,} \PYG{n}{speed}\PYG{p}{,} \PYG{n}{accel}\PYG{p}{)}
+    \PYG{n}{prev\PYGZus{}loc}   \PYG{o}{=} \PYG{n}{loc}
+    \PYG{n}{prev\PYGZus{}speed} \PYG{o}{=} \PYG{n}{speed}
+    \PYG{n}{prev\PYGZus{}frame} \PYG{o}{=} \PYG{n}{frame}
+\end{MintedVerbatim}

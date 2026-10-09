@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{distances} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mf}{0.0}\PYG{p}{]}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{positions}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{d} \PYG{o}{=} \PYG{p}{(}\PYG{n}{positions}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{positions}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{o}{.}\PYG{n}{length}
+    \PYG{n}{distances}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{distances}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{d}\PYG{p}{)}
+\PYG{n}{total\PYGZus{}length} \PYG{o}{=} \PYG{n}{distances}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{duration}     \PYG{o}{=} \PYG{p}{(}\PYG{n}{frame\PYGZus{}end} \PYG{o}{\PYGZhy{}} \PYG{n}{frame\PYGZus{}start}\PYG{p}{)} \PYG{o}{/} \PYG{n}{fps}
+\end{MintedVerbatim}

@@ -1,0 +1,619 @@
+\section{Related Work}
+\label{sec:related}
+
+% \subsection{Visuomotor Policies and Predictive Control}
+
+% Behavior cloning provides the standard supervised formulation for visuomotor policy learning, mapping observations and task context directly to demonstrated actions. ACT and Diffusion Policy
+% \cite{zhao2023learning, chi2025diffusion} established action chunking and generative action prediction as effective control primitives. RT-1/RT-2, OpenVLA, Octo, and the
+% $\pi$ family \cite{brohan2022rt, brohan2023rt, kim2024openvla, black2024pi_0, intelligence2025pi_} extended this
+% paradigm through language conditioning, large-scale pretraining, and cross-task or cross-embodiment learning. Open X-Embodiment \cite{o2024open} further demonstrated the value of heterogeneous robot
+% data.
+
+% Predictive policies expose an additional interface by modeling future
+% observations or latent states. Dreamer and DayDreamer
+% \cite{hafner2019dream, hafner2023mastering, wu2023daydreamer} learn latent dynamics for control, while GR-1/GR-2 and RoboDreamer \cite{wu2024unleashing, cheang2024gr, zhou2024robodreamer} use future prediction for policy learning or planning. WorldEval and Ctrl-World \cite{li2025worldeval, guo2026ctrl} use rollouts to assess policy behavior.
+
+% Action-conditioned world models provide a complementary perspective by
+% predicting how an environment evolves under a supplied action sequence.
+% A2World and $\tau_0$-WM \cite{huang2026learning, zhou2026tau_0} develop such models
+% for simulation, candidate evaluation, or policy learning, while
+% World-Coherent Decoding \cite{zhang2026worldcoherent} treats future--action pairs
+% as hypotheses that can be selected and checked after execution. Together, these methods show that predictive models can support action generation, simulation, and evaluation. However, action-conditioned prediction and video--action policy generation are often developed as separate components, leaving open how explicit prediction–action interfaces affect component reuse across tasks.
+
+% \subsection{Visuomotor Policies and Predictive Control}
+
+% Behavior cloning provides the standard supervised formulation for visuomotor
+% policy learning, mapping observations and task context directly to demonstrated
+% actions. ACT and Diffusion Policy
+% \cite{zhao2023learning, chi2025diffusion} established action chunking and
+% generative action prediction as effective control primitives. RT-1/RT-2,
+% OpenVLA, Octo, and the $\pi$ family
+% \cite{brohan2022rt, brohan2023rt, kim2024openvla, black2024pi_0,
+% intelligence2025pi_} extended this paradigm through language conditioning,
+% large-scale pretraining, and cross-task or cross-embodiment learning.
+% Open X-Embodiment~\cite{o2024open} further demonstrated the value of
+% heterogeneous robot data.
+
+% Predictive policies expose an additional interface by modeling future
+% observations or latent states. Early visual-foresight methods combined
+% action-conditioned video prediction with model-predictive control for robotic
+% manipulation~\cite{finn2017deep,ebert2018visual}. Dreamer and DayDreamer
+% \cite{hafner2019dream, hafner2023mastering, wu2023daydreamer} learn latent
+% dynamics for control, while GR-1/GR-2 and RoboDreamer
+% \cite{wu2024unleashing, cheang2024gr, zhou2024robodreamer} use future
+% prediction for policy learning or planning. WorldEval and Ctrl-World
+% \cite{li2025worldeval, guo2026ctrl} use predictive rollouts to assess policy
+% behavior.
+
+% Action-conditioned world models provide a complementary perspective by
+% predicting how an environment evolves under a supplied action sequence.
+% A2World and $\tau_0$-WM
+% \cite{huang2026learning, zhou2026tau_0} develop such models for simulation,
+% candidate evaluation, or policy learning. GPC~\cite{qi2026inference} trains an action-conditioned world model from expert
+% demonstrations and exploratory rollouts, then uses predictive look-ahead to
+% rank and refine policy proposals at inference time.
+% World-Coherent Decoding~\cite{zhang2026worldcoherent} similarly treats
+% future--action pairs as hypotheses that can be selected and checked after
+% execution. Together, these methods show that predictive models can support
+% action generation, simulation, planning, and evaluation. However,
+% action-conditioned prediction and video--action policy generation are often
+% developed as separate components, leaving open how explicit
+% prediction--action interfaces affect component reuse across tasks.
+
+\subsection{Visuomotor Policies and Predictive Control}
+
+Behavior cloning provides the standard supervised formulation for visuomotor
+policy learning, mapping observations and task context directly to demonstrated
+actions. Action chunking and generative action prediction have become effective
+control primitives~\cite{zhao2023learning, chi2025diffusion}, while large-scale
+vision--language--action models extend this paradigm through language
+conditioning, pretraining, and cross-task or cross-embodiment learning
+\cite{brohan2022rt, brohan2023rt, kim2024openvla, black2024pi_0,
+intelligence2025pi_, o2024open, team2024octo}.
+
+Predictive control introduces an additional interface by explicitly modeling
+future observations or latent states. Early visual-foresight methods combined
+action-conditioned video prediction with model-predictive control for robotic
+manipulation~\cite{finn2017deep,ebert2018visual}. Subsequent work learns latent
+or visual dynamics to support policy learning, planning, and imagined rollouts
+\cite{hafner2019dream, hafner2023mastering, wu2023daydreamer,
+wu2024unleashing, cheang2024gr, zhou2024robodreamer}. Predictive rollouts have also been used to evaluate policy behavior~\cite{li2025worldeval, guo2026ctrl}.
+
+Action-conditioned world models provide a complementary perspective by
+predicting how an environment evolves under supplied or candidate actions.
+Recent methods use such predictions for simulation, candidate evaluation,
+proposal refinement, and self-verifying planning
+\cite{huang2026learning, zhou2026tau_0, qi2026inference,
+zhang2026worldcoherent}. Together, these lines show that predictive models can
+support action generation, simulation, planning, and evaluation. However,
+action-conditioned prediction and video--action policy generation are often
+developed as separate components, leaving open how explicit
+prediction--action interfaces affect component reuse across tasks.
+
+% \subsection{Video Foundations and World--Action Architectures}
+
+% Recent world-action models use pretrained video representations to connect
+% future-observation prediction with robot control. DreamZero and VideoVLA
+% \cite{ye2026world, shen2026videovla} jointly generate future video and action
+% chunks, while LingBot-VA \cite{li2026causal} uses a causal video-first
+% formulation. EgoWAM and Zero-WAM
+% \cite{li2026egowam, zhou2026zero} use egocentric video as a source of predictive
+% priors or task specifications, and ZimaBlue
+% \cite{wu2026zimablue} studies multi-stage video pretraining followed by robot
+% grounding.
+
+% A separate line studies how predictive computation should be connected to
+% action generation. Fast-WAM, World Tokens, and GlanceWAM
+% \cite{yuan2026fast, tang2026world, wang2026glancewam} reduce,
+% sparsify, or reschedule future prediction during inference.
+% SelfWAM \cite{pan2026selfwam} conditions future prediction on clean actions during
+% training while retaining an action-only deployment path.
+% OA-WAM and RepWAM \cite{liu2026oa, wang2026repwam} change the predictive representation through object-addressable or action-grounded latents, while GIFT, SA-WAM, and TacPAC
+% \cite{zheng2026gift, gonzalez2026spatially, ma2026tacpac} add structural, geometric, or tactile supervision.
+% % OA-WAM~\cite{liu2026oa} explores object-addressable predictive representations, while TacPAC~\cite{ma2026tacpac} incorporates tactile supervision into world-action modeling.
+% UVA~\cite{li2503unified} jointly trains
+% policy, inverse-dynamics, and forward-dynamics objectives within
+% a shared video--action model. 
+% Riemann-1.0 and Motus2 \cite{sun2026riemann, bi2026motus2} expose policy and action-conditioned simulation within broader shared-model systems; Motus2 additionally includes
+% outcome evaluation and policy-improvement loops.
+% % Motus2~\cite{bi2026motus2} exposes policy and action-conditioned simulation within a shared-model system, while additionally supporting outcome evaluation and policy-improvement loops.
+% AcrossWAM1.0 \cite{zhang2026acrosswam1} makes the boundaries between latent prediction, policy adaptation, and deployment explicit.
+
+% These studies reveal several coupled design variables, including the
+% prediction target, cross-modal information flow, generation order, and
+% inference schedule. \ours fixes the causal robot-video initialization and
+% training interfaces while comparing joint, sequential, and restricted
+% video--action interaction under a shared evaluation protocol.
+
+% \subsection{Video Foundations and World--Action Architectures}
+
+% Recent world--action models use pretrained video representations to connect
+% future-observation prediction with robot control. DreamZero, Cosmos3 and VideoVLA
+% \cite{ye2026world, cosmos3, shen2026videovla} jointly generate future video and action
+% chunks, while LingBot-VA~\cite{li2026causal} and DVA~\cite{rhoda2026dva} adopts a causal video-first formulation. EgoWAM and Zero-WAM~\cite{li2026egowam, zhou2026zero} use egocentric video as a source of predictive priors or task specifications, and ZimaBlue \cite{wu2026zimablue} studies multi-stage video pretraining followed by robot grounding.
+
+% Closely related video-first approaches study how predictive visual information
+% can be grounded into robot actions. Seer \cite{tian2025predictive} predicts actions
+% through inverse dynamics conditioned on forecasted visual states, while VPP
+% \cite{hu2024video} conditions an inverse-dynamics policy on predictive
+% representations from a video model. AVDC \cite{ko2024learning} instead converts
+% synthesized video trajectories into actions through dense visual
+% correspondences. DreamGen \cite{jang2025dreamgen} uses video world models to
+% generate synthetic robot trajectories and recovers pseudo-actions with
+% inverse-dynamics or latent-action models. These methods provide complementary
+% interfaces for translating predicted visual futures into executable behavior.
+
+% A complementary line develops unified world--action models that expose multiple
+% predictive and control modes within a shared architecture. UWM \cite{zhu2025unified} couples video and action diffusion and uses modality-specific diffusion timesteps to realize policy, forward-dynamics, inverse-dynamics, and video-generation modes. UVA \cite{li2503unified} jointly trains policy, inverse-dynamics, and forward-dynamics objectives within a shared
+% video--action model. Riemann-1.0 and Motus2~\cite{sun2026riemann, bi2026motus2} similarly combine policy generation and action-conditioned prediction within broader shared-model systems; Motus2 additionally supports outcome evaluation and policy-improvement loops.
+
+% Other work studies how predictive computation, representation, and supervision
+% should be incorporated into world--action models. Fast-WAM, World Tokens, and
+% GlanceWAM \cite{yuan2026fast, tang2026world, wang2026glancewam} reduce,
+% sparsify, or reschedule future prediction during inference. SelfWAM
+% \cite{pan2026selfwam} conditions future prediction on clean actions during
+% training while retaining an action-only deployment path. OA-WAM and RepWAM
+% \cite{liu2026oa, wang2026repwam} modify the predictive representation through
+% object-addressable or action-grounded latents, while GIFT, SA-WAM, and TacPAC
+% \cite{zheng2026gift, gonzalez2026spatially, ma2026tacpac} introduce structural,
+% geometric, or tactile supervision. AcrossWAM1.0
+% \cite{zhang2026acrosswam1} makes the boundaries between latent prediction,
+% policy adaptation, and deployment explicit.
+
+% Together, these works expose several coupled design choices, including the
+% prediction target, cross-modal information flow, generation order,
+% representation, supervision, and inference schedule. \ours fixes a common
+% causal robot-video initialization and training interface while explicitly
+% varying generation order and future cross-modal visibility, enabling joint,
+% sequential, and decoupled video--action interaction to be compared under a
+% shared evaluation protocol. Beyond within-model interaction, we also study
+% whether independently trained dynamics components can be reused through
+% explicit trajectory interfaces.
+
+% \subsection{Video Foundations and World--Action Architectures}
+
+% Recent world--action models use pretrained video representations to connect
+% future prediction with robot control. DreamZero, Cosmos3, VideoVLA, and
+% PAD~\cite{ye2026world, cosmos3, shen2026videovla, guo2024prediction}
+% jointly model future visual content and actions, while LingBot-VA and
+% DVA~\cite{li2026causal, rhoda2026dva} adopt causal video-first formulations.
+% CoVAR and DeVA~\cite{yang2026covar, zhang2026deva} instead couple specialized
+% video and action pathways through cross-modal feature exchange. Other work
+% leverages egocentric or large-scale video priors for robot grounding and
+% generalization~\cite{li2026egowam, zhou2026zero, wu2026zimablue,
+% qiu2026vid2wam}.
+
+% A closely related line studies video-to-action grounding. Seer and
+% VPP~\cite{tian2025predictive, hu2024video} use predicted visual states or
+% representations to condition inverse dynamics, AVDC~\cite{ko2024learning}
+% converts synthesized videos to actions through dense correspondence, and
+% DreamGen~\cite{jang2025dreamgen} recovers pseudo-actions for generated robot
+% videos. DiT4DiT~\cite{ma2026dit4dit} couples action generation to intermediate
+% video-denoising features, while World2Act~\cite{vuong2026world2act} transfers
+% predictive dynamics through latent representation alignment.
+
+% Unified formulations expose several predictive and control modes within one
+% system. UWM and UVA~\cite{zhu2025unified, li2503unified} support combinations
+% of policy, inverse-dynamics, forward-dynamics, and video prediction objectives.
+% WorldVLA, Cosmos Policy, Riemann-1.0, Motus2, and X-WAM
+% \cite{cen2025worldvla, kim2026cosmos, sun2026riemann, bi2026motus2,
+% guo2026unified} further combine action generation with world prediction,
+% simulation, planning, or evaluation in shared architectures.
+
+% Recent work also isolates individual WAM design choices. Fast-WAM, World
+% Tokens, GlanceWAM, GigaWorld-Policy, Light-WAM, Streaming-WAM, NoiseGate, and
+% SelfWAM~\cite{yuan2026fast, tang2026world, wang2026glancewam,
+% ye2603gigaworld, li2026light, huang2026streaming,
+% huang2026noisegate, pan2026selfwam} study when, how much, and in what order
+% predictive computation should interact with action generation. OA-WAM,
+% RepWAM, AGRA, SG-WAM, LD4WAM, AffordanceWAM, and ReWAM
+% \cite{liu2026oa, wang2026repwam, qiu2026making, zhao2026sg,
+% shen2026ld4wam, you2026affordancewam, jiang2026rethinking} study alternative
+% predictive representations, while GIFT, SA-WAM, and TacPAC
+% \cite{zheng2026gift, gonzalez2026spatially, ma2026tacpac} introduce
+% structural, geometric, or tactile supervision. WALL-WM, GE-Act 2.0,
+% MotionWAM, and MaP-WAM~\cite{li2026wall, liu2026ge,
+% zheng2026motionwam, zhao2026memory} extend this design space to temporal
+% abstraction, scaling, humanoid control, and long-horizon memory; recent
+% surveys summarize the rapidly expanding landscape
+% \cite{wang2026world, lu2026world}.
+
+% Concurrent work, also named OpenWAM~\cite{wang2026openwam}, develops a modular
+% framework for systematic WAM pretraining and design studies. Our focus is
+% complementary: \ours fixes a common causal robot-video foundation and training
+% interface while explicitly varying generation order and future cross-modal
+% visibility, enabling joint, video-then-action, action-then-video, and decoupled
+% interaction to be compared under a shared evaluation protocol. We further study
+% the reuse of independently trained inverse- and forward-dynamics components
+% through explicit trajectory interfaces.
+
+\subsection{Video Foundations and World--Action Architectures}
+
+Recent world--action models connect predictive video representations with
+robot control through several forms of video--action coupling. Joint
+generation models predict future visual content and actions together
+\cite{ye2026world, cosmos3, shen2026videovla, guo2024prediction}, while
+causal video-first formulations generate or represent visual futures before
+action prediction~\cite{li2026causal, rhoda2026dva}. Other architectures use
+specialized video and action pathways with explicit cross-modal exchange
+\cite{yang2026covar, zhang2026deva}, or leverage egocentric and large-scale
+video priors for robot grounding and generalization
+\cite{li2026egowam, zhou2026zero, wu2026zimablue, qiu2026vid2wam}.
+
+A closely related line studies the interface between predictive visual
+information and executable actions. Predicted visual states or representations
+can condition inverse dynamics~\cite{tian2025predictive, hu2024video, li2026turningvideomodelsgeneralist}, while
+other approaches translate generated futures through dense correspondence,
+pseudo-action labeling, intermediate denoising features, or latent
+representation alignment
+\cite{ko2024learning, jang2025dreamgen, ma2026dit4dit,
+vuong2026world2act}. These methods differ in where and how predictive visual
+information enters the action-generation pathway.
+
+Unified formulations instead expose multiple predictive and control modes
+within a shared system. UWM and UVA~\cite{zhu2025unified, li2503unified}
+support combinations of policy, inverse-dynamics, forward-dynamics, and video
+prediction objectives, while related systems combine action generation with
+world prediction, simulation, planning, or evaluation
+\cite{cen2025worldvla, kim2026cosmos, sun2026riemann, bi2026motus2,
+guo2026unified}.
+
+Recent work further isolates particular choices in the WAM design space.
+Predictive computation can be reduced, sparsified, reordered, or scheduled
+asynchronously
+\cite{yuan2026fast, tang2026world, wang2026glancewam,
+ye2603gigaworld, li2026light, huang2026streaming,
+huang2026noisegate, pan2026selfwam}. Alternative work studies the
+representation through which world prediction interacts with control
+\cite{liu2026oa, wang2026repwam, qiu2026making, zhao2026sg,
+shen2026ld4wam, you2026affordancewam, jiang2026rethinking}, or augments
+world--action learning with structural, geometric, and tactile supervision
+\cite{zheng2026gift, gonzalez2026spatially, ma2026tacpac}. Temporal
+abstraction, data and model scaling, humanoid control, and long-horizon memory
+provide additional design axes
+\cite{li2026wall, liu2026ge, zheng2026motionwam, zhao2026memory};
+recent surveys summarize the rapidly expanding landscape
+\cite{wang2026world, lu2026world}.
+
+Concurrent work, also named OpenWAM~\cite{wang2026openwam}, develops a modular
+framework for systematic WAM pretraining and design studies. Our focus is
+complementary: \ours fixes a common causal robot-video foundation and training
+interface while explicitly varying generation order and future cross-modal
+visibility, enabling joint, video-then-action, action-then-video, and decoupled
+interaction to be compared under a shared evaluation protocol. We further study
+the reuse of independently trained inverse- and forward-dynamics components
+through explicit trajectory interfaces.
+
+
+
+% \subsection{Dynamics Learning Beyond Successful Demonstrations}
+
+% Successful demonstrations provide valid transitions, but they cover only the
+% action--outcome relationships selected by the demonstrating policy. A
+% complementary analysis shows that observational demonstrations alone may not
+% identify the consequences of unsupported actions~\cite{yu2026capability}.
+% Several methods therefore use interactions beyond successful demonstrations. UniPi~\cite{du2023learning} separates video planning from inverse dynamics and allows the inverse model to be trained independently on a separate, potentially suboptimal dataset. PlayWorld~\cite{yin2026playworld} collects autonomous play for action-conditioned world modeling. FACT~\cite{peng2026fact} masks failed-action imitation while retaining action-conditioned future and progress supervision, and Motus2~\cite{bi2026motus2} routes failed, suboptimal, and task-irrelevant interactions to simulation or evaluation. WAM-OPD~\cite{yang2026wam} addresses a related distribution-shift problem by distilling a teacher on student-visited histories.
+% % Several methods therefore exploit interactions beyond successful demonstrations. For example, UniPi~\cite{du2023learning} decouples video planning from inverse dynamics, allowing the inverse model to be trained on separate, potentially suboptimal data, while FACT~\cite{peng2026fact} retains future and progress supervision from failed trajectories without directly imitating their actions. Related work also explores autonomous play and other non-expert interactions for world modeling and evaluation.
+
+% % Recent work has shown that failures, autonomous play, and counterfactual or
+% % student-visited interactions can provide useful supervision for world modeling,
+% % evaluation, or policy improvement. However, the effect of transition coverage
+% % and conditioning scope on reusing independently trained dynamics components
+% % after visual task adaptation remains unclear.
+% Despite this progress, it remains unclear how transition coverage and conditioning scope affect the reuse of independently trained dynamics components after visual task adaptation.
+% \ours addresses this question
+% by evaluating local-context inverse- and forward-dynamics components and their
+% composition with adapted video predictors under controlled changes in
+% interaction data and conditioning context.
+% \subsection{Dynamics Learning Beyond Successful Demonstrations}
+
+% Successful demonstrations provide valid transitions, but they cover only the
+% action--outcome relationships selected by the demonstrating policy. A
+% complementary analysis shows that observational demonstrations alone may not
+% identify the consequences of unsupported actions~\cite{yu2026capability}.
+% Several methods therefore broaden supervision beyond clean expert
+% demonstrations. DART~\cite{laskey2017dart} injects noise during expert
+% demonstration collection to expose recovery states and reduce covariate shift
+% in imitation learning. UniPi~\cite{du2023learning} separates video planning
+% from inverse dynamics and allows the inverse model to be trained independently
+% on a separate, potentially suboptimal dataset. PlayWorld~\cite{yin2026playworld}
+% collects autonomous play for action-conditioned world modeling.
+% FACT~\cite{peng2026fact} masks failed-action imitation while retaining
+% action-conditioned future and progress supervision, and
+% Motus2~\cite{bi2026motus2} routes failed, suboptimal, and task-irrelevant
+% interactions to simulation or evaluation. WAM-OPD~\cite{yang2026wam}
+% addresses a related distribution-shift problem by distilling a teacher on
+% student-visited histories.
+
+% \ours instead studies how broader local transition coverage interacts with
+% conditioning scope to affect the reuse of independently trained dynamics
+% components after visual task adaptation. To this end, we branch alternative
+% action continuations from task-relevant simulator states and use the resulting
+% state--action--outcome transitions as local dynamics supervision.
+
+% \subsection{Dynamics Learning Beyond Successful Demonstrations}
+
+% Successful demonstrations provide valid transitions, but they cover only the
+% action--outcome relationships selected by the demonstrating policy. A
+% complementary analysis shows that observational demonstrations alone may not
+% identify the consequences of unsupported actions~\cite{yu2026capability}.
+% A long line of imitation-learning work therefore broadens the training
+% distribution beyond clean expert trajectories. DAgger~\cite{ross2011reduction}
+% collects supervision on states visited by the learned policy, while
+% DART~\cite{laskey2017dart} injects noise during expert demonstration collection
+% to expose states arising from execution errors. Human-in-the-loop approaches
+% such as IWR~\cite{mandlekar2020human} collect corrective interventions during
+% policy rollouts, and more recent methods such as
+% RaC~\cite{hu2026rac} explicitly collect recovery and correction trajectories
+% for long-horizon manipulation. RECAP~\cite{intelligence2025pi} further combines
+% demonstrations, autonomous on-policy experience, and expert interventions to
+% improve vision--language--action policies through deployment.
+
+% Recent work also constructs broader interaction data without relying solely on
+% successful demonstrations. AHA~\cite{duan2024aha} procedurally
+% perturbs successful simulated demonstrations to synthesize failure trajectories,
+% while Dream2Fix~\cite{li2026learning} uses a generative world model to produce
+% counterfactual failure rollouts from successful real-world demonstrations.
+% UniPi~\cite{du2023learning} separates video planning from inverse dynamics and
+% allows the inverse model to be trained independently on a separate, potentially
+% suboptimal dataset. PlayWorld~\cite{yin2026playworld} collects autonomous play
+% for action-conditioned world modeling. FACT~\cite{peng2026fact} masks
+% failed-action imitation while retaining action-conditioned future and progress
+% supervision, and Motus2~\cite{bi2026motus2} routes failed, suboptimal, and
+% task-irrelevant interactions to simulation or evaluation.
+% WAM-OPD~\cite{yang2026wam} addresses a related distribution-shift problem by
+% distilling a teacher on student-visited histories.
+
+% These approaches use broader experience primarily for robust imitation,
+% recovery, policy improvement, failure understanding, or world modeling.
+% \ours instead studies how local transition coverage interacts with conditioning
+% scope to affect the reuse of independently trained dynamics components after
+% visual task adaptation. To this end, we branch alternative action continuations
+% from task-relevant simulator states and use the resulting
+% state--action--outcome transitions as local dynamics supervision.
+
+% \subsection{Dynamics Learning Beyond Successful Demonstrations}
+
+% Successful demonstrations provide valid transitions, but they cover only the
+% action--outcome relationships selected by the demonstrating policy. A
+% complementary analysis shows that observational demonstrations alone may not
+% identify the consequences of unsupported actions~\cite{yu2026capability}.
+% A long line of imitation-learning work therefore broadens the training
+% distribution beyond clean expert trajectories. DAgger~\cite{ross2011reduction}
+% collects supervision on states visited by the learned policy, while
+% DART~\cite{laskey2017dart} injects noise during expert demonstration collection
+% to expose states arising from execution errors. Human-in-the-loop approaches
+% such as IWR~\cite{mandlekar2020human} collect corrective interventions during
+% policy rollouts, and more recent methods such as
+% RaC~\cite{hu2026rac} explicitly collect recovery and correction trajectories
+% for long-horizon manipulation. RECAP~\cite{intelligence2025pi} further combines
+% demonstrations, autonomous on-policy experience, and expert interventions to
+% improve vision--language--action policies through deployment.
+
+% Recent work also constructs broader interaction data without relying solely on
+% successful demonstrations. RoCoDA~\cite{ameperosa2025rocoda} synthesizes
+% additional demonstrations through causal and geometric counterfactual
+% augmentation, while AHA~\cite{duan2024aha} perturbs successful simulated
+% demonstrations to generate failure trajectories. Dream2Fix
+% \cite{li2026learning} uses a generative world model to synthesize
+% counterfactual failure rollouts from successful real-world demonstrations,
+% and FLARE~\cite{zhao2026flare} introduces perturbation-driven retry behavior
+% and targeted reset skills for autonomous recovery. Fail2Progress
+% \cite{huang2025fail2progress} generates data targeted to observed failures to
+% improve skill-effect models. UniPi~\cite{du2023learning} separates video
+% planning from inverse dynamics and allows the inverse model to be trained
+% independently on a separate, potentially suboptimal dataset.
+% PlayWorld~\cite{yin2026playworld} collects autonomous play for
+% action-conditioned world modeling. FACT~\cite{peng2026fact} masks
+% failed-action imitation while retaining action-conditioned future and progress
+% supervision, and Motus2~\cite{bi2026motus2} routes failed, suboptimal, and
+% task-irrelevant interactions to simulation or evaluation.
+% WAM-OPD~\cite{yang2026wam} addresses a related distribution-shift problem by
+% distilling a teacher on student-visited histories.
+
+% These approaches use broader experience primarily for robust imitation,
+% recovery, policy improvement, failure understanding, or world modeling.
+% \ours instead studies how local transition coverage interacts with conditioning
+% scope to affect the reuse of independently trained dynamics components after
+% visual task adaptation. To this end, we branch alternative action continuations
+% from task-relevant simulator states and use the resulting
+% state--action--outcome transitions as local dynamics supervision.
+
+\subsection{Dynamics Learning Beyond Successful Demonstrations}
+
+Successful demonstrations provide valid transitions, but they cover only the
+action--outcome relationships selected by the demonstrating policy. A
+complementary analysis shows that observational demonstrations alone may not
+identify the consequences of unsupported actions~\cite{yu2026capability}.
+Classical imitation-learning methods address the resulting distribution shift
+by collecting supervision on learner-visited states, perturbing expert
+trajectories, or soliciting corrective interventions
+\cite{ross2011reduction,laskey2017dart,mandlekar2020human,hu2026rac,
+intelligence2025pi}. These approaches broaden state coverage beyond clean
+expert rollouts and improve robustness to execution errors.
+
+More recent work expands supervision through synthetic failures,
+counterfactual augmentation, autonomous experience, and other non-successful
+interactions
+\cite{ameperosa2025rocoda,duan2024aha,li2026learning,zhao2026flare,
+yin2026playworld,peng2026fact,bi2026motus2,yang2026wam}.
+Such data have been used for recovery, policy improvement, failure
+understanding, and predictive modeling. Particularly related to our setting,
+Fail2Progress~\cite{huang2025fail2progress} targets data collection toward
+observed failures to improve skill-effect models, while
+UniPi~\cite{du2023learning} decouples video planning from inverse dynamics and
+allows the inverse model to learn from a separate, potentially suboptimal
+dataset.
+
+\ours focuses on a different question: how transition coverage and conditioning
+scope affect the reuse of independently trained dynamics components after
+visual task adaptation. We branch alternative action continuations from
+task-relevant simulator states and use the resulting state--action--outcome
+transitions as local dynamics supervision.
+
+
+% BEGIN ARCHIVED RELATED WORK -- superseded 2026-09-14
+% \section{Related Work}
+% \label{sec:related}
+%
+% \subsection{Visuomotor Policies and Predictive Control}
+% Direct visuomotor policies, including ACT and Diffusion Policy
+% \cite{zhao2023learning, chi2025diffusion}, learn executable action sequences from
+% observations. RT-1/RT-2, OpenVLA, Octo, and the $\pi$ family
+% \cite{brohan2022rt, brohan2023rt, kim2024openvla, team2024octo, black2024pi_0, intelligence2025pi_} extend this paradigm through
+% language conditioning and large-scale pretraining, with Open X-Embodiment
+% \cite{o2024open} supporting training across robot embodiments.
+% Predictive approaches additionally model future observations or latent states:
+% Dreamer and DayDreamer \cite{hafner2019dream, hafner2023mastering, wu2023daydreamer} learn dynamics for
+% control, while GR-1/GR-2 and RoboDreamer \cite{wu2024unleashing, cheang2024gr, zhou2024robodreamer}
+% incorporate future prediction into policy learning or planning. WorldEval and
+% Ctrl-World \cite{li2025worldeval, guo2026ctrl} use predicted rollouts for policy
+% assessment, and A2World and $\tau_0$-WM \cite{huang2026learning, zhou2026tau_0} develop
+% action-conditioned models for simulation and control. World-Coherent Decoding
+% \cite{zhang2026worldcoherent} further uses predicted future--action pairs for
+% selection and execution-time verification. These approaches motivate
+% predictive interfaces with distinct roles in action generation, simulation,
+% and evaluation.
+%
+% \subsection{Video Foundations and World--Action Architectures}
+% Pretrained video generators provide visual and temporal priors for robot control. DreamZero~\cite{ye2026world} and VideoVLA~\cite{shen2026videovla} jointly
+% generate future video and actions, while LingBot-VA~\cite{li2026causal}
+% adopts a causal video-first formulation. EgoWAM~\cite{li2026egowam}, Zero-WAM~\cite{zhou2026zero}, and ZimaBlue~\cite{wu2026zimablue} explore egocentric video as a source of predictive priors or task specifications. \ours builds on this direction through an explicit stage of causal robot-video adaptation without action labels, providing a common initialization for downstream video--action learning.
+%
+% Recent WAMs explore several additional design dimensions. Fast-WAM, World
+% Tokens, RIFT, and GlanceWAM
+% \cite{yuan2026fast, tang2026world, zhang2026keep, wang2026glancewam} reduce or
+% reschedule predictive computation during control. OA-WAM, RepWAM, GIFT,
+% SA-WAM, and TacPAC \cite{liu2026oa, wang2026repwam, zheng2026gift, gonzalez2026spatially, ma2026tacpac}
+% investigate alternative representations, structural supervision, or tactile
+% prediction. Riemann-1.0 and Motus2 \cite{sun2026riemann, bi2026motus2} support
+% policy generation and action-conditioned simulation through shared parameters,
+% with Motus2 also providing outcome evaluation. Differences in backbones,
+% supervision, and inference procedures complicate comparisons across systems.
+% \ours focuses on controlled comparisons of joint, sequential, and restricted
+% video--action interaction under a common architecture, examining both policy
+% performance and generation cost.
+%
+% \subsection{Dynamics Learning Beyond Successful Demonstrations}
+% Successful demonstrations provide useful transitions but cover only a subset
+% of possible action--outcome relationships. A complementary analysis shows why
+% observational demonstrations alone need not identify unsupported action
+% effects \cite{yu2026capability}. Learning from other interactions has
+% established precedents. UniPi \cite{du2023learning} separates video planning from
+% inverse dynamics and explicitly allows the inverse model to be trained
+% independently on a separate, potentially suboptimal dataset. PlayWorld
+% \cite{yin2026playworld} collects autonomous play for world modeling. FACT
+% \cite{peng2026fact} uses failures to supervise action-conditioned video and
+% progress prediction while masking failed-action imitation; Motus2
+% \cite{bi2026motus2} routes failed, suboptimal, and task-irrelevant interactions
+% to simulation or evaluation. WAM-OPD \cite{yang2026wam} addresses a
+% complementary source of distribution shift by distilling a teacher on
+% student-visited histories.
+%
+% Our study builds on these directions by examining transition coverage and
+% conditioning scope as separate factors in dynamics-component reuse. We
+% independently train inverse- and forward-dynamics components on local
+% transitions, using demonstrations and counterfactual rollouts in simulation,
+% and extending inverse-dynamics supervision with physical-robot failures and
+% play. Counterfactual collection executes alternative action sequences from the
+% same simulator state; each resulting transition supplies an individual
+% dynamics-training example. The strict interfaces omit task language and
+% preceding history. Comparisons with full-context models under matched
+% supervision examine this restriction separately from the effect of broader
+% data. Component-composition experiments then evaluate whether frozen
+% source-trained inverse models remain useful when paired with task-adapted
+% video predictors.
+%
+% \subsection{Open Frameworks for Controlled WAM Studies}
+% OpenVLA, Octo, StarVLA, VLA Foundry, and AcrossWAM
+% \cite{kim2024openvla, team2024octo, ye2026starvla, mercat2026vla, zhang2026acrosswam1}
+% motivate reusable infrastructure for embodied learning. \ours contributes a
+% common robot-video foundation and configurable video--action architecture,
+% together with shared training, rollout, and evaluation interfaces. These
+% interfaces support both architecture comparisons and composition of
+% independently trained components, connecting studies of video--action
+% interaction with studies of dynamics supervision and reuse.
+% END ARCHIVED RELATED WORK
+
+
+% BEGIN ARCHIVED RELATED WORK -- superseded 2026-09-10
+% \section{Related Work}
+% \label{sec:related}
+%
+% \subsection{Direct Visuomotor and Vision-Language-Action Policies}
+% Direct policies map observations and, increasingly, language instructions to
+% robot actions without an explicit predictive world interface. RT-1/RT-2
+% \cite{brohan2022rt, brohan2023rt} established large-scale language-conditioned control, Open
+% X-Embodiment and Octo \cite{o2024open, team2024octo} scaled training across robot
+% embodiments, and OpenVLA and the $\pi$ family
+% \cite{kim2024openvla, black2024pi_0, intelligence2025pi_} transferred pretrained vision-language features
+% to generalist manipulation. ACT and Diffusion Policy
+% \cite{zhao2023learning, chi2025diffusion} further show that action chunking and generative
+% action heads are themselves important design choices. These methods provide
+% strong direct-control baselines: they may learn dynamics implicitly from
+% history and demonstrations, but their objectives do not require a separately
+% addressable prediction of future scene evolution.
+%
+% \subsection{Video-Predictive Policies and World Models}
+% Predictive models have long supported planning, representation learning, and
+% simulation. Dreamer and DayDreamer \cite{hafner2019dream, hafner2023mastering, wu2023daydreamer} learn
+% latent dynamics for control, while UniPi \cite{du2023learning} generates video plans
+% before recovering actions. GR-1/GR-2 and RoboDreamer
+% \cite{wu2024unleashing, cheang2024gr, zhou2024robodreamer} use future prediction as policy supervision or a
+% compositional plan. Other work treats prediction as a simulator or evaluator:
+% WorldEval and Ctrl-World \cite{li2025worldeval, guo2026ctrl} roll out controlled
+% futures for policy assessment, while A2World and $\tau_0$-WM
+% \cite{huang2026learning, zhou2026tau_0} learn action-conditioned dynamics that can serve
+% both simulation and control. World-Coherent Decoding
+% \cite{zhang2026worldcoherent} further treats predicted future--action pairs as
+% hypotheses to select and verify after execution. These approaches establish the
+% value of predictive supervision, but connect it to control through different
+% planners, inverse models, evaluators, and training pipelines.
+%
+% \subsection{World-Action Model Architectures}
+% Recent WAMs make video--action coupling part of the policy itself. DreamZero
+% \cite{ye2026world} and VideoVLA \cite{shen2026videovla} jointly predict future
+% video and action chunks using pretrained video generators, whereas LingBot-VA
+% \cite{li2026causal} follows a causal video-first formulation. A rapidly
+% growing line reduces the runtime cost of imagination: Fast-WAM, World Tokens,
+% and RIFT \cite{yuan2026fast, tang2026world, zhang2026keep} retain predictive
+% training or anticipation while omitting dense video rollout from the action
+% path, and GlanceWAM \cite{wang2026glancewam} schedules sparse lookahead
+% asynchronously. Another line changes what the predictive interface represents:
+% OA-WAM and RepWAM \cite{liu2026oa, wang2026repwam} learn object-addressable or
+% action-grounded latents, GIFT and SA-WAM \cite{zheng2026gift, gonzalez2026spatially} inject
+% structural or 3D supervision, and TacPAC \cite{ma2026tacpac} adds tactile
+% prediction and correction. Riemann-1.0 and Motus2
+% \cite{sun2026riemann, bi2026motus2} expose policy and action-conditioned simulation
+% through shared weights; Motus2 additionally exposes outcome evaluation. Since
+% these systems vary backbone, target, coupling, data, and inference schedule
+% together, their results do not isolate which design choice causes a gain.
+% Open-WAM instead makes these choices interchangeable under a shared causal
+% video backbone and common training, rollout, and evaluation contracts.
+%
+% \subsection{Data Utilization and Open WAM Infrastructure}
+% Most manipulation WAMs are post-trained primarily on successful task
+% demonstrations, even though broader interaction data also contains useful
+% physical transitions. Several recent works directly address this limitation.
+% PlayWorld \cite{yin2026playworld} collects autonomous play for contact-rich world
+% modeling; FACT \cite{peng2026fact} masks imitation loss on failed actions while
+% retaining their action-conditioned video and progress supervision; and Motus2
+% routes failed, suboptimal, and task-irrelevant interactions to simulation and
+% evaluation modes. WAM-OPD \cite{yang2026wam} instead distills a teacher on
+% student-visited histories. A complementary analysis shows why observational
+% demonstrations alone need not identify unsupported action effects
+% \cite{yu2026capability}. Human-video scaling provides another source
+% of broader physical experience: EgoWAM, Zero-WAM, and ZimaBlue
+% \cite{li2026egowam, zhou2026zero, wu2026zimablue} learn predictive priors or task
+% specifications from egocentric video. These advances narrow the data gap but
+% leave a heterogeneous set of task-specific simulators, value heads, or
+% post-training loops. \ours-GJD takes a complementary route: a single shared
+% vector field switches among task-conditioned joint policy generation and
+% strict, task-agnostic IDM/FDM modes, so successful demonstrations and paired
+% counterfactual local transitions can supervise the same model without treating
+% undesirable actions as policy targets. In parallel, OpenVLA, Octo, StarVLA, VLA
+% Foundry, and AcrossWAM
+% \cite{kim2024openvla, team2024octo, ye2026starvla, mercat2026vla, zhang2026acrosswam1}
+% motivate reusable training and deployment stacks; Open-WAM extends this
+% principle to controlled WAM architecture and data-utilization studies.
+% END ARCHIVED RELATED WORK

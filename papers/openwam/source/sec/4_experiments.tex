@@ -1,0 +1,474 @@
+\section{Experiments}
+\label{sec:experiments}
+
+
+We evaluate \ours along three dimensions: \emph{native policy performance},
+\emph{component composability}, and \emph{local dynamics modeling}. We test
+whether the shared robot-video foundation supports different video--action
+interaction programs, whether independently trained action components remain
+useful when paired with adapted visual predictors, and whether local-context forward
+dynamics models action-dependent visual outcomes.
+
+
+\subsection{Experimental Setup}
+\label{sec:experimental-setup}
+
+\paragraph{Robot-video pretraining and simulation.}
+We initialize the visual backbone from Wan2.2-5B~\cite{wan2025wan} and further
+pretrain it without action supervision on heterogeneous robot and
+human-interaction video, including UMI/MV-UMI~\cite{chi2024universal,rayyan2026mv},
+AgiBot World~\cite{bu2025agibot}, RoboMIND~\cite{wu2024robomind},
+InternData-A1~\cite{tian2026interndata}, RoboCOIN~\cite{wu2025robocoin},
+FastUMI~\cite{zhaxizhuoma2025fastumi}, Ego-Exo4D~\cite{grauman2024ego},
+and Open X-Embodiment~\cite{o2024open}.
+% Dataset composition, preprocessing, sampling, and optimization details are provided in the
+% appendix.
+Unless otherwise stated, downstream \ours variants use this
+common initialization.
+
+
+The four interaction programs share the same dual-stream
+MoT backbone and downstream training recipe; they
+differ in generation order and future cross-modal attention. Video is
+processed in four-frame latent chunks, each predicting a 16-step action
+chunk, with proprioception provided as a per-chunk conditioning signal.
+Actions consist of end-effector position, axis-angle rotation, and a
+gripper command. We use a two-stage training procedure: causal
+robot-video pretraining followed by joint video--action training on the
+target suite.
+
+
+We evaluate Joint, VTA, ATV, and Decoupled on LIBERO-Object, LIBERO-Goal,
+LIBERO-Spatial, and LIBERO-Long~\cite{liu2023libero}.
+Component transfer uses LIBERO-Long as the downstream source
+distribution and four LIBERO-90 targets (Table~\ref{tab:transfer-tasks}) chosen to represent qualitatively different forms of transfer. These targets are outside the LIBERO-Long
+source-task set; robot-video pretraining is treated as a separate stage.
+
+
+
+
+
+\begin{table}[t]
+    \centering
+    \caption{Real-world bimanual manipulation tasks.}
+    % \vspace{-0.05in}
+    \label{tab:real-world-tasks}
+    \small
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        \textbf{Task}
+        & \textbf{Objective}
+        & \textbf{Main challenge} \\
+        \midrule
+        Toast Bread
+        & Insert bread and activate toaster
+        & Deformability and precise insertion \\
+        Rubik's Cube
+        & Restore final layer of $2\times2$ cube
+        & Contact-rich push and rotation \\
+        Sort Cups
+        & Sort cups according to color
+        & Variable ordering and sequencing \\
+        \bottomrule
+    \end{tabular}}
+    % \vspace{-0.2in}
+\end{table}
+
+\paragraph{Real-world tasks.}
+We evaluate on a bimanual platform comprising two Franka Research 3 arms
+with parallel-jaw grippers and three RGB views: two wrist-mounted cameras
+and one centered third-person camera. The three task definitions
+are listed in Table~\ref{tab:real-world-tasks}. Figure~\ref{fig:tasks} shows the
+real-world tasks and the LIBERO-90 transfer targets.
+
+\paragraph{Dynamics supervision.}
+Native task models are trained from task demonstrations. For local dynamics,
+we additionally construct \textbf{LIBERO-Long-CF} by executing alternative
+action continuations from states encountered in LIBERO-Long demonstrations.
+Branches sharing an initial state remain in the same train, validation, or
+test partition.
+IDM and FDM experiments use demonstration-only, counterfactual-only
+(CF-only), or mixed supervision. Mixed supervision samples 60\% of
+transitions from $\mathcal D_{\mathrm{cf}}$ and 40\% from
+$\mathcal D_{\mathrm{task}}^{\mathrm{loc}}$, corresponding to $\eta=0.6$
+in Eq.~\ref{eq:dynamics-training-distribution}.
+
+%For physical experiments, the broader dynamics data instead combines successful demonstrations, failed attempts, and free-form play.
+% Collection and sampling details are provided in the appendix.
+
+\paragraph{Evaluation.}
+Closed-loop task success is the primary policy and composition metric.
+For forward dynamics, we report visual prediction error and outcome
+identification accuracy. Given $K$ realized futures from the same state,
+the metric tests whether the prediction is closest in RGB MSE to its
+matching outcome. We report both pairwise identification ($K=2$) and
+identification among all 16 action branches ($K=16$).
+
+
+\begin{table}[!t]
+    \centering
+    \caption{Closed-loop success (\%) on four LIBERO suites.
+Baselines are previously reported results.}
+    % \vspace{-0.1in}
+    \label{tab:libero-broad}
+    \scriptsize
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{@{}lccccc@{}}
+        \toprule
+        \textbf{Method}
+        & \textbf{Object}
+        & \textbf{Goal}
+        & \textbf{Spatial}
+        & \textbf{Long}
+        & \textbf{Mean} \\
+        \midrule
+        OpenVLA~\cite{kim2024openvla}
+        & 88.4 & 79.2 & 84.7
+        & 53.7 & 76.5 \\
+        OpenVLA-OFT~\cite{kim2025fine}
+        & 98.4 & 97.9 & 97.6
+        & 94.5 & 97.1 \\
+        $\pi_0$~\cite{black2024pi_0}
+        & 98.8 & 95.8 & 96.8
+        & 85.2 & 94.1 \\
+        $\pi_{0.5}$~\cite{intelligence2025pi_}
+        & 98.2 & 98.0 & 98.8
+        & 92.4 & 96.9 \\
+        GR00T-N1~\cite{bjorck2025gr00t}
+        & 97.6 & 93.0 & 94.4
+        & 90.6 & 93.9 \\
+        Motus~\cite{bi2026motus}
+        & 99.8 & 96.6 & 96.8
+        & 97.6 & 97.7 \\
+        Fast-WAM~\cite{yuan2026fast}
+        & 100.0 & 97.0 & 98.2
+        & 95.2 & 97.6 \\
+        LingBot-VA~\cite{li2026causal}
+        & 99.6 & 97.2 & 98.5
+        & 98.5 & 98.5 \\
+        \midrule
+        \textbf{\ours-VTA}
+        & $\text{99.4}_{\pm\text{0.3}}$
+        & $\text{98.4}_{\pm\text{0.5}}$
+        & $\text{98.6}_{\pm\text{0.2}}$
+        & $\text{97.8}_{\pm\text{0.4}}$
+        & 98.6 \\
+
+        \textbf{\ours-ATV}
+        & $\text{98.0}_{\pm\text{0.4}}$
+        & $\text{97.2}_{\pm\text{0.2}}$
+        & $\text{96.6}_{\pm\text{0.6}}$
+        & $\text{95.4}_{\pm\text{0.3}}$
+        & 96.8 \\
+
+        \textbf{\ours-Joint}
+        & $\text{98.2}_{\pm\text{0.2}}$
+        & $\text{97.8}_{\pm\text{0.4}}$
+        & $\text{97.6}_{\pm\text{0.3}}$
+        & $\text{96.6}_{\pm\text{0.5}}$
+        & 97.6 \\
+
+        \textbf{\ours-Decoupled}
+        & $\text{99.0}_{\pm\text{0.3}}$
+        & $\text{98.0}_{\pm\text{0.2}}$
+        & $\text{97.8}_{\pm\text{0.5}}$
+        & $\text{97.0}_{\pm\text{0.4}}$
+        & 98.0 \\
+        \bottomrule
+    \end{tabular}
+    % \vspace{-0.1in}
+\end{table}
+
+
+\begin{table}[!t]
+    \centering
+    \caption{
+    Closed-loop success (\%) on real-world bimanual manipulation tasks.
+    }
+    % \vspace{-0.1in}
+    \label{tab:real-world-native}
+    \small
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        \textbf{Method}
+        & \textbf{Toast}
+        & \textbf{Cube}
+        & \textbf{Cups}
+        & \textbf{Mean} \\
+        \midrule
+        \ours-VTA
+        & 92.0 & 90.0 & 94.4 & 92.1 \\
+        \ours-Joint
+        & 90.0 & 94.0 & 91.7 & 91.9 \\
+        \bottomrule
+    \end{tabular}
+    \vspace{-0.2in}
+\end{table}
+
+\begin{table*}[t]
+    \centering
+    \caption{
+    Frozen inverse dynamics transfer to four LIBERO-90 targets.
+    Target rows use task-tuned video predictors while source-trained IDMs
+    remain frozen. Mean is averaged over the four target tasks.
+    }
+    % \vspace{-0.1in}
+    \label{tab:component-transfer}
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{@{}llccccc@{}}
+        \toprule
+        \textbf{Video / policy}
+        & \textbf{Action component (frozen)}
+        & \shortstack{\textbf{64}\\Composition}
+        & \shortstack{\textbf{74}\\Retarget}
+        & \shortstack{\textbf{21}\\Object/grasp}
+        & \shortstack{\textbf{45}\\Scene shift}
+        & \shortstack{\textbf{Transfer}\\\textbf{mean}} \\
+        \midrule
+
+        \multicolumn{2}{l}{
+            \textbf{Task-tuned VTA (finetuned policy reference)}
+        }
+        & 94\%
+        & 86\%
+        & 92\%
+        & 100\%
+        & 93.0\% \\
+
+        \midrule
+
+        Task-tuned video
+        & Full-context IDM, demo-only
+        & 88\%
+        & 90\%
+        & 0\%
+        & 0\%
+        & 44.5\% \\
+
+        Task-tuned video
+        & Full-context IDM, mixed
+        & 54\%
+        & 92\%
+        & 4\%
+        & 38\%
+        & 47.0\% \\
+
+        \midrule
+
+        Task-tuned video
+        & Local-context IDM, demo-only
+        & 36\%
+        & 50\%
+        & 0\%
+        & 0\%
+        & 21.5\% \\
+
+        Task-tuned video
+        & Local-context IDM, CF-only
+        & 80\%
+        & 92\%
+        & 90\%
+        & 76\%
+        & \textbf{84.5\%} \\
+
+        Task-tuned video
+        & Local-context IDM, mixed
+        & 74\%
+        & 86\%
+        & 88\%
+        & 88\%
+        & \textbf{84.0\%} \\
+
+        \midrule
+
+        \multicolumn{2}{l}{
+            \textbf{Original VTA (unadapted policy reference)}
+        }
+        & 42\%
+        & 0\%
+        & 0\%
+        & 0\%
+        & 10.5\% \\
+
+        \bottomrule
+    \end{tabular}
+    \vspace{-0.1in}
+\end{table*}
+
+
+% ---------------------------------------------------------
+% Source-task composition on LIBERO-Long
+% ---------------------------------------------------------
+\begin{table}[!t]
+    \centering
+    \caption{
+    Source-task composition on LIBERO-Long, all action components evaluated with LIBERO-Long video
+    predictor.
+    }
+    % \vspace{-0.1in}
+    \label{tab:component-source}
+    \footnotesize
+    \begin{tabular}{@{}llc@{}}
+        \toprule
+        \textbf{Action component}
+        & \textbf{Supervision}
+        & \textbf{Success (\%)} \\
+        \midrule
+
+        Full-context IDM
+        & Demo-only (Native VTA)
+        & 97.8 \\
+
+        Full-context IDM
+        & Mixed
+        & 92.2 \\
+
+        \midrule
+
+        Local-context IDM
+        & Demo-only
+        & 25.8 \\
+
+        Local-context IDM
+        & CF-only
+        & 90.6 \\
+
+        Local-context IDM
+        & Mixed
+        & \textbf{94.4} \\
+
+        \bottomrule
+    \end{tabular}
+    % \vspace{-0.1in}
+\end{table}
+
+
+
+\begin{table}[t]
+    \centering
+    \caption{
+    Local-context FDM prediction on counterfactual transitions.
+    MSE values are reported in units of $10^{-3}$.
+    Outcome accuracy measures identification of the matching realized future
+    by RGB MSE among $K$ same-state outcomes.
+    }
+    \label{tab:fdm}
+    \small
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        \textbf{Supervision}
+        & \textbf{RGB MSE $\downarrow$}
+        & \textbf{Acc.} $K{=}2$ $\uparrow$
+        & \textbf{Acc.} $K{=}16$ $\uparrow$ \\
+        \midrule
+        Demo-only
+        & 14.35
+        & 68.3
+        & 21.1 \\
+        CF-only
+        & \textbf{9.40}
+        & \textbf{93.6}
+        & \textbf{71.3} \\
+        Mixed
+        & 9.62
+        & 91.8
+        & 67.7 \\
+        \bottomrule
+    \end{tabular}
+    \vspace{-0.2in}
+\end{table}
+
+\subsection{Native Policy Performance}
+\label{sec:native-policy-performance}
+
+\paragraph{Broad LIBERO evaluation.}
+% We first test whether the shared foundation supports strong native policies
+% across different generation orders, and report the average success rate over three random seeds in Table~\ref{tab:libero-broad}.
+We compare the four interaction programs across the LIBERO suites and
+report the average success rate over three random seeds in
+Table~\ref{tab:libero-broad}.
+The principal \ours configurations achieve strong performance across all
+four suites, establishing that the shared foundation supports multiple
+world--action generation orders.
+
+\paragraph{Backbone initialization ablation.}
+Holding the VTA architecture, task supervision, and downstream training
+procedure fixed, the original Wan2.2-5B initialization reaches 68.4\%
+success on LIBERO-Long, while our robot-video-pretrained causal backbone
+reaches 97.8\% (+29.4 points). This comparison measures the combined effect
+of robot-video pretraining and causal adaptation, rather than attributing the
+gain to either factor individually.
+
+
+\paragraph{Real-world native policies.}
+
+
+
+% The physical evaluation tests the same framework under multi-view bimanual,
+% deformable, contact-rich, and multi-object manipulation.
+Table~\ref{tab:real-world-native} reports closed-loop success for VTA and
+Joint on the three bimanual tasks of Table~\ref{tab:real-world-tasks}, which
+test the same framework under multi-view, deformable, contact-rich,
+and multi-object manipulation.
+
+
+\subsection{Component Composability}
+\label{sec:component-composability}
+
+
+% ---------------------------------------------------------
+% Target-task transfer on LIBERO-90
+% ---------------------------------------------------------
+
+
+We next study whether action-grounding components remain useful when the visual predictor changes. Full-context and local-context IDMs are evaluated under transition-supervision regimes, separating the effects of broader local-transition data from the restriction of task-level context.
+
+\paragraph{Frozen action-component reuse.}
+For each LIBERO-90 target, the visual producer is taken from a task-tuned
+VTA model while source-trained action components remain frozen. Thus, the
+experiment measures reuse of an action component after visual-task
+adaptation, rather than target-task learning without action supervision.
+All reused executors are evaluated with the same target predictor and
+rollout protocol. Table~\ref{tab:component-source} reports source-task
+composition on LIBERO-Long.
+
+Conditioning scope and supervision interact strongly
+(Tables~\ref{tab:component-source} and~\ref{tab:component-transfer}).
+Mixed supervision raises mean target success from 21.5\% to 84.0\%
+for local-context IDMs, compared with 44.5\% to 47.0\% for
+full-context IDMs. Under matched mixed supervision, local conditioning
+improves target success by 37.0 percentage points while retaining
+94.4\% source-task success.
+% Neither local conditioning nor broader
+% supervision alone matches their combination in this evaluation.
+Counterfactual-only and mixed supervision both substantially improve
+local-context IDM transfer, achieving comparable mean success of 84.5\%
+and 84.0\%, respectively, across the four LIBERO-90 targets. These
+results show that broader transition coverage supports the reuse of
+local-context dynamics components after visual task adaptation.
+
+The per-task results also reveal uneven transfer. The demonstration-only
+full-context IDM performs well on Tasks 64 and 74 but obtains 0\%
+success on Tasks 21 and 45, whereas CF-only and mixed local-context
+IDMs remain effective across all four targets. This contrast highlights
+their more consistent reuse across the evaluated task changes.
+
+
+\subsection{Action-Conditioned Forward Dynamics}
+
+We evaluate local-context FDMs on 2,560 counterfactual futures from
+160 contexts across ten LIBERO tasks, with 16 action branches per context.
+Models share the same initial observations, actions, and realized futures.
+In addition to RGB prediction error, we measure whether the predicted future
+preserves the identity of its conditioning action through outcome
+identification at $K=2$ and $K=16$.
+
+As shown in Table~\ref{tab:fdm}, CF-only and mixed supervision reduce RGB MSE
+by 34.5\% and 33.0\%, respectively, relative to demonstration-only training.
+CF-only supervision raises outcome accuracy from 68.3\% to 93.6\% for
+$K=2$, and from 21.1\% to 71.3\% for $K=16$. Mixed supervision shows a
+similar improvement, reaching 91.8\% and 67.7\%, respectively. These results
+show that broader transition supervision improves both visual prediction
+accuracy and the ability to distinguish action-dependent futures.

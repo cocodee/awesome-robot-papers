@@ -1,0 +1,125 @@
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+
+% ------------ Left table: QuantiPhy evaluation ------------
+\begin{minipage}[t]{0.61\textwidth}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{
+r|
+>{\centering\arraybackslash}p{1.2cm}|
+>{\centering\arraybackslash}p{1.2cm}
+>{\centering\arraybackslash}p{1.2cm}
+>{\centering\arraybackslash}p{1.2cm}
+>{\centering\arraybackslash}p{1.2cm}|
+>{\centering\arraybackslash}p{1.2cm}
+}
+\toprule
+\multicolumn{1}{c}{\multirow{2}{*}{Models}}  & \multicolumn{1}{c}{\multirow{2}{*}{Size}}   &
+\multicolumn{4}{|c|}{\textbf{Kinematic Categories}} & \multicolumn{1}{c}{\multirow{2}{*}{Avg.}} \\
+ \multicolumn{1}{c}{}&  \multicolumn{1}{c}{} &  \multicolumn{1}{|c}{2S}  & \multicolumn{1}{c}{2D}  & \multicolumn{1}{c}{3S}  & \multicolumn{1}{c|}{3D} &  \\
+\midrule
+\rowcolor{row_color}
+\multicolumn{7}{l}{\textit{Proprietary models}} \\
+\includegraphics[height=0.75em]{sec/images/icons/medal1.png}\ ChatGPT-5.1~\cite{OpenAIgpt5.1} & -- & \bestsub{46.3} & 56.2 & \bestsub{51.5} & \bestsub{58.3} & \best{53.1} \\
+\includegraphics[height=0.75em]{sec/images/icons/medal2.png}\ Gemini-2.5 Pro~\cite{google2025gemini25pro} & -- & 44.8 & \bestsub{57.5} & 42.4 & 53.7 & 49.6 \\
+\includegraphics[height=0.75em]{sec/images/icons/medal3.png}\ Gemini-2.5 Flash~\cite{google2025gemini25flash} & -- & 40.3 & 53.2 & 43.6 & 57.4 & 48.6 \\
+Grok 4.1 (Fast Reasoning)~\cite{grok41} & -- & 39.4 & 49.5 & 42.4 & 48.6 & 45.0 \\
+ChatGPT-5~\cite{OpenAIgpt5} & -- & 36.6 & 35.0 & 25.9 & 33.1 & 32.6 \\
+Claude Sonnet 4.5~\cite{anthropic2025claude45sonnet} & -- & 19.6 & 23.0 & 19.6 & 29.1 & 22.8 \\
+\midrule
+\rowcolor{row_color}
+\multicolumn{7}{l}{\textit{Open-weight models}} \\
+\includegraphics[height=0.75em]{sec/images/icons/medal1.png}\ Qwen3-VL-Instruct-32B~\cite{bai2025qwen25vl} & 32B & 35.8 & \bestopensub{51.6} & \bestopensub{43.2} & \bestopensub{53.4} & \bestopen{46.0} \\
+\includegraphics[height=0.75em]{sec/images/icons/medal2.png}\ InternVL-3.5-30B~\cite{chen2024internvl} & 30B & \bestopensub{36.7} & 45.4 & 38.6 & 42.0 & 40.7 \\
+\includegraphics[height=0.75em]{sec/images/icons/medal3.png}\ Qwen3-VL-Instruct-8B~\cite{bai2025qwen25vl} & 8B & 26.0 & 47.8 & 35.1 & 46.3 & 38.8 \\
+InternVL-3.5-8B~\cite{chen2024internvl} & 8B & 27.3 & 41.8 & 34.4 & 38.3 & 35.4 \\
+Molmo-7B~\cite{allenai2025molmo} & 7B & 30.0 & 43.1 & 24.4 & 36.6 & 33.5 \\
+Phi-4-Multimodal-Instruct~\cite{microsoft2025phi4multi} & 5.6B & 33.4 & 42.3 & 25.4 & 28.4 & 32.4 \\
+Qwen3-VL-Instruct-2B~\cite{bai2025qwen25vl} & 2B & 27.1 & 39.0 & 17.6 & 32.1 & 29.0 \\
+SmolVLM-Instruct~\cite{marafioti2025smolvlm} & 0.26B & 31.6 & 34.4 & 20.0 & 27.8 & 28.5 \\
+InternVL-3.5-2B~\cite{chen2024internvl} & 2B & 25.0 & 31.1 & 16.6 & 27.4 & 25.0 \\
+VILA-7B~\cite{lin2023vila} & 7B & 23.0 & 29.8 & 14.4 & 23.0 & 22.6 \\
+CogVLM2 Video~\cite{wang2024cogvlm2} & 12B & 19.4 & 28.7 & 12.7 & 27.9 & 22.2 \\
+Phi-3-Mini-128K-Instruct-3.8B~\cite{microsoft2024phi3} & 3.8B & 17.3 & 14.7 & 19.5 & 18.6 & 17.5 \\
+LLaVA-13B~\cite{liu2023visual} & 13B & 14.4 & 22.1 & 8.0 & 16.5 & 15.2 \\
+MiniCPM-V 4.5~\cite{yao2024minicpmv} & 8B & 27.6 & 26.3 & 0.4 & 0.0 & 13.6 \\
+Fuyu-8B~\cite{adept2023fuyu} & 8B & 9.5 & 14.7 & 9.5 & 16.2 & 12.5 \\
+\midrule
+\textcolor{gray}{Human Baseline} & \textcolor{gray}{--} &
+\textcolor{gray}{50.0} & \textcolor{gray}{59.1} &
+\textcolor{gray}{55.2} & \textcolor{gray}{57.9} & \textcolor{gray}{55.6} \\
+\bottomrule
+\end{tabular}
+}
+\caption{
+Evaluation results on \textsc{QuantiPhy}. We report Mean Relative Accuracy (MRA \%) on four kinematic categories (2S, 2D, 3S, 3D) and their average. \best{Dark} cell marks the best overall model and \bestopen{light} cell marks the best open-weight model.
+}
+\label{tab:main-results}
+\end{minipage}
+\hfill
+% ------------ Right table: Ablations (no model or size column) ------------
+\begin{minipage}[t]{0.35\textwidth}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{
+>{\centering\arraybackslash}p{1.7cm}|
+>{\centering\arraybackslash}p{1.7cm}|
+>{\centering\arraybackslash}p{1.9cm}|
+>{\centering\arraybackslash}p{1.4cm}
+}
+\toprule
+\multicolumn{1}{c}{\multirow{2}{*}{Video + Prior}} &
+\multicolumn{1}{c}{\multirow{2}{*}{Prior only}} &
+\multicolumn{1}{c}{\multirow{2}{*}{Counterfactual}} &
+\multicolumn{1}{c}{\multirow{2}{*}{CoT}} \\
+\multicolumn{1}{c}{} &
+\multicolumn{1}{c}{} &
+\multicolumn{1}{c}{} &
+\multicolumn{1}{c}{} \\
+\midrule
+\rowcolor{row_color}
+\multicolumn{4}{l}{\textit{}} \\
+
+56.1 & 39.0 & 15.4 & 27.7 \\ % gpt-5.1
+60.9 & 46.1 & 29.9 & 49.8 \\ % gemini-2.5-pro
+49.8 & 36.1 & 14.4 & 22.4 \\ % gemini-flash
+47.5 & 44.3 & 31.6 & 39.5 \\ % grok
+34.2 & 50.8 & 29.6 & 53.7 \\ % gpt-5
+25.4 & 16.6 & 11.6 & 25.9 \\ % claude
+
+\midrule
+\rowcolor{row_color}
+\multicolumn{4}{l}{\textit{}} \\
+
+50.1 & 37.2 & 34.0 & 23.1 \\ % Qwen3-32B
+45.4 & --   & 12.1 & 17.6 \\ % InternVL-30B
+40.5 & 24.9 & 12.0 & 21.0 \\ % Qwen3-8B 
+37.0 & 19.3 & 29.7 & 18.2 \\ % InternVL-8B 
+39.8 & --   & 14.7 & 15.9 \\ % molmo 
+40.0 & 20.1 & 9.2  & 23.5 \\ % Phi-4 
+34.9 & 28.2 & 25.2 & 25.6 \\ % Qwen3-2B
+38.9 & --   & 14.3 & 17.8 \\ % smolvlm
+32.7 & 25.1 & 22.5 & 21.5 \\ % InternVL-2B 
+31.8 & --   & 14.1 & 10.0 \\ % vila
+28.5 & --   & 9.5  & 26.4 \\ % cogvlm2
+11.1 & 10.3 & 8.4  & 7.2  \\ % phi-3 
+20.2 & --   & 13.9 & 14.4 \\ % llava 
+29.7 & --   & 19.9 & 24.1 \\ % minicpm 
+14.3 & --   & 9.0  & 21.1 \\ % fuyu
+
+\midrule
+\textcolor{gray}{--} & \textcolor{gray}{--} &
+\textcolor{gray}{--} & \textcolor{gray}{--} \\
+\bottomrule
+\end{tabular}
+}
+\caption{Extensive results on an analysis subset. We report Mean Relative Accuracy (MRA) in \%. Rows follow the same model order as in Table~\ref{tab:main-results}.} 
+
+
+\label{tab:more-results}
+\end{minipage}
+
+\end{table*}
