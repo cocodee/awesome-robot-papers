@@ -1,0 +1,27 @@
+\begin{table}[t]
+    \centering
+    \caption{Performance on RoboCasa365. We report success rates (SR, \%) across three evaluation splits. Baseline results are obtained from the official leaderboard. Embodied PT. follows the definition in Table~\ref{tab:robotwin_results}. Blue and light blue highlight LoopWAM and the runner-up, respectively.}
+    \label{tab:robocasa_results}
+    \footnotesize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.05}
+    \setlength{\resulttablewidth}{0.97\linewidth}
+    \begin{tabular*}{\resulttablewidth}{l@{\extracolsep{\fill}}ccccc}
+        \toprule
+        Method & \resulthead{Embodied PT.} & \resulthead{Atomic Seen} & \resulthead{Composite Seen} & \resulthead{Composite Unseen} & Overall \\
+        \midrule
+        Diffusion Policy~\citep{chi2025diffusion} & \xmark & 15.7 & 0.2 & 1.3 & 6.1 \\
+        $\pi_0$~\citep{black2024pi0} & \cmark & 34.6 & 6.1 & 1.1 & 14.8 \\
+        $\pi_{0.5}$~\citep{physicalintelligence2025pi05} & \cmark & 39.6 & 7.1 & 1.2 & 16.9 \\
+        GigaWorld-Policy~0.1~\citep{ye2026gigaworld} & \cmark & 44.4 & 11.8 & 2.9 & 20.7 \\
+        GR00T N1.6~\citep{nvidia2025gr00t} & \cmark & 51.1 & 9.4 & 1.7 & 21.9 \\
+        GR00T N1.5~\citep{nvidia2025gr00t} & \cmark & 50.7 & 14.8 & 2.7 & 23.9 \\
+        RLDX-1~\citep{kim2026rldx1} & \cmark & 67.6 & 27.9 & 8.5 & 36.0 \\
+        PRTS~\citep{zhang2026prts} & \cmark & 66.3 & 30.3 & \textbf{18.8} & 39.6 \\
+        ABot-M0.5~\citep{chen2026abot05} & \cmark & 75.6 & 37.7 & 3.3 & 40.3 \\
+        \resultrow{secondsky}ABot-M0.6~\citep{yang2026abot} & \cmark & 79.4 & 48.3 & 7.9 & 46.6 \\
+        \midrule
+        \resultrow{loopsky}\textbf{LoopWAM} & \xmark & \textbf{79.7} & \textbf{50.3} & 14.9 & \textbf{49.5} \\
+        \bottomrule
+    \end{tabular*}
+\end{table}

@@ -3,3 +3,7 @@ papers/openwam/code/
 # Official TEMPO checkouts are retained locally for paper reading.
 papers/tempo-learning-temporal-context-for-dynamic-robot-manipulation/code/
 papers/tempo-learning-temporal-context-for-dynamic-robot-manipulation/benchmark/
+# Official VPP2 checkout is retained locally for paper reading.
+papers/video-prediction-policy-2/code/
+# Selected official UNITAS source files retained locally for paper reading.
+papers/unitas-3d-native-world-action-model/code/

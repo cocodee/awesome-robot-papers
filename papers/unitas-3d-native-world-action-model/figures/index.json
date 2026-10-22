@@ -1,0 +1,436 @@
+[
+ {
+  "kind": "figure",
+  "num": "1",
+  "page": 2,
+  "caption": "Figure 1: UNITAS is a 3D-native world action model. Observations, action flow, and scene flow share a metric frame within each prediction window, with a common representation across embod- iments. With 1.7B parameters, UNITAS achieves leading manipulation results among the compared methods and predicts action-conditioned scene trajectories.",
+  "file": "figures/fig-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.173,
+   0.101,
+   0.826,
+   0.366
+  ],
+  "label": "fig:physwam_overview",
+  "source_files": [
+   "figures/unitas_overview.pdf"
+  ],
+  "tex_line": 98,
+  "refs": [
+   "§1 Introduction (L73)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "2",
+  "page": 4,
+  "caption": "Figure 2: UNITAS architecture and attention masks. Left: The point dynamics expert models both action and scene flows, while the action expert generates the end-effector action chunk. Scene flow generation is conditioned on clean demonstrated action flow during training and generated or supplied action flow at inference. Right: Colored/white cells indicate allowed/blocked attention. Policy-only inference omits both future action-flow and scene-flow tokens.",
+  "file": "figures/fig-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.174,
+   0.101,
+   0.826,
+   0.343
+  ],
+  "label": "fig:architecture, fig:attention_mask",
+  "source_files": [
+   "figures/architecture.pdf"
+  ],
+  "tex_line": 205,
+  "refs": [
+   "§3 Methodology (L222)",
+   "§3.5 Model Architecture (L501)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "3",
+  "page": 6,
+  "caption": "Figure 3: Shared point-flow representations across data sources. Left: gripper/hand trajectories (purple) and scene trajectories (yellow–blue), with RGB insets. Right: RoboTwin end-effector XYZ error (mm). Thick curves show exponential moving averages (EMA) of the thin curves.",
+  "file": "figures/fig-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.175,
+   0.099,
+   0.826,
+   0.236
+  ],
+  "label": "fig:experiments:mixed_dataset_training",
+  "source_files": [
+   "figures/mixed_dataset_training.pdf"
+  ],
+  "tex_line": 458,
+  "refs": [
+   "§4.2 Simulation Benchmarks (L668)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "4",
+  "page": 8,
+  "caption": "Figure 4: Qualitative real-robot rollouts on Organize Books and Pack the Ball. Numbered keyframes show task progression through precise placement and sequential manipulation.",
+  "file": "figures/fig-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.096,
+   0.659,
+   0.25
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "5",
+  "page": 9,
+  "caption": "Figure 5: Action-conditioned scene-flow predictions. Top: observed RGB images. Middle: ini- tial point clouds. Bottom: predicted endpoint point clouds and scene trajectories (color gradient), conditioned on recorded gripper trajectories (purple). Translucent robot meshes indicate the corre- sponding poses.",
+  "file": "figures/fig-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.206,
+   0.103,
+   0.806,
+   0.328
+  ],
+  "label": "fig:experiments:scene_flow_qualitative",
+  "source_files": [
+   "figures/scene_flow_qualitative.pdf"
+  ],
+  "tex_line": 846,
+  "refs": [
+   "§5 Action-Conditioned World Modeling (L897)",
+   "§G.1 Scene Prediction in Simulation (L1554)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "6",
+  "page": 16,
+  "caption": "Figure 6: Representative observations and aligned geometry from pretraining data. Robot panels show RGB, depth where available, and scene points with robot overlays. VITRA shows egocentric RGB and hand landmarks.",
+  "file": "figures/fig-06.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.175,
+   0.242,
+   0.827,
+   0.679
+  ],
+  "label": "fig:app:dataset_visualization",
+  "source_files": [
+   "figures/pretraining_datasets.pdf"
+  ],
+  "tex_line": 953,
+  "refs": [
+   "§A.1 Data Mixture and Temporal Sampling (L950)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "7",
+  "page": 23,
+  "caption": "Figure 7: Additional scene-flow visualizations (1/4): insertion, extraction, bimanual lifting, and block stacking.",
+  "file": "figures/fig-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.188,
+   0.697,
+   0.809,
+   0.791
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "8",
+  "page": 24,
+  "caption": "Figure 8: Additional scene-flow visualizations (2/4): bowl and mug placement, articulated motion, and gravity-driven motion after object release.",
+  "file": "figures/fig-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.188,
+   0.548,
+   0.809,
+   0.785
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "9",
+  "page": 25,
+  "caption": "Figure 9: Additional scene-flow visualizations (3/4): book, bottle, block, and bowl manipulation across LIBERO and RoboTwin.",
+  "file": "figures/fig-09.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.188,
+   0.152,
+   0.809,
+   0.785
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "10",
+  "page": 26,
+  "caption": "Figure 10: Additional scene-flow visualizations (4/4): object placement, drawer opening and clos- ing, and microwave opening.",
+  "file": "figures/fig-10.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.188,
+   0.294,
+   0.809,
+   0.785
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "11",
+  "page": 27,
+  "caption": "Figure 11: Zero-shot scene-flow predictions on real-world observations. The first four rows are from DROID and the last is from RH20T. Columns show observed RGB, initial points, and predicted midpoint and endpoint point clouds with scene trajectories (orange to purple) and ground-truth grip- per trajectories used for conditioning (magenta). No scene-trajectory ground truth is shown.",
+  "file": "figures/fig-11.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.704,
+   0.828,
+   0.804
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "1",
+  "page": 7,
+  "caption": "Table 1: Policy performance (%, ↑). Our 1.7B model is evaluated with and without mixed-dataset pretraining. Bold and underlined scores denote the best and second-best results, respectively. LIBERO-Plus ranks use one-decimal precision. Dashes denote unavailable results.",
+  "file": "figures/tab-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.189,
+   0.669,
+   0.807,
+   0.931
+  ],
+  "label": "tab:experiments:simulation",
+  "source_files": [],
+  "tex_line": 585,
+  "refs": [
+   "§4.2 Simulation Benchmarks (L647)",
+   "§4.2 Simulation Benchmarks (L659)",
+   "§C Detailed LIBERO-Plus Results (L1266)",
+   "§E Detailed RoboTwin Results (L1362)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "2",
+  "page": 8,
+  "caption": "Table 2: Quantitative comparison results of real-robot experiments (20 trials per task).",
+  "file": "figures/tab-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.601,
+   0.14,
+   0.824,
+   0.229
+  ],
+  "label": "fig:experiments:real_world, tab:experiments:real_world",
+  "source_files": [
+   "figures/real_world_keyframes.pdf"
+  ],
+  "tex_line": 688,
+  "refs": [
+   "§4.3 Real-world Evaluation (L686)",
+   "§4.3 Real-world Evaluation (L683)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "3",
+  "page": 8,
+  "caption": "Table 3: LIBERO-Plus ablations without mixed-dataset pretraining. Checkmarks indicate enabled components. Success rates (%) are reported for each perturbation; Overall pools all 10,030 evalua- tion episodes.",
+  "file": "figures/tab-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.181,
+   0.8,
+   0.819,
+   0.926
+  ],
+  "label": "tab:experiments:libero_plus_ablation",
+  "source_files": [],
+  "tex_line": 732,
+  "refs": [
+   "§4.4 Ablation Study (L802)",
+   "§B.1 Evaluation without Depth Input (L1216)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "4",
+  "page": 9,
+  "caption": "Table 4: Action-conditioned scene prediction on RoboTwin. Errors are in cm (↓); Acc@1cm is in % (↑). DA3 and STv2 denote Depth Anything 3 and SpatialTrackerV2, respectively.",
+  "file": "figures/tab-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.199,
+   0.629,
+   0.797,
+   0.713
+  ],
+  "label": "tab:experiments:world_model",
+  "source_files": [],
+  "tex_line": 860,
+  "refs": [
+   "§5 Action-Conditioned World Modeling (L894)",
+   "§F.1 Action-Conditioned Scene Prediction (L1452)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "5",
+  "page": 17,
+  "caption": "Table 5: Pretraining trajectory sampling configuration. H and Hhist count future and historical intervals; duration is H/f in seconds. H + 1 includes the current anchor.",
+  "file": "figures/tab-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.284,
+   0.187,
+   0.716,
+   0.35
+  ],
+  "label": "tab:app:temporal",
+  "source_files": [],
+  "tex_line": 985,
+  "refs": [
+   "§A.1 Data Mixture and Temporal Sampling (L973)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "6",
+  "page": 18,
+  "caption": "Table 6: Held-out trajectory reconstruction errors of the frozen tokenizer (mm). Dashes indicate unavailable scene-flow ground truth.",
+  "file": "figures/tab-06.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.235,
+   0.139,
+   0.765,
+   0.321
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "7",
+  "page": 18,
+  "caption": "Table 7: Model architecture. Parameter counts include the frozen tokenizer. Component Configuration Params. (M)",
+  "file": "figures/tab-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.235,
+   0.411,
+   0.765,
+   0.516
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "8",
+  "page": 19,
+  "caption": "Table 8: Inference efficiency on an RTX 5090 D. Latency is measured per prediction chunk; Ns denotes the number of scene queries.",
+  "file": "figures/tab-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.288,
+   0.239,
+   0.712,
+   0.375
+  ],
+  "label": "tab:app:inference_efficiency",
+  "source_files": [],
+  "tex_line": 1173,
+  "refs": [
+   "§A.4 Inference Efficiency (L1159)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "9",
+  "page": 19,
+  "caption": "Table 9: Spatial grounding without depth input on LIBERO-Plus. Success rates (%, ↑) over 10,030 episodes. Routed PE and ground-truth depth PE use the same checkpoint.",
+  "file": "figures/tab-09.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.206,
+   0.636,
+   0.794,
+   0.722
+  ],
+  "label": "tab:app:missing_depth",
+  "source_files": [],
+  "tex_line": 1219,
+  "refs": [
+   "§B.1 Evaluation without Depth Input (L1214)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "10",
+  "page": 20,
+  "caption": "Table 10: LIBERO-Plus success rates (%, ↑) across seven perturbation types. Robot denotes initial- state perturbations.",
+  "file": "figures/tab-10.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.201,
+   0.828,
+   0.393
+  ],
+  "label": "tab:experiments:libero_plus",
+  "source_files": [],
+  "tex_line": 1270,
+  "refs": [
+   "§C Detailed LIBERO-Plus Results (L1264)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "11",
+  "page": 20,
+  "caption": "Table 11: Detailed VLABench results (%). SR, PS, and IS denote success rate, progress score, and intention score, respectively (all ↑).",
+  "file": "figures/tab-11.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.191,
+   0.546,
+   0.809,
+   0.836
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "12",
+  "page": 21,
+  "caption": "Table 12: Detailed RoboTwin 2.0 success rates (%, ↑). Clean and Rand. denote demo clean and demo randomized. All methods are evaluated over 100 episodes per task in each setting.",
+  "file": "figures/tab-12.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.143,
+   0.828,
+   0.774
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "13",
+  "page": 22,
+  "caption": "Table 13: Closed-loop action–scene consistency on RoboTwin. Predictions are compared with the scene evolution produced by executing the same model’s generated actions. Errors are in cm; Moving Acc@1cm is in %.",
+  "file": "figures/tab-13.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.218,
+   0.709,
+   0.782,
+   0.814
+  ]
+ }
+]

@@ -1,0 +1,28 @@
+\subsection{Task Definition and MDP}
+\label{sec:task_mdp}
+We formulate all 20 ATB1 assembly tasks~\cite{kimble2020benchmarking}
+as a multi-task reinforcement-learning problem with one shared policy.
+
+Let $e \in \mathcal{E}$ denote an assembly task, with $|\mathcal{E}|=20$.
+Each task corresponds to one \textit{assembly pair}: a movable \textit{part}, its \textit{mating geometry}, and a fully-assembled configuration.
+
+We model the problem as a finite-horizon MDP,
+\begin{equation}
+    \mathcal{M}=(\mathcal{S},\mathcal{A},p,r,\gamma,T,\rho),
+\end{equation}
+where $p(s_{t+1}\mid s_t,a_t)$ is the transition kernel and $\rho$
+is the joint distribution over task identities and initial states.
+At the beginning of each episode, $(e,s_0)\sim\rho$.
+A shared policy $\pi_\theta(a_t\mid o_t)$ acts on partial observations
+$o_t$ of the simulator state $s_t$ and maximizes
+\begin{equation}
+    J(\theta)
+    =
+    \mathbb{E}_{\rho,p,\pi_\theta}
+    \left[
+        \sum_{t=0}^{T-1}\gamma^t r_t
+    \right].
+    \label{eq:objective}
+\end{equation}
+Task variation is represented through surface point clouds in $o_t$, 
+rather than an explicit discrete task identifier.

@@ -1,0 +1,50 @@
+\vspace{-0.3cm}
+
+\section{Related Work}
+\label{sec:related_work}
+\vspace{-0.2cm}
+
+\noindent\textbf{Video world--action modeling.}
+Video-based policies use future prediction for control \citep{hu2024vpp},
+with early WAMs coupling prediction and action learning through shared
+representations and generative objectives
+\citep{li2025uva,zhu2025uwm,cen2025worldvla,xu2025imaginative}.
+Video-generation priors subsequently support joint video--action learning
+and future-conditioned policies
+\citep{genieenvisioner,shen2025videovla,bi2025motus,cosmospolicy,li2026lingbotva,wang2026eva},
+while heterogeneous robot and video-only data support cross-task and
+cross-embodiment transfer \citep{ye2026dreamzero,lingbotva2}.
+Efficient variants omit future generation at deployment or replace it
+with latent subgoals \citep{yuan2026fastwam,chen2026lawam}.
+These models primarily represent world evolution in images or visual
+latents. Reported sensitivity to viewpoint and robot initial-state changes
+\citep{zhang2026wamgeneralization,hong2026walqr} highlights the importance
+of grounding perception, world evolution, and executable actions in a
+shared physical space.
+
+\noindent\textbf{Policy learning in 3D space.}
+Explicit 3D representations improve spatial understanding for manipulation
+\citep{shridhar2023peract,ze2024threediffusion,zhen2024threedvla,qu2025spatialvla}.
+Geometry-aware world models augment visual prediction with image-aligned
+geometric signals \citep{zhen2025tesseract,guo2026xwam,zhao2026rynnworld}.
+In policy learning, LaMP~\citep{wang2026lamp} and
+GeomVLA~\citep{xiong2026geomvla} use intermediate motion features from
+trajectory denoising to condition action generation. PointWorld~\citep{huang2026pointworld}
+follows the complementary direction, predicting scene flow conditioned
+on robot motion for planning. \method{} jointly models agent motion and
+its conditional scene response through point flows, while supporting
+direct command execution without generating scene flows.
+
+\noindent\textbf{Unified action representations for manipulation.}
+Cross-embodiment learning must reconcile different morphologies and
+control interfaces \citep{chi2024umi}. Generalist policies use
+embodiment-specific prompts, canonical state--action formats, and aligned
+end-effector conventions
+\citep{liu2024rdt,zheng2025xvla,yuan2026qwenrobotmanip,xiaomi2026robotics1}.
+Point flows provide transferable motion targets across embodiments
+\citep{yuan2024generalflow,bharadhwaj2024track2act,xu2024im2flow2act},
+connecting object-motion prediction to control
+\citep{zhi2025threedflowaction,dharmarajan2025dream2flow} and representing
+robot and object trajectories \citep{huang2026pointworld,lin2026chronoflow}.
+\method{} unifies human-hand, robot-gripper, and scene trajectories with
+a shared physical-time tokenizer.

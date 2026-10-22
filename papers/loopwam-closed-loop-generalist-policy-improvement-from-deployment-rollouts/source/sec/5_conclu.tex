@@ -1,0 +1,8 @@
+% !TEX root = ../main.tex
+
+We presented LoopWAM for improving generalist world-action policies directly from deployment experience.
+The key is to learn physical consequences from trajectories across the quality spectrum while controlling how their actions supervise behavior.
+Source-dependent noise sampling, quality steering, and quality-weighted supervision implement this distinction within joint video--action denoising, allowing consequence representations to participate directly in action generation.
+The same formulation accepts rollouts from both LoopWAM and other deployed policies. Experiments show the best overall results: a score of 56.80 and 43.33\% success on RoboChallenge Table30-V2, 94.5\% average success on RoboTwin~2.0, and 49.5\% overall success on RoboCasa365.
+Repeated real-robot deployment raises Table30-V2 success by 19.7 percentage points over three rounds and improves shirt-folding success from 13.20\% to 55.56\% over two rounds after single-task post-training.
+These findings support using mixed-quality interaction history as a training resource for continued improvement of both multi-task policies and policies adapted to individual tasks.

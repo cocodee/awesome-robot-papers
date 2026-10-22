@@ -1,0 +1,63 @@
+{
+ "arxiv_id": "2610.10270",
+ "version": "v2",
+ "title": "Video Prediction Policy 2: Predict Better, Act Better",
+ "authors": [
+  "Yanjiang Guo",
+  "Haodong Yan",
+  "Zhide Zhong",
+  "Zhongru Zhang",
+  "Qingyuan Yang",
+  "Qingzhou Lu",
+  "Xiaoyu Chen",
+  "Yen-Jen Wang",
+  "Shuying Deng",
+  "Chenghan Yang",
+  "Puzhen Yuan",
+  "Chenxin Liu",
+  "Tun Ban",
+  "Xiang Zhu",
+  "Yichen Liu",
+  "Kun Feng",
+  "Haoang Li",
+  "Jianyu Chen"
+ ],
+ "published": "2026-10-07",
+ "updated": "2026-10-08",
+ "abstract": "World action models (WAMs) have emerged as an important class of generalist robot policies, aiming to transfer video prediction priors to action learning. However, we find that existing WAMs frequently produce incorrect motion predictions in open-ended environment, leading to erroneous actions. We attribute this limitation to two factors: (1) base video models are not optimized for manipulation, and (2) naively incorporating action components into video models can substantially degrade their generalization capabilities. We introduce Video Prediction Policy 2 (VPP2), a WAM that enables strong zero-shot generalization in both video prediction and action generation. First, we curate a large-scale, diverse dataset of manipulation videos to continue pretraining the base video foundation model. We annotate video clips with detailed captions and perform \\textit{event-level} video pretraining to promote generalization across open-ended manipulation tasks. Second, we post-train and distill the video model into a single-step visual planner with fixed prediction horizon. Finally, we introduce action module via a mixture-of-transformers (MoT) architecture to learn implicit inverse dynamics model. Experiments demonstrate three key results: (1) VPP2-14B outperforms Cosmos3-64B by 11.0\\% points in video prediction instruction-following success rate on open-ended tasks; (2) VPP2 surpasses the strongest baseline by 18.5\\% points in success rate on real-world zero-shot ALOHA manipulation tasks; and (3) following benchmark-specific post-training, VPP2 achieves the highest success rates among evaluated methods on the challenging LIBERO-Pro, LIBERO-OOD, and RoboDojo benchmarks.",
+ "comment": "",
+ "journal_ref": "",
+ "categories": [
+  "cs.CV",
+  "cs.RO"
+ ],
+ "abs_url": "https://arxiv.org/abs/2610.10270",
+ "pdf_pages": 21,
+ "has_latex": true,
+ "main_tex": "source/iclr2027_conference.tex",
+ "links": {
+  "project": [
+   {
+    "url": "https://robert-gyj.github.io/video-prediction-policy-2",
+    "score": 9.5,
+    "from": [
+     "首页链接",
+     "首页文字",
+     "正文链接",
+     "正文提到"
+    ]
+   },
+   {
+    "url": "https://snap-research.github.io/Panda-70M",
+    "score": 1.0,
+    "from": [
+     "正文链接"
+    ]
+   }
+  ]
+ },
+ "official_code": "https://github.com/roboterax/video-prediction-policy-2",
+ "official_code_from": " --code 手动指定",
+ "code_dir": "/Users/kdi/workspace/gitprj/awesome-robot-papers/papers/video-prediction-policy-2/code",
+ "fetched": "2026-10-13"
+}

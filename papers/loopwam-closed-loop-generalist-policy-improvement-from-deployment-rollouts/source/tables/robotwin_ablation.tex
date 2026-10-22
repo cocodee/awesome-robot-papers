@@ -1,0 +1,22 @@
+% !TEX root = ../main.tex
+\begin{table*}[t]
+\caption{Ablation study on RoboTwin~2.0. We evaluate quality steering with different annotation schemes and assess the effect of quality-weighted rollout action supervision (Act.).}
+\label{tab:robotwin_ablation}
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.0}
+\setlength{\resulttablewidth}{0.75\linewidth}
+\begin{tabular*}{\resulttablewidth}{l@{\extracolsep{\fill}}cccc}
+    \toprule
+    Quality Steering & Quality-weighted Act. & Clean & Rand. & Average \\
+    \midrule
+    None & \xmark & 73.5 & 71.1 & 72.3 \\
+    Extra-coarse & \xmark & 92.2 & 93.3 & 92.8 \\
+    \resultrow{secondsky}Extra-coarse & \cmark & 93.9 & 93.3 & 93.6 \\
+    Coarse & \xmark & 93.2 & 92.2 & 92.7 \\
+    \midrule
+    \resultrow{loopsky}\textbf{Coarse (ours)} & \cmark & \textbf{94.6} & \textbf{94.4} & \textbf{94.5} \\
+    \bottomrule
+\end{tabular*}
+\end{table*}

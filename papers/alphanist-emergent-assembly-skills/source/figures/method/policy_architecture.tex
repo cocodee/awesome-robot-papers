@@ -1,0 +1,146 @@
+\begin{tikzpicture}[
+    x=1mm,
+    y=1mm,
+    font=\footnotesize\sffamily,
+    flow/.style={-{Latex[length=1.8mm,width=1.15mm]}, draw=graphite,
+        line width=0.5pt},
+    source/.style={rounded corners=0.5mm, line width=0.45pt, align=center,
+        inner sep=1.2mm},
+    layer/.style={line width=0.4pt, minimum width=2.4mm,
+        minimum height=10mm, inner sep=0pt, align=center},
+    annotation/.style={font=\scriptsize\sffamily, text=graphite, align=center}
+]
+    \definecolor{graphite}{RGB}{48,55,59}
+    \definecolor{geomblue}{RGB}{77,115,144}
+    \definecolor{stateblue}{RGB}{91,142,131}
+    \definecolor{networkblue}{RGB}{115,151,166}
+    \definecolor{networkgold}{RGB}{169,136,41}
+    \tikzset{every node/.style={text=graphite}}
+
+    \node[source, draw=geomblue, fill=white, text width=29mm,
+        minimum height=13mm] (geometry) at (15,12)
+        {\textbf{Point cloud}};
+    \node[source, draw=stateblue, fill=white, text width=33mm,
+        minimum height=12mm] (history) at (17,-10)
+        {\textbf{Proprioception + last action}\\[-1pt]
+        pose $7$ $\mid$ twist $6$ $\mid$ joints $9$ $\mid$ action $8$};
+
+    \node[layer, draw=geomblue, fill=geomblue!75]
+        (pc-in) at (38,12) {};
+    \node[layer, draw=geomblue, fill=geomblue!75]
+        (pc-hidden) at (49,12) {};
+    \node[layer, draw=geomblue, fill=geomblue!75]
+        (pc-out) at (58,12) {};
+    \node[annotation] at (48,21) {two-layer ELU encoder};
+    \node[annotation, below=1.0mm of pc-in] {$3\times n_{\mathrm{pts}}$};
+    \node[annotation, below=1.0mm of pc-hidden] {$256$};
+    \node[annotation, below=1.0mm of pc-out] {$128$};
+    \draw[flow] (geometry.east) -- (pc-in.west);
+    \draw[flow] (pc-in.east) -- (pc-hidden.west);
+    \draw[flow] (pc-hidden.east) -- (pc-out.west);
+
+    \node[layer, draw=stateblue, fill=stateblue!75]
+        (state-in) at (42,-10) {};
+    \node[layer, draw=stateblue, fill=stateblue!35]
+        (state-norm) at (50,-10) {};
+    \node[annotation, above=1.0mm of state-norm] {RN};
+    \node[layer, draw=stateblue, fill=stateblue!75]
+        (state-out) at (58,-10) {};
+    \node[annotation, below=1.0mm of state-in] {$150$};
+    \node[annotation, below=1.0mm of state-out] {$150$};
+    \draw[flow] (history.east) -- (state-in.west);
+    \draw[flow] (state-in.east) -- (state-norm.west);
+    \draw[flow] (state-norm.east) -- (state-out.west);
+
+    \node[circle, draw=graphite, fill=white, line width=0.5pt,
+        minimum size=7.5mm, inner sep=0pt] (concat) at (66,0) {$\Vert$};
+    \node[annotation, below=1.0mm of concat] {$278$};
+    \draw[flow] (pc-out.east) -- (concat.north west);
+    \draw[flow] (state-out.east) -- (concat.south west);
+
+    \foreach \branch/\yy in {actor/15,critic/-16} {
+        \node[layer, draw=geomblue, fill=networkblue]
+            (projection-\branch) at (76,\yy) {};
+        \node[annotation, above=1.0mm of projection-\branch] {linear};
+        \node[annotation, below=1.0mm of projection-\branch] {$256$};
+
+        \foreach \block/\offset in {1/0,2/43} {
+            \path[draw=graphite!28, fill=white,
+                line width=0.35pt, rounded corners=0.65mm]
+                ({80+\offset},{\yy-10}) rectangle ({120+\offset},{\yy+16});
+            \coordinate (res-in-\branch-\block) at ({81+\offset},\yy);
+            \node[layer, draw=stateblue, fill=stateblue!35]
+                (layer-norm-\branch-\block) at ({86+\offset},\yy) {};
+            \node[annotation, above=1.0mm of layer-norm-\branch-\block] {LN};
+            \node[layer, draw=geomblue, fill=networkblue]
+                (expand-\branch-\block) at ({93+\offset},\yy) {};
+            \node[annotation, above=1.0mm of expand-\branch-\block] {linear};
+            \node[annotation, below=1.0mm of expand-\branch-\block] {$1024$};
+            \node[layer, draw=networkgold, fill=networkgold!45]
+                (swish-\branch-\block) at ({100+\offset},\yy) {};
+            \node[annotation, above=1.0mm of swish-\branch-\block] {SW};
+            \node[layer, draw=geomblue, fill=networkblue]
+                (contract-\branch-\block) at ({107+\offset},\yy) {};
+            \node[annotation, above=1.0mm of contract-\branch-\block] {linear};
+            \node[annotation, below=1.0mm of contract-\branch-\block] {$256$};
+            \node[circle, draw=graphite, fill=white,
+                line width=0.5pt, minimum size=5.5mm, inner sep=0pt]
+                (res-add-\branch-\block) at ({116+\offset},\yy) {$+$};
+            \draw[flow] (layer-norm-\branch-\block.east) -- (expand-\branch-\block.west);
+            \draw[flow] (expand-\branch-\block.east) -- (swish-\branch-\block.west);
+            \draw[flow] (swish-\branch-\block.east) -- (contract-\branch-\block.west);
+            \draw[flow] (contract-\branch-\block.east) -- (res-add-\branch-\block.west);
+            \draw[flow, rounded corners=0.8mm]
+                (res-in-\branch-\block) -- ++(0,11mm) --
+                node[above=0.4mm, annotation, fill=white, inner sep=0.4mm] {identity}
+                ({116+\offset},{\yy+11}) -- (res-add-\branch-\block.north);
+            \fill[graphite] (res-in-\branch-\block) circle[radius=0.4mm];
+        }
+        \draw[flow] (projection-\branch.east) -- (layer-norm-\branch-1.west);
+        \draw[flow] (res-add-\branch-1.east) -- (layer-norm-\branch-2.west);
+
+        \node[layer, draw=stateblue, fill=stateblue!35]
+            (out-norm-\branch) at (168,\yy) {};
+        \node[annotation, above=1.0mm of out-norm-\branch] {LN};
+        \node[layer, draw=networkgold!85!black, fill=networkgold!80]
+            (head-\branch) at (175,\yy) {};
+        \draw[flow] (res-add-\branch-2.east) -- (out-norm-\branch.west);
+        \draw[flow] (out-norm-\branch.east) -- (head-\branch.west);
+    }
+
+    \draw[flow, rounded corners=1mm]
+        (concat.north east) |- (projection-actor.west);
+    \draw[flow, rounded corners=1mm]
+        (concat.south east) |- (projection-critic.west);
+
+    \node[annotation, above=1.0mm of head-actor] {linear};
+    \node[annotation, below=1.0mm of head-actor] {$8$};
+    \foreach \j [evaluate=\j as \x using 182+(\j-1)*2.7] in {1,...,7} {
+        \node[draw=networkgold!85!black, fill=networkgold!80, line width=0.45pt,
+            rounded corners=0.15mm, minimum size=2.6mm, inner sep=0pt]
+            (arm-\j) at (\x,15) {};
+    }
+    \node[draw=stateblue, fill=stateblue!75, line width=0.45pt,
+        rounded corners=0.15mm, minimum size=2.6mm, inner sep=0pt]
+        (gripper) at (203,15) {};
+    \node[annotation, font=\scriptsize\sffamily\bfseries] at (192.5,20.2)
+        {Gaussian action $a_t\in\mathbb{R}^{8}$};
+    \draw[flow] (head-actor.east) -- (arm-1.west);
+    \draw[draw=graphite, line width=0.4pt]
+        ([yshift=-1mm]arm-1.south west) -- ++(0,-1mm) -|
+        ([yshift=-1mm]arm-7.south east) -- ++(0,1mm);
+    \node[annotation, text=graphite] at (190,9.6)
+        {arm $\Delta q_{1:7}$};
+    \node[annotation, text=graphite] at (203,9.6)
+        {gripper};
+
+    \node[annotation, above=1.0mm of head-critic] {linear};
+    \node[annotation, below=1.0mm of head-critic] {$1$};
+    \node[draw=networkgold!85!black, fill=networkgold!80, line width=0.45pt,
+        rounded corners=0.15mm, minimum size=3.2mm, inner sep=0pt]
+        (value-cell) at (182,-16) {};
+    \node[annotation, font=\scriptsize\sffamily\bfseries,
+        text=graphite, anchor=west] at (186,-16)
+        {value $V_\phi(o_t)\in\mathbb{R}$};
+    \draw[flow] (head-critic.east) -- (value-cell.west);
+\end{tikzpicture}

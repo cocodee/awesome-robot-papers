@@ -1,0 +1,12 @@
+AlphaNIST shows that heterogeneous contact-rich assembly can be learned with a \emph{single} policy using a binary task objective, diverse reset coverage, and large-scale reinforcement learning.
+In simulation, one policy learns all
+20 ATB1 tasks without demonstrations, prescribed stages, or per-task tuning, while outperforming separately trained specialists on the most difficult small-part assemblies.
+Across all tested scales, the binary task objective outperforms the evaluated dense reward shaping.
+The learned policy discovers grasp adaptation, extrinsic reorientation, tapping, threading, and longer-horizon coordination without direct supervision.
+In multi-pair assembly, it can prepare one part, complete another, and return to finish the first, without an intermediate assembly reward or a planner prescribing the sequence.
+
+
+
+
+
+More broadly, these findings challenge the assumption that task complexity and diversity must be reduced to make robot learning tractable. Instead, they show that diverse experience under a shared objective can itself become a source of reusable dexterity and coordination. We view this work as a critical step toward general-purpose assembly policies that discover how to solve complex physical tasks, rather than requiring those strategies to be specified in advance.

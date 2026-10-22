@@ -1,0 +1,19 @@
+% !TEX root = ../main.tex
+
+\textbf{Robot Manipulation Policies.}
+Robot manipulation policies increasingly combine scalable imitation learning with pretrained representations.
+ACT~\citep{zhao2023learning} and Diffusion Policy~\citep{chi2025diffusion} learn action sequences from demonstrations, while RT-2~\citep{zitkovich2023rt2} and OpenVLA~\citep{kim2024openvla} transfer vision-language priors to language-conditioned control.
+Flow-based policies such as $\pi_0$~\citep{black2024pi0} and $\pi_{0.5}$~\citep{physicalintelligence2025pi05} further scale continuous action generation and generalization.
+Open X-Embodiment~\citep{o2024open} and DROID~\citep{khazatsky2024droid} expand training coverage across embodiments and environments.
+Beyond offline demonstrations, DAgger~\citep{ross2011dagger} addresses policy-induced distribution shift by collecting expert labels on visited states.
+LoopWAM studies learning from the recorded observations and actions of deployment rollouts, using trajectory quality to guide policy updates while retaining world supervision from unsuccessful interactions.
+
+\textbf{World Action Models.}
+Video-based robot policies use predictive visual representations to support control.
+mimic-video~\citep{pai2025mimicvideo} conditions an action decoder on representations from a pretrained video model.
+DreamZero~\citep{ye2026world} jointly generates video and actions, while LingBot-VA~\citep{lingbot-va2026} organizes visual prediction and action decoding within a causal autoregressive framework.
+LingBot-VA~2.0~\citep{zhang2026lingbotva2} further develops native video-action pretraining with a control-oriented tokenizer.
+Efficiency-oriented designs include Fast-WAM~\citep{yuan2026fast}, which retains video co-training but removes future-video generation at inference, and GigaWorld-Policy~\citep{ye2026gigaworld}, which learns action-conditioned visual dynamics while allowing action-only inference.
+Being-H0.7~\citep{luo2026beingh07} instead uses future observations to supervise latent representations.
+These studies establish several ways for predictive supervision to support action learning.
+LoopWAM focuses on closing the deployment--training loop: mixed-quality rollouts broaden world-model training, while joint video--action modeling, quality steering, and weighted action supervision connect consequence awareness with high-quality behavior.

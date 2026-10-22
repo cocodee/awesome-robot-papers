@@ -1,0 +1,418 @@
+[
+ {
+  "kind": "figure",
+  "num": "1",
+  "page": 2,
+  "caption": "Figure 1: LoopWAM learns from deployment. Mixed-quality rollouts return to training through quality steer- ing, source-dependent noise sampling, and quality-weighted supervision. Center: closed-loop self-improvement on RoboChallenge Table30-V2, where three rounds of deployment and retraining increase overall success from 23.67% to 43.33%. Bottom: benchmark comparisons.",
+  "file": "figures-auto/fig-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.092,
+   0.093,
+   0.91,
+   0.495
+  ],
+  "label": "fig:teaser",
+  "source_files": [
+   "figures/teaser.pdf"
+  ],
+  "tex_line": 50,
+  "refs": []
+ },
+ {
+  "kind": "figure",
+  "num": "2",
+  "page": 4,
+  "caption": "Figure 2: Overview of LoopWAM. LoopWAM is structured as a Mixture-of-Transformer (MoT) architecture, where bidirectional attention enables feature interaction between the video and action branches. Training combines quality-conditioned instructions, source-dependent noise sampling, and quality-weighted action supervision. Expert trajectories supervise both modalities, while lower-quality rollouts retain full world supervision and contribute to action imitation according to their quality. The trained model is deployed using the expert score 𝑞⋆, and recorded experience returns to the next training round.",
+  "file": "figures-auto/fig-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.102,
+   0.099,
+   0.897,
+   0.363
+  ],
+  "label": "fig:method",
+  "source_files": [
+   "figures/LoopWAM_method0926.pdf"
+  ],
+  "tex_line": 104,
+  "refs": [
+   "§3 Method (L101)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "3",
+  "page": 10,
+  "caption": "Figure 3: Closed-loop improvement from real-robot deployment. Top: three deployment-and-training iterations on RoboChallenge Table30-V2, covering 30 tasks across four robot embodiments. Bottom: two deployment- and-training iterations on shirt folding after task-specific expert post-training of the DOS-W1 model. Each plot reports success rate and score over successive improvement rounds.",
+  "file": "figures-auto/fig-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.107,
+   0.101,
+   0.895,
+   0.293
+  ],
+  "label": "fig:closed_loop_improvement",
+  "source_files": [
+   "figures/closed_loop_improvement.pdf"
+  ],
+  "tex_line": 397,
+  "refs": [
+   "§4.4 Closed-Loop Improvement from Deployment (L407)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "4",
+  "page": 16,
+  "caption": "Figure 4: Button pressing (ARX5). Subtask segmentation example. The initial observation (Stage 1) and subsequent stage observations are shown in order, each paired with its subtask instruction.",
+  "file": "figures-auto/fig-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.179,
+   0.186,
+   0.821,
+   0.769
+  ],
+  "label": "fig:subtask_press_the_button",
+  "source_files": [
+   "figures/table30_subtask_keyframes_train/press_the_button/init.png",
+   "figures/table30_subtask_keyframes_train/press_the_button/01_press_2.png",
+   "figures/table30_subtask_keyframes_train/press_the_button/02_press_3.png",
+   "figures/table30_subtask_keyframes_train/press_the_button/03_press_4.png"
+  ],
+  "tex_line": 585,
+  "refs": [
+   "§A.4 Subtask Switching Examples (L581)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "5",
+  "page": 17,
+  "caption": "Figure 5: Plant watering (ARX5). Subtask segmentation example. The initial observation (Stage 1) and subsequent stage observations are shown in order, each paired with its subtask instruction.",
+  "file": "figures-auto/fig-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.179,
+   0.101,
+   0.821,
+   0.392
+  ],
+  "label": "fig:subtask_water_the_flowers",
+  "source_files": [
+   "figures/table30_subtask_keyframes_train/water_the_flowers/init.png",
+   "figures/table30_subtask_keyframes_train/water_the_flowers/01_place.png"
+  ],
+  "tex_line": 602,
+  "refs": []
+ },
+ {
+  "kind": "figure",
+  "num": "6",
+  "page": 17,
+  "caption": "Figure 6: Paper shredding (UR5). Subtask segmentation example. The initial observation (Stage 1) and subsequent stage observations are shown in order, each paired with its subtask instruction.",
+  "file": "figures-auto/fig-06.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.179,
+   0.445,
+   0.821,
+   0.855
+  ],
+  "label": "fig:subtask_shred_paper",
+  "source_files": [
+   "figures/table30_subtask_keyframes_train/shred_paper/init.png",
+   "figures/table30_subtask_keyframes_train/shred_paper/01_retract.png"
+  ],
+  "tex_line": 613,
+  "refs": []
+ },
+ {
+  "kind": "figure",
+  "num": "7",
+  "page": 18,
+  "caption": "Figure 7: Stamp positioning (ALOHA). Subtask segmentation example. The initial observation (Stage 1) and subsequent stage observations are shown in order, each paired with its subtask instruction.",
+  "file": "figures-auto/fig-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.179,
+   0.259,
+   0.821,
+   0.696
+  ],
+  "label": "fig:subtask_stamp_positioning",
+  "source_files": [
+   "figures/table30_subtask_keyframes_train/stamp_positioning/init.png",
+   "figures/table30_subtask_keyframes_train/stamp_positioning/01_dip.png",
+   "figures/table30_subtask_keyframes_train/stamp_positioning/02_stamp.png"
+  ],
+  "tex_line": 624,
+  "refs": [
+   "§A.4 Subtask Switching Examples (L581)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "8",
+  "page": 20,
+  "caption": "Figure 8: RoboChallenge Table30-V2 leaderboard. LoopWAM ranks first with an overall score of 56.80 and a success rate of 43.33%, using a multi-task policy for each embodiment.",
+  "file": "figures-auto/fig-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.171,
+   0.106,
+   0.829,
+   0.849
+  ],
+  "label": "fig:table30_leaderboard",
+  "source_files": [
+   "figures/table30v2-leaderboard.png"
+  ],
+  "tex_line": 643,
+  "refs": [
+   "§B RoboChallenge Table30-V2 Leaderboard (L640)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "9",
+  "page": 21,
+  "caption": "Figure 9: Qualitative examples of iterative execution and failure recovery. The first attempt may fail due to execution uncertainty, incomplete interaction, or object displacement. Subsequent attempts generate corrective behaviors and achieve successful task completion.",
+  "file": "figures-auto/fig-09.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.1,
+   0.309,
+   0.9,
+   0.63
+  ],
+  "label": "fig:retry_success",
+  "source_files": [
+   "figures/lyp/retry-sucess.pdf"
+  ],
+  "tex_line": 666,
+  "refs": [
+   "§C Failure Recovery and Iterative Execution (L658)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "10",
+  "page": 22,
+  "caption": "Figure 10: Qualitative comparison between predicted future observations from LoopWAM and ground-truth robot executions. The model captures the temporal evolution of robot-object interactions and predicts plausible future visual states.",
+  "file": "figures-auto/fig-10.png",
+  "mode": "整页",
+  "label": "fig:video_prediction",
+  "source_files": [
+   "figures/lyp/video-pred-1.pdf",
+   "figures/lyp/video-pred-2.pdf"
+  ],
+  "tex_line": 698,
+  "refs": [
+   "§D Qualitative Future Observation Predictio (L689)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "11",
+  "page": 23,
+  "caption": "Figure 11: Representative tasks on the ARX robot platform. The examples illustrate diverse manipulation scenarios used for evaluating LoopWAM across different robot embodiments.",
+  "file": "figures-auto/fig-11.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.119,
+   0.116,
+   0.881,
+   0.33
+  ],
+  "label": "fig:arx_tasks",
+  "source_files": [
+   "figures/lyp/arx-01.png",
+   "figures/lyp/arx-02.png"
+  ],
+  "tex_line": 735,
+  "refs": [
+   "§E Representative Robot Platforms and Tasks (L727)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "12",
+  "page": 23,
+  "caption": "Figure 12: Representative tasks on the ALOHA robot platform. The examples include coordinated manipulation and object interaction requiring temporally consistent control.",
+  "file": "figures-auto/fig-12.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.119,
+   0.414,
+   0.881,
+   0.839
+  ],
+  "label": "fig:aloha_tasks",
+  "source_files": [
+   "figures/lyp/aloha-01.png",
+   "figures/lyp/aloha-02.png",
+   "figures/lyp/aloha-03.png",
+   "figures/lyp/aloha-04.png"
+  ],
+  "tex_line": 752,
+  "refs": [
+   "§E Representative Robot Platforms and Tasks (L728)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "13",
+  "page": 24,
+  "caption": "Figure 13: Representative tasks on the UR5 robot platform. The examples demonstrate single-arm manipulation in structured environments.",
+  "file": "figures-auto/fig-13.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.119,
+   0.116,
+   0.881,
+   0.33
+  ],
+  "label": "fig:ur5_tasks",
+  "source_files": [
+   "figures/lyp/ur5-01.png",
+   "figures/lyp/ur5-02.png"
+  ],
+  "tex_line": 777,
+  "refs": [
+   "§E Representative Robot Platforms and Tasks (L730)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "14",
+  "page": 24,
+  "caption": "Figure 14: Representative long-horizon tasks on the W1 robot platform. The examples demonstrate sequential manipulation behaviors in complex environments.",
+  "file": "figures-auto/fig-14.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.119,
+   0.414,
+   0.881,
+   0.84
+  ],
+  "label": "fig:w1_tasks",
+  "source_files": [
+   "figures/lyp/w1-01.png",
+   "figures/lyp/w1-02.png",
+   "figures/lyp/w1-03.png",
+   "figures/lyp/w1-04.png"
+  ],
+  "tex_line": 794,
+  "refs": [
+   "§E Representative Robot Platforms and Tasks (L732)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "1",
+  "page": 8,
+  "caption": "Table 1: Performance on RoboChallenge Table30-V2. We report per-embodiment success rates (SR, %) and overall performance across four robot embodiments. Baselines are sorted by overall SR. Bold denotes the best performance, while blue and light blue highlight LoopWAM and the runner-up, respectively.",
+  "file": "figures-auto/tab-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.1,
+   0.159,
+   0.9,
+   0.393
+  ],
+  "label": "tab:robochallenge_results",
+  "source_files": [],
+  "tex_line": 281,
+  "refs": [
+   "§1 Introduction (L69)",
+   "§4.3 Benchmark Results (L379)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "2",
+  "page": 9,
+  "caption": "Table 2: Performance on RoboTwin 2.0. We report success rates (SR, %) under clean and randomized evaluation settings. Embodied PT. denotes additional embodied-data pretraining before benchmark training. LoopWAM is trained with the mixed expert–rollout corpus described in Section 4.2. Blue and light blue highlight LoopWAM and the runner-up, respectively.",
+  "file": "figures-auto/tab-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.159,
+   0.175,
+   0.841,
+   0.364
+  ],
+  "label": "tab:robotwin_results",
+  "source_files": [],
+  "tex_line": 312,
+  "refs": [
+   "§1 Introduction (L70)",
+   "§4.2 Benchmark Experimental Setup (L342)",
+   "§4.3 Benchmark Results (L385)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "3",
+  "page": 9,
+  "caption": "Table 3: Performance on RoboCasa365. We report success rates (SR, %) across three evaluation splits. Baseline results are obtained from the official leaderboard. Embodied PT. follows the definition in Table 2. Blue and light blue highlight LoopWAM and the runner-up, respectively.",
+  "file": "figures-auto/tab-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.112,
+   0.432,
+   0.888,
+   0.621
+  ],
+  "label": "tab:robocasa_results",
+  "source_files": [],
+  "tex_line": 340,
+  "refs": [
+   "§1 Introduction (L70)",
+   "§4.3 Benchmark Results (L390)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "4",
+  "page": 10,
+  "caption": "Table 4: Ablation study on RoboTwin 2.0. We evaluate quality steering with different annotation schemes and assess the effect of quality-weighted rollout action supervision (Act.).",
+  "file": "figures-auto/tab-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.199,
+   0.429,
+   0.801,
+   0.545
+  ],
+  "label": "tab:robotwin_ablation",
+  "source_files": [],
+  "tex_line": 431,
+  "refs": [
+   "§4.5 Ablation Study (L453)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "5",
+  "page": 15,
+  "caption": "Table 5: Table30-V2 subtask instructions, listed in execution order.",
+  "file": "figures-auto/tab-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.1,
+   0.126,
+   0.9,
+   0.355
+  ],
+  "label": "tab:table30_subtasks",
+  "source_files": [],
+  "tex_line": 551,
+  "refs": [
+   "§A.3 Table30-V2 Subtask Segmentation (L548)"
+  ]
+ }
+]

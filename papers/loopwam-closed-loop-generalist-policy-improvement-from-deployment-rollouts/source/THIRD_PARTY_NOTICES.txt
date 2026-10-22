@@ -1,0 +1,66 @@
+THIRD-PARTY TEMPLATE ATTRIBUTION AND LICENSE
+
+%%%%%%%%%
+% Copyright (c) 2024, NVIDIA CORPORATION.  All rights reserved.
+% modified from Arxiv RecurrentGemma Tech report
+%
+% Basic style file for NVIDIA Tech Report papers --
+% based on Google DeepMind's style file (see below).
+%
+% Licence: This template is released under the Creative Commons licence
+% Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+%
+% This class allows for several options depending on the preferences of the authors.
+% Use it in the following way, with the full set of option possible:
+% \documentclass[11pt, a4paper, twocolumn, logo, address, copyright, nonumbering,
+% internal]{techreport}
+%
+% Options:
+%    - 11pt: Sets the normal font size of the text. Can be only 10, 11, 12pt.
+%    - a4paper: Paper size. Usually would not adjust.
+%    - twocolumn: Makes the paper into two column mode; single column by default.
+%    - logo: Adds the LoopWAM logo to the top left (local adaptation). No logo included if left out.
+%    - address: Add a postal address for correspondence to the bottom footer.
+%    - copyright: Add a copyright statement to the first page of the paper in the left footnote
+%    - nonumbering: Uses unnumbered sections.
+%    - internal: for internal only docs that should not be shared externally.
+%           Can only use techreportnumber with this option.
+%
+% Date of Paper
+%   The report is by default given the curren date in the top right. If you want to fix the
+%   date: add the date to your preamble with your own date as follows:
+%   \renewcommand{\today}{1 January 2000}
+%
+% Confidentiality
+%   Change the confidentiality statement for internal docs by adding this in the preable
+%   \renewcommand{\internalonly}{Confidential.}
+%
+% ----------------
+% Licence: This template is released under the Creative Commons licence
+% Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+%
+%
+% Known issues:
+%   - Package todonotes does not work in the abstract
+%
+% Version history:
+% v0.6, Aug 2024 - Modified for NVIDIA Deep Imagination Research unofficial tech report
+% v0.5, Aug 2024 - Modified for unofficial NVIDIA Tech Report
+% v0.4, Sept 2023 - Update to Google DeepMind unit
+% v0.31, May 2019 - Allow corresponding authors without internal option
+% v0.3, March 2019 - Math font consistency, better handling of optional arguments
+% v0.2, January 2019 - Consistency of fonts, margins, additional notes
+% v0.1, December 2018 - Initial version for testing
+%
+% Ongoing Review
+%    We review and improve this regularly.
+%    Send comments to shakir@
+%
+%  DeepMind, London, 2019
+%
+% %%%%%%%%%%%%%%%
+
+
+Local modifications: LoopWAM branding, portable font loading, and neutral file names.
+The bundled font binaries are unchanged; only their filenames have been renamed.
+Their embedded attribution and metadata are preserved.

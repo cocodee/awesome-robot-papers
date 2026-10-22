@@ -1,0 +1,162 @@
+
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2027_conference,times}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % for professional tables
+\usepackage{tabularx}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{multirow}
+
+
+% \usepackage{hyperref}
+\usepackage{url}
+\usepackage{float}
+\usepackage{microtype}
+% \usepackage{graphicx}
+\usepackage{graphicx,wrapfig,lipsum}
+% \usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{booktabs} % for professional tables
+\usepackage{colortbl}
+\usepackage{xspace}
+\usepackage{xcolor}
+\definecolor{softgreen}{RGB}{90,150,120}
+% Attempt to make hyperref and algorithmic work together better:
+
+\newcommand{\yj}[1]{{\color{blue}\textbf{\small[Yanjiang: #1]}}}
+\newcommand{\tbd}[1]{{\color{red}#1}}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+
+\title{Video Prediction Policy 2: Predict Better, \\Act Better}
+
+% \title{Video Prediction Policy 2: Next Event Video Prediction for Next Action-Chunk Generation}
+% \title{Video Prediction Policy 2: Reducing Future Prediction Uncertainty Improve Generalization in Robot Policy}
+% \title{Video Prediction Policy 2: Advancing Both \\ Prediction and Action}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{%
+\begin{minipage}[t]{\dimexpr\textwidth-2\tabcolsep\relax}
+\raggedright\normalfont\mdseries
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}l@{}}
+\mbox{\textbf{Yanjiang Guo}\textsuperscript{\mdseries 1,2,*}, \textbf{Haodong Yan}\textsuperscript{\mdseries 1,3,*},
+\textbf{Zhide Zhong}\textsuperscript{\mdseries 1,3,*}, \textbf{Zhongru Zhang}\textsuperscript{\mdseries 2,*},
+\textbf{Qingyuan Yang}\textsuperscript{\mdseries 1,2,*}}\\
+\mbox{\textbf{Qingzhou Lu}\textsuperscript{\mdseries 1,2}, \textbf{Xiaoyu Chen}\textsuperscript{\mdseries 2},
+\textbf{Yen-Jen Wang}\textsuperscript{\mdseries 4}, \textbf{Shuying Deng}\textsuperscript{\mdseries 1,2,4},
+\textbf{Chenghan Yang}\textsuperscript{\mdseries 2}, \textbf{Puzhen Yuan}\textsuperscript{\mdseries 1,2}}\\
+\mbox{\textbf{Chenxin Liu}\textsuperscript{\mdseries 1,2}, \textbf{Tun Ban}\textsuperscript{\mdseries 1,5},
+\textbf{Xiang Zhu}\textsuperscript{\mdseries 1,2}, \textbf{Yichen Liu}\textsuperscript{\mdseries 1,2},
+\textbf{Kun Feng}\textsuperscript{\mdseries 1,2}, \textbf{Haoang Li}\textsuperscript{\mdseries 3},
+\textbf{Jianyu Chen}\textsuperscript{\mdseries 1,2}}
+\end{tabular}%
+}\\[0.5em]
+\normalfont\small
+\textsuperscript{*}Equal Contribution\quad
+\textsuperscript{1}Robotera\quad \textsuperscript{2}Tsinghua University\quad
+\textsuperscript{3}HKUST (GZ) \\
+\textsuperscript{4}University of California, Berkeley\quad
+\textsuperscript{5}Shanghai Jiaotong University\\
+Project Page: \url{https://robert-gyj.github.io/video-prediction-policy-2}
+\end{minipage}%
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+
+\maketitle
+\vspace{-3mm}
+\begin{abstract}
+% World action models (WAMs) have emerged as an important class of generalist robot policies, aiming to translate the predictive capabilities of video foundation models into generalizable robot control. However, our evaluations reveal that incorporating action learning often substantially degrades video prediction generalization. On unseen, open-ended manipulation tasks, existing WAMs frequently produce incorrect motion predictions that lead to erroneous actions during execution. 
+
+% We first train a strong video model for manipulation. Our central finding is that reducing uncertainty in future prediction is key to generalization across manipulation tasks. Guided by this insight, we annotate video clips with detailed captions and perform event-level video pretraining. 
+
+World action models (WAMs) have emerged as an important class of generalist robot policies, aiming to transfer video prediction priors to action learning. However, we find that existing WAMs frequently produce incorrect motion predictions in open-ended environments, leading to erroneous actions. We attribute this limitation to two factors: (1) base video models are not optimized for manipulation, and (2) naively incorporating action components into video models can substantially degrade their generalization capabilities. We introduce Video Prediction Policy 2 (VPP2), a WAM that enables strong zero-shot generalization in both video prediction and action generation. First, we curate a large-scale, diverse dataset of manipulation videos to continue pretraining the base video foundation model. We annotate video clips with detailed captions and perform \textit{event-level} video pretraining to promote generalization across open-ended manipulation tasks. Second, we post-train and distill the video model into a single-step visual planner with a fixed prediction horizon. Finally, we introduce an action module via a mixture-of-transformers (MoT) architecture to learn an implicit inverse dynamics model. Experiments demonstrate three key results: (1) VPP2-14B outperforms Cosmos3-64B by 11.0\% points in video prediction instruction-following success rate on open-ended tasks; (2) VPP2 surpasses the strongest baseline by 18.5\% points in success rate on real-world zero-shot ALOHA manipulation tasks; and (3) following benchmark-specific post-training, VPP2 achieves the highest success rates among evaluated methods on the challenging LIBERO-Pro, LIBERO-OOD, and RoboDojo benchmarks.
+
+% The abstract paragraph should be indented 1/2~inch (3~picas) on both left and
+% right-hand margins. Use 10~point type, with a vertical spacing of 11~points.
+% The word \textsc{Abstract} must be centered, in small caps, and in point size 12. Two
+% line spaces precede the abstract. The abstract must be limited to one
+% paragraph.
+% The abstract paragraph should be indented 1/2~inch (3~picas) on both left and
+% right-hand margins. Use 10~point type, with a vertical spacing of 11~points.
+% The word \textsc{Abstract} must be centered, in small caps, and in point size 12. Two
+% line spaces precede the abstract. The abstract must be limited to one
+% paragraph.
+% The abstract paragraph should be indented 1/2~inch (3~picas) on both left and
+% right-hand margins. Use 10~point type, with a vertical spacing of 11~points.
+% The word \textsc{Abstract} must be centered, in small caps, and in point size 12. Two
+% line spaces precede the abstract. The abstract must be limited to one
+% paragraph.
+% The abstract paragraph should be indented 1/2~inch (3~picas) on both left and
+% right-hand margins. Use 10~point type, with a vertical spacing of 11~points.
+% The word \textsc{Abstract} must be centered, in small caps, and in point size 12. Two
+% line spaces precede the abstract. The abstract must be limited to one
+% paragraph.
+\end{abstract}
+
+
+
+\input{sections/0_intro}
+\input{sections/2_method}
+\input{sections/3_exp}
+\input{sections/1_related_works}
+
+
+\vspace{-1mm}
+\section{Conclusion}
+\vspace{-1mm}
+We presented Video Prediction Policy 2 (VPP2), a world action model that achieves strong zero-shot generalization in both video prediction and action generation. We first continue pretraining the base video model to produce generalizable, instruction-following predictions, then learn a policy while preserving these predictive capabilities. Experiments show that VPP2 follows manipulation instructions more faithfully than substantially larger video foundation models, exhibits strong zero-shot manipulation capabilities on a real-world ALOHA platform, and achieves the highest success rates after post-training on challenging benchmarks. We hope these findings encourage future WAM research to look beyond architectural choices for action modeling and place greater emphasis on learning generalizable video predictions and preserving this generalization during action learning.
+
+% These results suggest that better future prediction leads to better action, and we hope VPP2 encourages future WAMs to treat prediction quality as a first-class objective.
+
+
+
+% We identify two factors that limit the generalization of existing WAMs: base video models are not optimized for manipulation, and naively incorporating action learning can degrade their predictive capabilities. To address these issues, VPP2 performs event-level continued pretraining with detailed captions on large-scale, diverse manipulation videos, establishing consistent mappings from instructions to future trajectories. It then post-trains and distills the video model into a single-step visual planner with a fixed prediction horizon, and learns actions through a mixture-of-transformers action expert. 
+
+\newpage
+
+\section*{Acknowledgments}
+We thank Yucheng Hu and Jianke Zhang for insightful discussions that greatly benefited the development of VPP2.
+
+\section*{AI Use Statement}
+We used generative AI tools to assist with language polishing, improve the clarity and readability of the manuscript, and draft portions of the paper. In the research process, these tools were used to suggest experimental parameter settings and assist with searches for relevant literature and technical information. We also used AI tools to annotate human and robotic manipulation datasets at scale for model training. The authors evaluated the suggestions and made the final decisions regarding experimental design and parameter selection. All AI-assisted text was reviewed and revised by the authors, and retrieved information was checked against original sources before use. The authors take full responsibility for the final content of the paper, including its data, claims, results, and references.
+
+
+\section*{Reproducibility Statement}
+We describe the model architecture, training objectives, and evaluation protocols in the main text, with additional data processing details provided in the appendix. Detailed training configurations, code, and model checkpoints are available on our \href{https://robert-gyj.github.io/video-prediction-policy-2}{project website}.
+
+\bibliography{iclr2027_conference}
+\bibliographystyle{iclr2027_conference}
+
+\input{sections/appendix}
+
+
+\end{document}

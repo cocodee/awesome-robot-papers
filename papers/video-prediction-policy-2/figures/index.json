@@ -1,0 +1,384 @@
+[
+ {
+  "kind": "figure",
+  "num": "1",
+  "page": 1,
+  "caption": "Figure 1: A typical robot policy maps a simple instruction and an observation into a short action chunk. As datasets scale, this mapping becomes increasingly multimodal and uncertain, leading models to learn spurious short-horizon correlations. VPP2 first establishes consistent semantic-to- trajectory mappings via next event video prediction with detailed captions, then post-trains and distills the model to generate short action chunks.",
+  "file": "figures/fig-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.169,
+   0.646,
+   0.829,
+   0.841
+  ],
+  "label": "fig:fig1",
+  "source_files": [
+   "figures/fig1_0926_scientific_colors_checked.pdf"
+  ],
+  "tex_line": 14,
+  "refs": [
+   "§1 Introduction (L30)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "2",
+  "page": 3,
+  "caption": "Figure 2: An example of our data processing pipeline. The central objective is to reduce uncertainty in future prediction, thereby encouraging the model to learn a consistent mapping from conditioning information to sub-task trajectories. To this end, each caption includes detailed task descriptions, explicit end-effector identification, a description of the visible target object, and camera-view changes.",
+  "file": "figures/fig-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.222,
+   0.287,
+   0.777,
+   0.438
+  ],
+  "label": "fig:fig2",
+  "source_files": [
+   "figures/fig2_2.pdf"
+  ],
+  "tex_line": 79,
+  "refs": [
+   "§2 Data Processing Pipeline (L77)",
+   "§2 Data Processing Pipeline (L122)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "3",
+  "page": 3,
+  "caption": "Figure 3: (a) Bounding boxes show the aligned workspaces of different datasets. (b) Aligned end-effector coordinate frames.",
+  "file": "figures/fig-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.495,
+   0.653,
+   0.84,
+   0.809
+  ],
+  "label": "fig:coordinate_alignment",
+  "source_files": [
+   "figures/fig3_2.pdf"
+  ],
+  "tex_line": 87,
+  "refs": []
+ },
+ {
+  "kind": "figure",
+  "num": "4",
+  "page": 5,
+  "caption": "Figure 4: The VPP2 training pipeline is designed to maximize generalization. Stage 1 uses large- scale, event-level video pretraining to learn a generalizable video model for manipulation. Stage 2 post-trains and distills this model to predict long-horizon video chunks spanning 8 seconds in a single forward pass, taking approximately 0.1 seconds. Finally, Stage 3 trains an action expert to generate 2-second action chunks conditioned on the one-step video latents.",
+  "file": "figures/fig-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.19,
+   0.101,
+   0.81,
+   0.249
+  ],
+  "label": "fig:fig4",
+  "source_files": [
+   "figures/fig4_3.pdf"
+  ],
+  "tex_line": 188,
+  "refs": [
+   "§3 VPP2: A Generalist Policy with Zero-shot (L127)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "5",
+  "page": 6,
+  "caption": "Figure 5: VPP2 video predictions for human-hand and robot manipulation. Trained on large-scale, diverse manipulation datasets, VPP2 generalizes across human hands and a wide range of robot embodiments. For robot manipulation, VPP2 jointly predicts one to three camera views arranged in a T-shaped composite. Due to space constraints, single-step video predictions after distillation are shown in Figure 10 in the appendix.",
+  "file": "figures/fig-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.164,
+   0.046,
+   0.838,
+   0.462
+  ],
+  "label": "fig:fig6",
+  "source_files": [
+   "figures/fig6.pdf",
+   "figures/fig7.pdf"
+  ],
+  "tex_line": 271,
+  "refs": [
+   "§4.1 Video Prediction Quality Analysis (L289)",
+   "§4.1 Video Prediction Quality Analysis (L290)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "6",
+  "page": 7,
+  "caption": "Figure 6: Win rates of the pretrained VPP2 model against different baselines on video prediction tasks.",
+  "file": "figures/fig-06.png",
+  "mode": "整页",
+  "label": "table:video_quality, fig:fig8",
+  "source_files": [
+   "figures/fig8_2_0921.pdf"
+  ],
+  "tex_line": 297,
+  "refs": [
+   "§4.1 Video Prediction Quality Analysis (L295)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "7",
+  "page": 7,
+  "caption": "Figure 7: Comparison of instruction-following capabilities among VPP2, Wan-14B, and Cosmos3- 64B. VPP2 demonstrates better instruction following on complex tasks requiring spatial understand- ing.",
+  "file": "figures/fig-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.171,
+   0.25,
+   0.826,
+   0.397
+  ],
+  "label": "fig:fig5",
+  "source_files": [
+   "figures/fig5_2.pdf"
+  ],
+  "tex_line": 337,
+  "refs": [
+   "§4.1 Video Prediction Quality Analysis (L295)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "8",
+  "page": 8,
+  "caption": "Figure 8: Zero-shot success rates on the real-world ALOHA across 10 randomly selected task categories. For a fair comparison, we finetune π0.5 and FastWAM on all ALOHA datasets exposed in VPP2’s training data and use the 14B variant of FastWAM.",
+  "file": "figures/fig-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.164,
+   0.046,
+   0.838,
+   0.201
+  ],
+  "label": "fig:fig9",
+  "source_files": [
+   "figures/fig10.pdf"
+  ],
+  "tex_line": 351,
+  "refs": [
+   "§4.2 Policy Performance Analysis (L349)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "9",
+  "page": 9,
+  "caption": "Figure 9: Success rates with and without VLM-based subtask planning (50 trials per task). Average is the five-task mean; the baseline checkpoint matches Table 4.",
+  "file": "figures/fig-09.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.201,
+   0.828,
+   0.3
+  ],
+  "label": "fig:subtask_planning",
+  "source_files": [
+   "figures/subtask_planning.pdf"
+  ],
+  "tex_line": 488,
+  "refs": [
+   "§4.2 Policy Performance Analysis (L486)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "10",
+  "page": 19,
+  "caption": "Figure 10: Additional video prediction results on open-ended tasks. We compare single-step video predictions before and after distillation. Distillation enables high-quality video prediction with just one sampling step.",
+  "file": "figures/fig-10.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.185,
+   0.136,
+   0.815,
+   0.837
+  ],
+  "label": "fig:video_app",
+  "source_files": [
+   "figures/video_comparison_8groups_updated.pdf"
+  ],
+  "tex_line": 603,
+  "refs": [
+   "§3.3 VLM for High-level Planning. (L275)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "1",
+  "page": 3,
+  "caption": "Table 1: Overview of training data sources. Full dataset references are provided in Appendix A, Table 5.",
+  "file": "figures/tab-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.046,
+   0.831,
+   0.247
+  ],
+  "label": "table:video_source",
+  "source_files": [],
+  "tex_line": 42,
+  "refs": [
+   "§2 Data Processing Pipeline (L40)",
+   "§A Dataset Process Details (L526)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "2",
+  "page": 7,
+  "caption": "Table 2: Instruction following success rates.",
+  "file": "figures/tab-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.046,
+   0.828,
+   0.201
+  ],
+  "label": "table:video_quality",
+  "source_files": [],
+  "tex_line": 322,
+  "refs": [
+   "§4.1 Video Prediction Quality Analysis (L295)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "3",
+  "page": 8,
+  "caption": "Table 3: Post-training on LIBERO-ID, LIBERO-Pro, and LIBERO-OOD benchmarks. All models are trained exclusively on the four standard LIBERO suites (Liu et al., 2023) and are evaluated under three complementary settings.",
+  "file": "figures/tab-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.207,
+   0.255,
+   0.793,
+   0.407
+  ],
+  "label": "tab:libero_generalization",
+  "source_files": [],
+  "tex_line": 359,
+  "refs": [
+   "§4.2 Policy Performance Analysis (L476)",
+   "§C.1 Detailed LIBERO Results (L613)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "4",
+  "page": 9,
+  "caption": "Table 4: Post-training results on the RoboDojo simulation benchmark. Average score captures partial task progress, and success rate measures binary task completion; both are averaged over the five capability dimensions. Baseline results are taken from the official leaderboard.",
+  "file": "figures/tab-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.046,
+   0.828,
+   0.151
+  ],
+  "label": "tab:robodojo",
+  "source_files": [],
+  "tex_line": 456,
+  "refs": [
+   "§4.2 Policy Performance Analysis (L481)",
+   "§4.2 Policy Performance Analysis (L484)",
+   "§4.2 Policy Performance Analysis (L492)",
+   "§C.2 Detailed RoboDojo Results (L643)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "5",
+  "page": 18,
+  "caption": "Table 5: Training data sources with references to the original datasets. Self-collected datasets are collected as part of this work.",
+  "file": "figures/tab-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.169,
+   0.831,
+   0.392
+  ],
+  "label": "table:video_source_full",
+  "source_files": [],
+  "tex_line": 528,
+  "refs": [
+   "§2 Data Processing Pipeline (L69)",
+   "§A Dataset Process Details (L526)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "6",
+  "page": 20,
+  "caption": "Table 6: Per-suite success rates (%) on the standard LIBERO benchmark. Best results in each column are in bold.",
+  "file": "figures/tab-06.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.245,
+   0.214,
+   0.755,
+   0.386
+  ],
+  "label": "tab:app_libero",
+  "source_files": [],
+  "tex_line": 615,
+  "refs": [
+   "§C.1 Detailed LIBERO Results (L613)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "7",
+  "page": 20,
+  "caption": "Table 7: Per-dimension average score on the RoboDojo simulation benchmark. Generalization is evaluated under standard (Std.) and randomized (Rand.) settings. Avg. is the mean over the five capability dimensions, where the generalization score is the mean of the Std. and Rand. settings. For VPP2, we report the generalization result pooled over both settings (25 episodes each, following the official protocol), which equals their mean. Baseline results are taken from the official leaderboard.",
+  "file": "figures/tab-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.631,
+   0.826,
+   0.816
+  ],
+  "label": "tab:app_robodojo_score",
+  "source_files": [],
+  "tex_line": 645,
+  "refs": [
+   "§C.2 Detailed RoboDojo Results (L643)",
+   "§C.2 Detailed RoboDojo Results (L691)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "8",
+  "page": 21,
+  "caption": "Table 8: Per-dimension success rate (%) on the RoboDojo simulation benchmark, computed in the same way as Table 7.",
+  "file": "figures/tab-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.172,
+   0.046,
+   0.828,
+   0.572
+  ],
+  "label": "tab:app_robodojo_sr",
+  "source_files": [],
+  "tex_line": 670,
+  "refs": [
+   "§C.2 Detailed RoboDojo Results (L643)"
+  ]
+ }
+]

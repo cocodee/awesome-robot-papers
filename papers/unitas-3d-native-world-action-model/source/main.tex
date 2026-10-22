@@ -1,0 +1,72 @@
+\documentclass{article}
+
+\usepackage{iclr2027_conference,times}
+\input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs,graphicx}
+\usepackage{adjustbox}
+\usepackage{multirow}
+
+\title{\textsc{Unitas}: A 3D-Native World Action Model for Embodied Manipulation}
+
+% Authors remain hidden while \iclrfinalcopy is commented out.
+
+% Ruixiang Wang1, Yongyi Su2, Wenlve Zhou2, Bo Yue1, Hengyan Liu1, Dekun Lu3, Yuxin Tian1, Yihan Fang1, Zerui Wu3, Xing Hu3, Jietao Chen3, Yong Guo4, Ziyan He5, Junbin Yuan6, Guiliang Liu1, Xiaofen Xing7, Kui Jia1
+
+% 1 The Chinese University of Hong Kong Shenzhen (cuhk.edu.cn)
+% 2 Foshan University (fosu.edu.cn)
+% 3 DexForce Co. Ltd., Shenzhen (dexforce.com)
+% 5 N/A (gmail.com)
+% 6 SUN YAT-SEN UNIVERSITY (mail.sysu.edu.cn)
+% 7 South China University of Technology (scut.edu.cn)
+
+\author{Ruixiang Wang$^{1,2}$\textsuperscript{*} \quad Yongyi Su$^{3}$\textsuperscript{*\textdagger} \quad Wenlve Zhou$^{3}$ \quad Bo Yue$^{1,2}$ \quad Hengyan Liu$^{1,2}$ \quad Dekun Lu$^{2}$ \\
+\bf Yuxin Tian$^{1,2}$ \quad Yihan Fang$^{1,2}$ \quad Zerui Wu$^{2}$ \quad Xing Hu$^{2}$ \quad Jietao Chen$^{2}$ \quad Yong Guo$^{2}$ \\
+\bf Ziyan He$^{2}$ \quad Junbin Yuan$^{4}$ \quad Guiliang Liu$^{1}$ \quad Xiaofen Xing$^{5}$ \quad Kui Jia$^{1,2}$\\
+\\
+$^1$ The Chinese University of Hong Kong, Shenzhen \quad
+$^2$ DexForce Technology Co., Ltd.\\
+$^3$ Foshan University\quad
+$^4$ Sun Yat-sen University \quad
+$^5$ South China University of Technology\\
+\\
+\textsuperscript{*} Equal contribution. \quad
+\textsuperscript{\textdagger} Correspondence to \textless\href{mailto:suyongyi@fosu.edu.cn}{suyongyi@fosu.edu.cn}\textgreater.
+}
+
+% Uncomment only for the camera-ready version.
+\iclrfinalcopy
+
+\newcommand{\method}{\textsc{Unitas}}
+
+\begin{document}
+
+\maketitle
+
+% \begingroup
+% \renewcommand\thefootnote{\textasteriskcentered}%
+% \footnotetext{Correspondence to \textless\href{mailto:xu_xun@a-star.edu.sg}{xu\_xun@a-star.edu.sg}\textgreater\ and \textless\href{mailto:Li\_Shijie@a-star.edu.sg}{Li\_Shijie@a-star.edu.sg}\textgreater.
+% }
+% \endgroup
+
+\input{sections/0.abstract}
+
+\input{sections/1.introduction}
+\input{sections/2.related_work}
+\input{sections/3.method}
+\input{sections/4.experiments}
+\input{sections/5.conclusion}
+
+\subsection*{AI use statement}
+Generative AI tools were used to assist with literature review to identify related work and with language polishing.
+
+\bibliography{references}
+\bibliographystyle{iclr2027_conference}
+
+\clearpage
+\appendix
+\input{sections/appendix}
+
+\end{document}

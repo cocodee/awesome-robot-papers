@@ -1,0 +1,219 @@
+[
+ {
+  "kind": "figure",
+  "num": "1",
+  "page": 1,
+  "caption": "Fig. 1. Emergent multi-component assembly with a single policy. Trained with a binary task reward, AlphaNIST learns to select, grasp, reorient, and assemble diverse components, while autonomously sequencing multiple assemblies within a single episode. Shown are snapshots from a ten-component assembly sequence.",
+  "file": "figures/fig-01.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.225,
+   0.917,
+   0.388
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "2",
+  "page": 2,
+  "caption": "Fig. 2. The complete NIST Assembly Task Board #1 in simulation. Yellow indicates the 20 movable parts in their fully-assembled states.",
+  "file": "figures/fig-02.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.059,
+   0.493,
+   0.239
+  ],
+  "label": "fig:nistboard-overview",
+  "source_files": [
+   "figures/overview/nistboard_fully_assembled.png"
+  ],
+  "tex_line": 61,
+  "refs": [
+   "§1 Introduction (L72)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "3",
+  "page": 4,
+  "caption": "Fig. 3. Policy architecture. Actor and critic have the same architecture with separate parameters. Inputs are drawn once; each network contains two consecutive residual blocks. RN: running normalization; LN: layer normalization; SW: Swish activation; npts: number of input points.",
+  "file": "figures/fig-03.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.084,
+   0.06,
+   0.907,
+   0.238
+  ],
+  "label": "fig:policy-architecture",
+  "source_files": [],
+  "tex_line": 214,
+  "refs": [
+   "§4.4 Shared Policy and Robot Control (L571)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "4",
+  "page": 4,
+  "caption": "Fig. 4. Diverse assembly reset states. Examples of resets across tasks, ranging from random object poses to in-hand grasps and partial assemblies.",
+  "file": "figures/fig-04.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.269,
+   0.493,
+   0.507
+  ],
+  "label": "fig:reset-coverage",
+  "source_files": [
+   "figures/method/reset_coverage.png"
+  ],
+  "tex_line": 406,
+  "refs": [
+   "§4.2 Reset Coverage and Experience Allocation (L401)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "5",
+  "page": 5,
+  "caption": "Fig. 5. Training across heterogeneous assembly pairs substantially improves learning from a sparse binary task reward. At 64K environments across 25k iterations: (a) compares 20-task success rates for one shared policy versus 20 separately trained policies. The shared policy (first row) achieved above 98% success rate across all tasks, including three precision assemblies that corresponding specialists rarely solve. Dense shaping does not exhibit the same benefit. Panel (b) shows overall success, note that the separate-policy success rate is average across all 20 per-task policies; Asset notation: N, G, R, and P denote nuts, gears, rods, and pegs, respectively; numeric suffixes indicate nominal diameters in millimeters, while s, m, and l indicate gear size. \"Sparse reward\" denotes Eq. (6); \"dense reward\" additionally includes the shaping terms in Eq. (7).",
+  "file": "figures/fig-05.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.059,
+   0.917,
+   0.275
+  ],
+  "label": "fig:heterogeneity-ablation",
+  "source_files": [
+   "figures/results/heterogeneity.pdf"
+  ],
+  "tex_line": 469,
+  "refs": [
+   "§2.1 Scalable Learning for Contact-Rich Assem (L120)",
+   "§5.1 Assembly-Pair Heterogeneity Enables Lear (L701)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "6",
+  "page": 5,
+  "caption": "Fig. 6. Joint sparse training converges faster than separate policies. Curves compare one shared policy trained on all 20 tasks with the mean of 20 policies trained separately, one per task.",
+  "file": "figures/fig-06.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.351,
+   0.495,
+   0.572
+  ],
+  "label": "fig:heterogeneity-dynamics",
+  "source_files": [
+   "figures/results/heterogeneity_dynamics.pdf"
+  ],
+  "tex_line": 486,
+  "refs": [
+   "§5.1 Assembly-Pair Heterogeneity Enables Lear (L708)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "7",
+  "page": 5,
+  "caption": "Fig. 7. Sparse task rewards benefit strongly from parallel experience. Mean success ± standard deviation over 5 evaluation seeds for 25k-iteration checkpoints, with 32 trials per task per seed across 20 assemblies. Color denotes reward; solid and dashed lines denote beta and uniform training- reset sampling.",
+  "file": "figures/fig-07.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.609,
+   0.493,
+   0.844
+  ],
+  "label": "fig:parallel-scaling",
+  "source_files": [
+   "figures/results/scaling.pdf"
+  ],
+  "tex_line": 495,
+  "refs": [
+   "§5.2 Sparse Binary Task Rewards Benefit from  (L712)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "8",
+  "page": 6,
+  "caption": "Fig. 8. One shared policy discovers diverse contact strategies from a sparse binary task reward. Each panel proceeds from left to right. (a) Waterproof connector: board contact helps reorient the part before insertion. (b) D-sub connector: the part is set down and regrasped for alignment with its socket. (c) 8 mm peg: the part is dropped from a center grasp and regrasped near one end, leaving its remaining length free for insertion. (d) Medium gear: the part pivots from a side grasp into a horizontal pose over its mounting post. (e) M12 nut: the nut is rolled from its edge onto a flat face before placement on the bolt. (f) M4 nut: repeated one-sided taps advance the nut along the thread. (g) 8 mm rod: the fingertip shovels the rod to a position where it is easier to lift. (h) M16 nut: the gripper moves around the nut, using fingertip contact to turn it along the bolt.",
+  "file": "figures/fig-08.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.092,
+   0.048,
+   0.907,
+   0.556
+  ],
+  "label": "fig:emergent-assembly-strategies",
+  "source_files": [
+   "figures/qualitative/waterproof_strategy.png",
+   "figures/qualitative/dsub_strategy.png",
+   "figures/qualitative/peg_insert_8mm_strategy.png",
+   "figures/qualitative/gear_mesh_medium_strategy.png",
+   "figures/qualitative/nut_thread_m12_strategy.png",
+   "figures/qualitative/nut_thread_m4_strategy.png",
+   "figures/qualitative/shoveling_rod_8mm.png",
+   "figures/qualitative/full_circle_threading_m16.png"
+  ],
+  "tex_line": 507,
+  "refs": [
+   "§5.3 Emergent Strategies over Short Horizons (L722)"
+  ]
+ },
+ {
+  "kind": "figure",
+  "num": "9",
+  "page": 7,
+  "caption": "Fig. 9. Emergent coordination in multi-pair assembly. (a) The policy brings the USB-A connector from a distant corner to a nearby working position, leaves it there while assembling the 8 mm rod, then returns to insert the connector. (b) During M12 nut threading, the end effector makes small turns to avoid touching the neighboring RJ45 connector. Each sequence proceeds from left to right.",
+  "file": "figures/fig-09.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.059,
+   0.917,
+   0.358
+  ],
+  "label": "fig:long-horizon-multi-asset",
+  "source_files": [
+   "figures/qualitative/bring_close_deferred_assembly.png",
+   "figures/qualitative/small_turns.png"
+  ],
+  "tex_line": 543,
+  "refs": [
+   "§5.4 Emergent Strategies over Long Horizons (L735)"
+  ]
+ },
+ {
+  "kind": "table",
+  "num": "I",
+  "page": 7,
+  "caption": "TABLE I SUCCESS RATE FOR MULTI-PAIR ASSEMBLY EACH POLICY IS TRAINED AND EVALUATED ON THE SAME NUMBER OF ACTIVE ASSEMBLY PAIRS, FROM 1–10. ALPHANIST SOLVES THESE TASKS WITHOUT A PRESCRIBED ORDER OR EXPLICIT TASK DECOMPOSITION. FOR EXAMPLE, WHEN THERE ARE 10 ACTIVE PAIRS, THE POLICY RECEIVES A SUCCESS REWARD ONLY WHEN ALL 10 ARE IN THEIR ASSIGNED BOARD SLOTS.",
+  "file": "figures/tab-I.png",
+  "mode": "裁剪",
+  "bbox": [
+   0.083,
+   0.467,
+   0.917,
+   0.516
+  ],
+  "label": "tab:seq-success",
+  "source_files": [],
+  "tex_line": 670,
+  "refs": [
+   "§5.4 Emergent Strategies over Long Horizons (L734)"
+  ]
+ }
+]

@@ -1,0 +1,119 @@
+We organize the experiments around three questions:
+\textbf{(Q1) Heterogeneity:} Under a binary task reward, how does joint
+training compare with training each task separately?
+\textbf{(Q2) Scaling:} How do parallel experience and reset-state sampling
+affect learning from a binary task reward?
+\textbf{(Q3) Reward formulation:} How does a binary task reward compare
+with dense assembly-progress shaping as heterogeneous training scales?
+We additionally explore multi-pair assembly and inspect the learned policy
+for behaviors that arise without direct supervision.
+
+
+
+For heterogeneity, we compare one policy trained across all 20 ATB1 tasks
+with one separately trained policy per task, using matched per-run
+interaction budgets and otherwise identical settings. We use 64K environments
+per run to keep the comparison affordable; the shared policy reaches
+98.2\% training success at this scale.
+
+For parallel scaling, GPUs, environments, and rollout batch size increase
+together while the task distribution, reward, policy, and environment remain
+fixed. The sampling ablation compares against uniform sampling over the same reset
+bank instead of beta sampling.
+For the scaling evaluation, all checkpoints use stochastic actions and a common
+frozen mixed-reset bank, sampled uniformly within each task. Success requires
+full assembly within 15 seconds without a simultaneous safety failure.
+The reward ablation adds two dense assembly-progress terms to
+Eq.~\eqref{eq:full-reward}: 
+\begin{equation}
+    r_t^{\mathrm{dense}} = r_t +
+    c_2 r_t^{\mathrm{reach}} + c_3 r_t^{\mathrm{align}},
+    \qquad c_2,c_3 \geq 0,
+    \label{eq:reward-ablation}
+\end{equation}
+where $r_t^{\mathrm{reach}}$ rewards end-effector proximity to the part 
+centroid and $r_t^{\mathrm{align}}$ rewards alignment with the target assembly
+orientation. These are common shaping terms in manipulation and assembly RL
+\cite{narang2022factory,tang2024automate,yin2026omnireset}.
+We set $c_2=c_3=0.01$, matching the coefficients used in
+OmniReset~\cite{yin2026omnireset}.
+Across all experiments, success rates cover all reset configurations.
+
+\begin{table*}[!t]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\caption{\textbf{Success rate for multi-pair assembly} 
+Each policy is trained and evaluated on the same number of active assembly pairs, from 1--10. 
+AlphaNIST solves these tasks without a prescribed order or explicit task decomposition. 
+For example, when there are 10 active pairs, the policy receives a success reward only when all 10 are in their assigned board slots. 
+}
+\label{tab:seq-success}
+\begin{tabularx}{\textwidth}{l*{10}{>{\centering\arraybackslash}X}}
+\toprule
+\# Active\ Pairs & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+Success Rate (\%) & 99 & 97 & 95 & 93 & 92 & 90 & 89 & 87 & 86 & 84 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+ 
+
+
+\subsection{Assembly-Pair Heterogeneity Enables Learning}
+From randomly initialized states, separately-trained policies have $\leq$0.3\% success on M4 nut threading, as well as 4\,mm peg insertion and rod
+insertion. The main obstacle is that the small parts are
+difficult to grasp reliably from the table. 
+In contrast, the shared
+policy produces successful grasp-and-assembly rollouts on these same tasks
+without task-specific changes. This result suggests that shared experience
+can help with assemblies that are difficult to learn separately.
+This benefit depends strongly on the reward formulation.
+At their final checkpoints, the 20 separately trained dense-reward policies
+reach a mean success rate of 78.3\%, ranging from 45.0\% on
+M4 threading to 93.6\% on the medium gear. Joint dense training reaches 17.8\%
+overall success at 25K iterations, with low completion across tasks
+(Fig.~\ref{fig:heterogeneity-ablation}).
+One possible explanation
+is that dense shaping terms favor different partial solutions across geometries,
+whereas the binary task reward gives a unified full-assembly objective for every task.
+
+
+Joint training reaches higher success at lower total cost.
+At 64K parallel environments across 25K iterations, the \textbf{shared policy trained with the sparse binary task reward reaches 98.2\% training success} in 410 GPU-hours
+(Fig.~\ref{fig:heterogeneity-dynamics}), while the 20 separately trained policies average 81.4\% and consume 16.1K total GPU-hours,
+39.3$\times$ more device-hours.
+
+\subsection{Sparse Binary Task Rewards Benefit from Scale}
+Performance with the sparse binary task reward improves rapidly with increased parallel experience (Fig.~\ref{fig:parallel-scaling}).
+With beta sampling, evaluation success rises from
+38.6\% at 1K environments to 78.9\% at 4K and 86.9\% at 8K.
+With dense reward shaping, success remains at 11.8--12.0\% over 1K--4K environments.
+Beta sampling provides an additional gain over uniform reset sampling. At 256K environments, success with the sparse binary task reward reaches \textbf{97.4\% with beta sampling} versus 84.3\% with uniform sampling; the corresponding results with dense reward shaping are 77.4\% and 34.3\%. While the advantage of the sparse task objective is already visible at modest scale, beta sampling provides further gains as
+parallel experience increases.
+
+
+
+\subsection{Emergent Strategies over Short Horizons}
+
+
+
+The policy exhibits a broad range of dexterous strategies across
+assemblies (Fig.~\ref{fig:emergent-assembly-strategies}), including grasp adaptation, extrinsic reorientation, and contact-driven assembly. It releases and reacquires parts when the initial grasp is unsuitable for insertion, uses surrounding geometry to change object orientation, and discovers intermittent tapping and pivoting motions.
+These behaviors emerge within a single policy, without demonstrations or rewards specifying the individual
+maneuvers.
+For a peg, a successful pickup may not produce a grasp suitable for insertion; the
+policy drops a center-held peg and regrasps it near one end, exposing enough
+shaft length for complete insertion. For a nut, repeated taps on one side engage
+and advance the thread, using intermittent contact to make assembly progress.
+
+\subsection{Emergent Strategies over Long Horizons}
+Beyond the main single-assembly experiments, we train policies with multiple
+assembly pairs per episode. The binary task reward is issued only when every
+active pair is assembled; episodes allow 15 seconds per pair and terminate upon success. 
+Table \ref{tab:seq-success} shows the success rates for episodes with up to ten active pairs.
+This multi-pair setting reveals coordination over substantially longer horizons (Fig.~\ref{fig:long-horizon-multi-asset}). The policy need not finish
+assembling a pair before turning to another, and its approach to
+one assembly changes based on neighboring parts. 
+These planning-like behaviors---taking actions whose utility is realized later and adapting one assembly to the state of another---emerge without an explicit planner, policy switching, or prescribed sequence.
+
+

@@ -1,0 +1,41 @@
+{
+   "sources" : [
+      {
+         "usage" : "toplevel",
+         "filename" : "main.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "README.md"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "THIRD_PARTY_NOTICES.txt"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "fonts/Text-Bold.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "fonts/Text-BoldItalic.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "fonts/Text-Italic.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "fonts/Text-Regular.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "main.brf"
+      }
+   ],
+   "spec_version" : 1,
+   "texlive_version" : "2025",
+   "process" : {
+      "compiler" : "pdflatex"
+   }
+}

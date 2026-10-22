@@ -1,0 +1,30 @@
+\begin{table}[t]
+    \centering
+    \caption{Performance on RoboChallenge Table30-V2. We report per-embodiment success rates (SR, \%) and overall performance across four robot embodiments. Baselines are sorted by overall SR. Bold denotes the best performance, while blue and light blue highlight LoopWAM and the runner-up, respectively.}
+    \label{tab:robochallenge_results}
+    \footnotesize
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{1.12}
+    \setlength{\resulttablewidth}{\linewidth}
+    \begin{tabular*}{\resulttablewidth}{l@{\extracolsep{\fill}}*{10}{r}}
+        \toprule
+        \raisebox{-0.75\normalbaselineskip}[0pt][0pt]{Method} & \multicolumn{2}{c}{ALOHA} & \multicolumn{2}{c}{DOS-W1} & \multicolumn{2}{c}{ARX5} & \multicolumn{2}{c}{UR5} & \multicolumn{2}{c}{Overall} \\
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+         & Score & SR & Score & SR & Score & SR & Score & SR & Score & SR \\
+        \midrule
+        debuggers\_vla & 5.40 & 0.00 & 5.15 & 2.00 & 53.21 & 34.29 & 27.83 & 23.33 & 18.72 & 11.00 \\
+        W0 & 12.25 & 2.00 & 4.40 & 0.00 & 48.64 & 30.00 & 49.50 & 43.33 & 21.85 & 12.00 \\
+        test\_01 & 6.25 & 1.00 & 8.95 & 3.00 & 49.50 & 28.57 & 61.17 & 43.33 & 22.73 & 12.33 \\
+        holobrain & 11.75 & 3.00 & 13.30 & 6.00 & 53.64 & 30.00 & 70.67 & 43.33 & 27.93 & 14.33 \\
+        Baseline Model & 21.55 & 6.00 & 17.35 & 6.00 & 60.14 & 32.86 & 44.83 & 26.67 & 31.48 & 14.33 \\
+        MagicBot & 4.70 & 0.00 & 6.85 & 5.00 & 47.57 & 32.86 & 58.67 & 53.33 & 20.82 & 14.67 \\
+        mc & 10.60 & 7.00 & 2.00 & 0.00 & 73.64 & 47.14 & 22.50 & 20.00 & 23.63 & 15.33 \\
+        JV0 & 12.70 & 5.00 & 17.80 & 16.00 & 49.64 & 20.00 & 58.33 & 43.33 & 27.58 & 16.00 \\
+        my16 & 18.95 & 13.00 & 36.60 & 27.00 & 73.29 & 54.29 & 56.50 & 46.67 & 41.27 & 30.67 \\
+        \resultrow{secondsky}VLA-DM0.5 & 26.50 & 18.00 & 55.45 & 42.00 & 79.07 & 58.57 & 86.50 & 70.00 & 54.42 & 40.67 \\
+        \midrule
+        LoopWAM (expert-trained) & 23.05 & 8.00 & 46.35 & 38.00 & 37.00 & 24.29 & 43.33 & 26.67 & 36.10 & 23.67 \\
+        \resultrow{loopsky}\textbf{LoopWAM} & 38.65 & 26.00 & 54.90 & 42.00 & 76.21 & 55.71 & 78.33 & 76.67 & \textbf{56.80} & \textbf{43.33} \\
+        \bottomrule
+    \end{tabular*}
+\end{table}

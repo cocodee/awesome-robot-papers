@@ -1,0 +1,102 @@
+    \documentclass[letterpaper,10pt,conference]{ieeeconf}
+
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage[nocompress]{cite}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\usepackage{dblfloatfix}
+\usepackage{placeins}
+\renewcommand{\dbltopfraction}{0.90}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{8pt plus 2pt minus 2pt}
+\setcounter{topnumber}{4}
+\setcounter{totalnumber}{6}
+\makeatletter
+\let\NAT@parse\undefined
+\renewcommand{\@IEEEfigurecaptionsepspace}{\vskip 3pt\nointerlineskip}
+\makeatother
+\usepackage[hidelinks]{hyperref}
+
+\title{\LARGE \bf AlphaNIST: Emergent Assembly Skills from Binary Task Rewards}
+
+\author{%
+    \authorblockN{Octi Zhang$^{1}$, Iretiayo Akinola$^{1}$, Rosario Scalise$^{2}$,
+    Mateo Guaman Castro$^{2}$, Patrick Yin$^{1,2}$\\
+    Tobias Widmer$^{1}$, Miles Macklin$^{1}$, Chris Amevor$^{1}$,
+    Dylan Turpin$^{1}$, Dirk Van Gelder$^{1}$\\
+    Jan Carius$^{1}$, Ankur Handa$^{1}$, Gavriel State$^{1}$,
+    Yunrong Guo$^{1}$, and Yashraj Narang$^{1}$}
+    \authorblockA{$^{1}$NVIDIA \qquad $^{2}$University of Washington}
+}
+
+\makeatletter
+\IEEEaftertitletext{%
+    \noindent\begin{minipage}{\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/overview/hero_k10_clutter_square.png}
+        \endgraf\nointerlineskip
+        \setlength{\abovecaptionskip}{3pt}
+        \def\@captype{figure}
+        \caption{
+        \textbf{Emergent multi-component assembly with a single policy}. Trained with a binary task reward, AlphaNIST learns to select, grasp, reorient, and assemble diverse components, while autonomously sequencing multiple assemblies within a single episode. Shown are snapshots from a ten-component assembly sequence.}
+        \label{fig:assembly-hero}
+    \end{minipage}
+    \vspace{0.5\baselineskip}%
+}
+\makeatother
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\begin{abstract}
+\input{sections/01_abstract}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/02_introduction}
+
+\section{Related Work}
+\label{sec:related-work}
+\input{sections/03_related_work}
+
+\section{Problem Formulation}
+\label{sec:problem-formulation}
+\input{sections/04_problem_formulation}
+
+\section{Method}
+\label{sec:method}
+\input{sections/05_method}
+
+\section{Experiments}
+\label{sec:experiments}
+\input{sections/06_experiments}
+
+\FloatBarrier
+\section{Limitations}
+\label{sec:limitations}
+\input{sections/07_limitations}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/08_conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

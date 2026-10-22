@@ -1,0 +1,108 @@
+\documentclass[10pt,logo]{loopwamreport}
+\linespread{1.15}
+% Wordmark colors sampled from Figure 1 (teaser.pdf).
+\definecolor{loopwamteal}{HTML}{039EA7}
+\definecolor{loopwampurple}{HTML}{6050D1}
+\newcommand{\LoopWAMLogo}{%
+  \raisebox{-0.22\height}{\includegraphics[height=18pt]{assets/loopwam-mark.png}}%
+  \hspace{5pt}%
+  {\normalfont\bfseries\fontsize{17}{20}\selectfont
+   \textcolor{loopwamteal}{Loop}\textcolor{loopwampurple}{WAM}}%
+}
+\usepackage[authoryear,sort&compress,round]{natbib}
+\usepackage{parskip}
+\input{math_commands.tex}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{pifont}
+\usepackage{hyperref}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\definecolor{loopsky}{RGB}{218,239,252}
+\definecolor{secondsky}{RGB}{240,248,254}
+\newlength{\resulttablewidth}
+% Paint the entire row before its text, using the tabular* width and row strut.
+\makeatletter
+\newcommand{\resultrow}[1]{\rlap{\hspace{-\tabcolsep}\color{#1}%
+  \rule[-\dp\@arstrutbox]{\resulttablewidth}{\dimexpr\ht\@arstrutbox+\dp\@arstrutbox\relax}}}
+\makeatother
+\newcommand{\resulthead}[1]{\begin{tabular}[c]{@{}c@{}}#1\end{tabular}}
+
+\title{LoopWAM: Closed-Loop Generalist Policy Improvement from Deployment Rollouts}
+% Author order, affiliations, and roles transcribed from the supplied index.html.
+% Slightly larger author names; affiliations and role notes keep their own sizes.
+\renewcommand{\Authfont}{\normalfont\bfseries\fontsize{10}{14}\selectfont}
+\author{%
+  Wenxuan Guo\textsuperscript{1,2,3,*}\quad\quad
+  Yingping Liang\textsuperscript{2,*}\quad\quad
+  Zhaoguo Wang\textsuperscript{1,*}\quad\quad
+  Ziyuan Li\textsuperscript{1}\quad\quad
+  Angyuan Ma\textsuperscript{1}\newline
+  Zhenyu Wu\textsuperscript{3}\quad\quad
+  Chengkun Wang\textsuperscript{3}\quad\quad
+  Bingyao Yu\textsuperscript{1}\quad\quad
+  Ze Chen\textsuperscript{2}\quad\quad
+  Borui Zhang\textsuperscript{1,3}\newline
+  Xiuwei Xu\textsuperscript{3,$\dagger$}\quad\quad
+  Meng Zhang\textsuperscript{2,$\dagger$}\quad\quad
+  Erjin Zhou\textsuperscript{2}\quad\quad
+  Jiwen Lu\textsuperscript{1,$\dagger$}\newline
+  {\normalfont\fontsize{10}{14}\selectfont
+   \textsuperscript{1}Tsinghua University\quad\quad
+   \textsuperscript{2}Dexmal\quad\quad
+   \textsuperscript{3}Loopeva}\newline
+  {\normalfont\fontsize{8}{11}\selectfont
+   * Core Contributors\qquad
+   \textsuperscript{$\dagger$} Corresponding Authors}%
+}
+\hypersetup{pdfauthor={Wenxuan Guo, Yingping Liang, Zhaoguo Wang, Ziyuan Li, Angyuan Ma, Zhenyu Wu, Chengkun Wang, Bingyao Yu, Ze Chen, Borui Zhang, Xiuwei Xu, Meng Zhang, Erjin Zhou, Jiwen Lu}}
+
+% LoopWAM technical-report layout.
+
+\begin{document}
+\maketitle
+\raggedbottom
+\brokenpenalty=10000
+% Allow flexible line breaks with the wider technical-report font.
+\setlength{\emergencystretch}{3em}
+
+\begin{abstract}
+\input{sec/0_abstract}
+\end{abstract}
+\abscontent
+
+\section{Introduction}
+\label{sec:introduction}
+\input{sec/1_intro}
+
+\section{Related Work}
+\label{sec:related_work}
+\input{sec/2_rela}
+\section{Method}
+\label{sec:method}
+\input{sec/3_method}
+\section{Experiments}
+\label{sec:experiments}
+\input{sec/4_exper}
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sec/5_conclu}
+
+
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\clearpage
+\appendix
+\input{sec/X_suppl}
+\end{document}
+
+
+
+
+
+

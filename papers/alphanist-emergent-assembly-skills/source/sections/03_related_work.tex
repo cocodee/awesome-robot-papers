@@ -1,0 +1,83 @@
+\subsection{Scalable Learning for Contact-Rich Assembly}
+Parallel physics simulation supports experience collection at scale for
+on-policy methods such as PPO~\cite{mittal2025isaaclab, zakka2026mjlab},
+with applications ranging from dexterous in-hand manipulation
+\cite{andrychowicz2020dexterous, qi2023general, singh2024dextrah, handa2023dextreme}
+to industrial assembly.
+GPU-accelerated physics engines such as PhysX~\cite{nvidiaphysx} and
+Newton~\cite{newton2025} support large-scale parallel simulation for robot learning.
+For industrial assembly,
+Factory~\cite{narang2022factory} demonstrated real-time or faster simulation of
+1,000 simultaneous nut-and-bolt interactions in Isaac Gym, later incorporated into Isaac Lab. 
+AlphaNIST uses this
+simulation throughput to collect experience across heterogeneous assembly pairs.
+
+OmniReset~\cite{yin2026omnireset} addressed state coverage through diverse,
+manipulation-centric resets, demonstrating long-horizon on-policy RL with fixed
+algorithm hyperparameters and no curricula or human demonstrations.
+Success-Guided Sampling (SGS)~\cite{zhang2026balanceddiet} addressed experience
+allocation by concentrating simulation near the policy's changing capability
+frontier, scaling beyond one million parallel environments using sparse rewards.
+In its reported assembly experiments, SGS trains a separate policy for
+each single task. AlphaNIST retains SGS's sampling rule but trains one
+multi-task policy across all 20 ATB1 tasks under a common binary task reward.
+Our experiments show that this shared policy learns assemblies that
+remain unsolved in single-task training
+(Fig.~\ref{fig:heterogeneity-ablation}).
+
+\subsection{Multi-Task Reinforcement Learning}
+Multi-task RL aims to improve learning by sharing experience across tasks.
+However, standard joint-training baselines have achieved lower success
+rates than separately trained policies on multi-task manipulation
+benchmarks~\cite{yu2020pcgrad}.
+One approach to obtaining a single multi-task policy is to distill
+multiple separately trained specialists into a shared
+policy~\cite{tang2024automate}.
+Other approaches address the difficulty of joint training directly.
+PopArt~\cite{hessel2019popart} addresses differences in reward scales
+with a separate value output and normalization statistics for each task,
+while PCGrad~\cite{yu2020pcgrad} removes conflicting components of task
+gradients before combining them.
+However, Kurin et al.~\cite{kurin2022unitary} show that shared-network
+baselines with standard regularization and stabilization can match
+specialized multi-task optimizers.
+
+AlphaNIST takes a simple approach to multi-task learning by exploiting
+the shared structure of assembly: threading, gear meshing, and insertion
+all receive the same binary task reward when assembly error falls below
+a common threshold. Under this shared objective, we train one
+geometry-conditioned policy and one value function with standard PPO
+at scale, without task-specific value heads, gradient projection,
+or specialist pretraining.
+
+\subsection{Learning-Based Robot Assembly}
+Prior learning-based assembly systems make exploration tractable by shortening
+the task horizon or restricting initialization to staged, pre-grasped, or
+local-insertion problems
+\cite{schoettler2020industrial,florensa2017reverse}.
+Factory~\cite{narang2022factory} trains separate pick, place, and screw
+subpolicies, while AutoMate~\cite{tang2024automate} combines
+assembly-by-disassembly, imitation learning, and curriculum-based RL to obtain
+specialist and generalist assembly policies.
+Refinery~\cite{tang2025refinery} improves pretrained assembly specialists
+through Bayesian-optimization-guided sampling of initial conditions during
+fine-tuning and Gaussian-mixture-model-based initialization at deployment.
+The refined policies can then be chained to complete multi-part assemblies.
+For longer sequences,
+ARCH~\cite{sun2025arch} uses a high-level imitation-learned policy to select from
+a library of RL and model-based primitives. These methods structure learning
+through initialization, demonstrations, or prescribed subskills.
+OmniReset~\cite{yin2026omnireset} uses a generic dense objective with fixed
+weights, including gripper--object and object--goal distance terms. Zhang et al.~\cite{zhang2026balanceddiet} present the first end-to-end RL solution to individual tasks from the NIST ATB1, but retain task-specific
+auxiliary grasp- and gripper-related shaping. Such
+terms can aid exploration and discourage reward exploitation, but their relative
+influence can change with object size, geometry, and assembly motion. Even with
+fixed coefficients, a new task family requires checking that the shaped reward
+remains aligned with successful assembly.
+
+AlphaGo Zero provides a broader motivation: terminal win/loss and
+search-generated policy targets support strategy discovery without human game
+data or intermediate reward shaping~\cite{silver2017alphagozero}. AlphaNIST asks
+whether binary task success can similarly support strategy discovery in continuous,
+contact-rich control, with one shared policy learning heterogeneous
+assemblies end to end.

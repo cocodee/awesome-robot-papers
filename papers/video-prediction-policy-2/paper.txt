@@ -1,0 +1,1548 @@
+
+===== 第 1 页 =====
+VIDEO PREDICTION POLICY 2: PREDICT BETTER,
+ACT BETTER
+Yanjiang Guo1,2,*, Haodong Yan1,3,*, Zhide Zhong1,3,*, Zhongru Zhang2,*, Qingyuan Yang1,2,*
+Qingzhou Lu1,2, Xiaoyu Chen2, Yen-Jen Wang4, Shuying Deng1,2,4, Chenghan Yang2, Puzhen Yuan1,2
+Chenxin Liu1,2, Tun Ban1,5, Xiang Zhu1,2, Yichen Liu1,2, Kun Feng1,2, Haoang Li3, Jianyu Chen1,2
+*Equal Contribution
+1Robotera
+2Tsinghua University
+3HKUST (GZ)
+4University of California, Berkeley
+5Shanghai Jiaotong University
+Project Page: https://robert-gyj.github.io/video-prediction-policy-2
+ABSTRACT
+World action models (WAMs) have emerged as an important class of general-
+ist robot policies, aiming to transfer video prediction priors to action learning.
+However, we find that existing WAMs frequently produce incorrect motion pre-
+dictions in open-ended environments, leading to erroneous actions. We attribute
+this limitation to two factors: (1) base video models are not optimized for ma-
+nipulation, and (2) naively incorporating action components into video models
+can substantially degrade their generalization capabilities. We introduce Video
+Prediction Policy 2 (VPP2), a WAM that enables strong zero-shot generalization in
+both video prediction and action generation. First, we curate a large-scale, diverse
+dataset of manipulation videos to continue pretraining the base video foundation
+model. We annotate video clips with detailed captions and perform event-level
+video pretraining to promote generalization across open-ended manipulation tasks.
+Second, we post-train and distill the video model into a single-step visual planner
+with a fixed prediction horizon. Finally, we introduce an action module via a
+mixture-of-transformers (MoT) architecture to learn an implicit inverse dynamics
+model. Experiments demonstrate three key results: (1) VPP2-14B outperforms
+Cosmos3-64B by 11.0% points in video prediction instruction-following success
+rate on open-ended tasks; (2) VPP2 surpasses the strongest baseline by 18.5%
+points in success rate on real-world zero-shot ALOHA manipulation tasks; and
+(3) following benchmark-specific post-training, VPP2 achieves the highest success
+rates among evaluated methods on the challenging LIBERO-Pro, LIBERO-OOD,
+and RoboDojo benchmarks.
+Simple Caption → Short Future Chunks
+Unstable mapping
+Multiple modes
+Detailed Caption → Complete trajectory
+Start
+Goal
+Unique, stable mapping
+Concentrated distribution
+The left robot gripper picks up white bowl in 
+the left and place it inside the transparent 
+box. The camera view keeps static.
+Place the bowl inside 
+the box.
+o1 ··· oH
+a1 ··· ah
+Video DiT
+Action DiT
+o0
+o1 ··· oH
+a1 ··· ah
+Event-level Continue Pretraining +
+Chunk-level Post-training
+Large diverse manipulation Data
+0.18
+0.54
+0.38
+0.74
+0.85
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+(1) Video Prediction Instruction 
+Following
+0.40
+0.21
+0.58
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+(2) Zero-shot Real-
+World Manipulation
+6.93
+14.88
+11.92
+29.47
+0
+10
+20
+30
+40
+(3) Post-training on 
+Benchmarks
+Wan-14B
+LVP
+Cosmos
+-16B
+Cosmos3-64B
+VPP2
+𝝅𝟎.𝟓
+Fast
+WAM
+VPP2
+𝝅𝟎.𝟓
+G0.5
+Open
+WAM
+VPP2
+Figure 1: A typical robot policy maps a simple instruction and an observation into a short action
+chunk. As datasets scale, this mapping becomes increasingly multimodal and uncertain, leading
+models to learn spurious short-horizon correlations. VPP2 first establishes consistent semantic-to-
+trajectory mappings via next event video prediction with detailed captions, then post-trains and distills
+the model to generate short action chunks.
+1
+arXiv:2610.10270v2  [cs.CV]  8 Oct 2026
+
+===== 第 2 页 =====
+1
+INTRODUCTION
+World action models (WAMs) are developing rapidly and have become an important class of generalist
+robot policies (Hu et al., 2024; Liao et al., 2025; Kim et al., 2026; Yuan et al., 2026; Ma et al., 2026;
+Li et al., 2026a;b; AgiBot Research Team et al., 2026; Ye et al., 2026). Many WAMs build on video
+foundation models (Wan et al., 2025; Agarwal et al., 2025; Yang et al., 2025), aiming to transfer
+their rich priors about physical dynamics to policy learning. This premise is compelling: accurate,
+instruction-conditioned video predictions can guide action generation through an explicit or implicit
+inverse dynamics model (Du et al., 2023; Hu et al., 2024). However, prior work (Zhang et al., 2026b)
+has found that existing WAMs often perform well only on a narrow set of seen tasks, while producing
+unreliable future motion predictions in unseen, out-of-distribution scenarios. These prediction failures,
+in turn, lead to erroneous actions. In recent benchmarks that require generalization, robot policies,
+including WAMs, with near-perfect success rates on standard evaluation suites suffer substantial
+performance drops under perturbed task configurations and novel skill compositions (Zhou et al.,
+2025; Li, 2025; Mishra et al., 2026).
+We identify two key factors that limit the generalization of existing WAMs to unseen scenarios.
+First, base video models are primarily optimized for creative content generation and aesthetic quality
+rather than precise physical dynamics, and therefore often fail to follow manipulation instructions
+faithfully (Chen et al., 2025; Zhang et al., 2026b). Second, introducing action-specific compo-
+nents or training objectives into pretrained video foundation models can substantially degrade their
+generalization capabilities (Mishra et al., 2026).
+To address these issues, we introduce Video Prediction Policy 2 (VPP2), a WAM that achieves
+strong zero-shot generalization in both video prediction and action generation. Our first objective
+is to train a generalizable video foundation that can faithfully follow instructions and make future
+predictions grounded in the current observation, without unsupported changes to the scene or task.
+To this end, we annotate each clip with a detailed caption specifying the manipulation process, active
+end effector, and target object, and perform event-level video prediction training. As illustrated
+in Figure 1, detailed captions and complete event-level trajectory prediction substantially reduce
+uncertainty in future prediction and encourage consistent mappings from semantic descriptions to
+visual trajectories, improving generalization across diverse instructions. We then post-train the video
+model to predict fixed-horizon future chunks and apply consistency distillation (Song et al., 2023)
+to obtain a single-step visual planner for real-time robot execution. Finally, we introduce an action
+expert through a mixture-of-transformers (MoT) architecture (Liang et al., 2025) to learn an implicit
+inverse dynamics model conditioned on the predicted future. During policy execution, we pair VPP2
+with a VLM planner (Bai et al., 2025; Bytedance Seed, 2026) that translates open-ended instructions
+into explicit subtask instructions.
+Our experiments demonstrate three key advantages of VPP2. (1) VPP2-14B follows manipulation
+instructions faithfully, outperforming Cosmos3-64B (Agarwal et al., 2026) by 11% in instruction-
+following success rate on open-ended tasks. (2) VPP2 exhibits strong zero-shot manipulation
+capabilities on a real-world ALOHA platform (Zhao et al., 2023), achieving an average success rate
+of 58.5% across 10 task categories, compared with 40.0% for π0.5 (Intelligence et al., 2025) and
+20.5% for Fast-WAM (Yuan et al., 2026). (3) Following benchmark-specific post-training, VPP2
+achieves the highest success rates among evaluated methods on LIBERO-Pro (Zhou et al., 2025)
+(45.0%, compared with 11.0% for the strongest baseline), LIBERO-OOD (Li, 2025; Mishra et al.,
+2026) (63.9%), and RoboDojo (Chen et al., 2026) (32.26%, state-of-the-art).
+2
+DATA PROCESSING PIPELINE
+In this section, we describe our data collection and curation pipeline, including how we unify the
+inputs and outputs across diverse manipulation datasets.
+Video Sources. We compile a large-scale, diverse collection of manipulation videos for continued
+pretraining of an open-source video foundation model (Wan et al., 2025). Our data span three cate-
+gories: robot manipulation datasets, human activity datasets, and general-purpose video datasets. For
+general-purpose video datasets, we apply an extensive filtering pipeline similar to that of LVP (Chen
+et al., 2025) to retain only videos depicting manipulation-related activities. Table 1 summarizes the
+datasets used for training; full dataset references are provided in Appendix A.
+2
+
+===== 第 3 页 =====
+Data Type
+Embodiment Type
+Data Sources
+Robot
+Single-arm
+OXE, RoboMIND, DROID, RH20T, MolmoAct
+Dual-arm
+AgiBot World-Beta, RoboCOIN, RDT, GM-100, ABC-130K, Self-
+collected ALOHA Data
+Mobile & humanoid
+InternData-A1, Galaxea Open-World, Self-collected dexterous hands
+Human
+Human hands
+Open-source:
+EgoDex,
+Ego4D, EPIC-KITCHENS, Something-
+Something V2, VITRA-1M
+Self-collected egocentric data
+General Video
+Human hands
+OpenVid, Panda-70M
+Table 1: Overview of training data sources. Full dataset references are provided in Appendix A,
+Table 5.
+End-effector is not 
+visible. →Delete
+End effector fully 
+visible. →First frame
+Final caption: The left robot gripper picks up the 
+stainless steel cup in the left side and place it inside the 
+left most yellow box,  the right gripper is not visible in 
+the video. This is a composed robot video with two wrist 
+views in the right side.
+Caption Tempelate:
+Left gripper ……
+Right Gripper ……
+Specified object …
+Camera view ……
+Specify the left cup. 
+(Two cups on the table.)
+Specify the left most yellow box. 
+(Three boxes on the table.)
+Multi-view concatenation
+Figure 2: An example of our data processing pipeline. The central objective is to reduce uncertainty
+in future prediction, thereby encouraging the model to learn a consistent mapping from conditioning
+information to sub-task trajectories. To this end, each caption includes detailed task descriptions,
+explicit end-effector identification, a description of the visible target object, and camera-view changes.
+Video Filtering, Segmentation and Captioning. We first remove corrupted trajectories, including
+those with camera failures or abrupt discontinuities, and segment the remaining trajectories into
+semantically coherent clips lasting 1–12 seconds. We identify candidate boundaries using heuristic
+cues associated with natural transitions, such as local minima in human-hand or end-effector velocity
+and moments when the gripper or fingers open or close. A vision-language model (VLM) then refines
+the segmentation by merging adjacent clips where appropriate and adjusting their start and end points.
+After segmentation, we generate detailed captions that describe the task, explicitly identify the active
+end effectors, unambiguously specify the target objects, and characterize the camera views and
+motion. Figure 2 illustrates an example, and Appendix A.1 provides further details.
+𝑩𝒅
+𝑨𝒅
+𝑩𝒅
+(a) Workspace alignment             (b) End-effector alignment 
+Figure 3: (a) Bounding boxes show the aligned
+workspaces of different datasets. (b) Aligned
+end-effector coordinate frames.
+Unified Action Space and Unified End-effector
+Coordinate Systems. Different robot datasets
+often adopt inconsistent coordinate systems and
+camera viewpoints, resulting in conflicting action
+representations for visually similar motions. For
+example, a leftward motion may correspond to the
+positive x-direction in one dataset but the nega-
+tive y-direction in another, making it difficult for
+the model to learn the semantic meaning of each
+action dimension.
+We focus on egocentric bimanual datasets, includ-
+ing ALOHA-style, humanoid-style, and human
+egocentric datasets. These datasets account for
+more than 80% of the total data and share a sim-
+ilar bimanual structure and camera viewpoint. We
+explicitly align their coordinate systems at two levels: (1) workspace alignment, which applies a
+world-frame transformation so that different robots have comparable end-effector workspaces; and
+(2) end-effector alignment, which applies a local transformation to standardize end-effector origins
+and axis orientations.
+3
+
+===== 第 4 页 =====
+For an arm dataset d , let Td = WdTEd ∈SE(3) denote the original end-effector pose, where Wd and
+Ed are the dataset’s world and end-effector frames, respectively. We define the workspace alignment
+as Ad = ¯
+W TWd and the end-effector alignment as Bd = EdT ¯
+E, where ¯W and ¯E denote the canonical
+world and end-effector frames. The aligned end-effector pose is given by eTd = AdTdBd,.
+Unified T-shape Multi-view Input across Datasets. Robotics datasets commonly contain obser-
+vations from multiple camera views. We arrange them into a T-shaped composite image, with the
+primary view on the left and two auxiliary views stacked vertically on the right, as illustrated in the
+bottom-left panel of Figure 2. When fewer than two auxiliary views are available, we fill the missing
+slots with black placeholder images.
+3
+VPP2: A GENERALIST POLICY WITH ZERO-SHOT CAPABILITY
+Overview. Our large-scale, diverse, and densely annotated dataset enables us to train a policy with
+strong generalization capabilities. VPP2 builds upon the pretrained Wan2.1-I2V-14B model (Wan
+et al., 2025) and introduces an action expert via a mixture-of-transformers (MoT) architecture (Liang
+et al., 2025). Our training objective is twofold: we first adapt the video model to produce generalizable
+future predictions at real-time inference speed for open-ended manipulation tasks, and then train the
+action expert conditioned on the KV cache of the video model. To maximize policy generalization,
+we organize training into the stages summarized in Figure 4.
+3.1
+VIDEO PREDICTION MODEL TRAINING PIPELINE
+Stage 1: Event-level Video Model Continued Pre-training. We first adapt a pretrained video
+generation model to the manipulation domain through event-level continued pre-training. Each
+training example covers a complete manipulation subtask, aligning the subtask description with the
+corresponding visual evolution from the initial observation to subtask completion.
+Given a demonstration τ = (o0, o1, . . . , oT ), we uniformly sample N future frames across the entire
+event:
+yevent =
+ o0, o⌊T/N⌋, o⌊2T/N⌋, . . . , oT
+
+,
+(1)
+where T is the final frame index and N excludes the initial conditioning frame o0. Let x1 = E(yevent)
+denote the corresponding video latent representation, where E is the video encoder. We construct the
+interpolated latent as
+xs = (1 −s)ϵ + sx1,
+ϵ ∼N(0, I),
+s ∈[0, 1],
+(2)
+where s denotes flow time, with s = 0 corresponding to noise and s = 1 to data. The model is
+optimized with the flow matching objective (Lipman et al., 2023)
+LFM(θ) = E(x1,c), ϵ, s
+h
+∥vθ(xs, s, c) −(x1 −ϵ)∥2
+2
+i
+,
+(3)
+where vθ predicts the flow velocity and c includes the subtask instruction and initial observation o0.
+In this stage, we predict 49 frames at a resolution of 416 × 240 and continue pre-training Wan2.1-
+I2V-14B for 30,000 optimization steps with batch size 1,024 and learning rate 1e-5. Our experiments
+in Sec. 4.1 show that the resulting model achieves strong instruction following on manipulation tasks,
+outperforming the 64B Cosmos3-Super-Image2Video model (Agarwal et al., 2026).
+Stage 2: Chunk-level Video Model Post-training. Event-level continued pre-training enables
+the model to generalize well to manipulation tasks. However, sampling a fixed number of frames
+from events of different durations produces variable temporal intervals between predicted frames,
+complicating their alignment with downstream actions. We therefore further post-train the model
+to predict a fixed-duration future chunk, establishing a consistent temporal scale for action learn-
+ing. In experiments, we predict 2 seconds for human-hand manipulation and 8 seconds for robot
+manipulation.
+Let H denote the prediction horizon in seconds and f the dataset frame rate in frames per second
+(fps). The nominal interval between sampled frames is δ = fH/N, measured in dataset frames. For
+a chunk starting at frame t, the target video is
+y(t)
+chunk =
+ ot, ot+⌊δ⌋, ot+⌊2δ⌋, . . . , ot+⌊Nδ⌋
+
+,
+(4)
+4
+
+===== 第 5 页 =====
+Denoised latent observations/actions
+Noise
+(1) Continue Pretraining
+o1 ··· oH
+Video DiT
+o0
+o1 ··· oH
+Long Video Chunk Prediction
+(2) Post-training & Distillation
+o1 ··· oH
+a1 ··· ah
+Video DiT
+Action DiT
+o0
+o1 ··· oH
+a1 ···
+ah
+Short Action Chunk Generation
+(3) Action DiT Pretraining
+o1 ··· oT
+Video DiT
+o0
+o1 ··· oT
+Video Event Prediction
+Complete trajectory
+Event level
+0
+T
+Fixed-length video chunk
+0
+H
+Video chunk
+0
+H
+Action chunk
+0
+h
+Attention mask
+o 0
+o 0
+o h
+o h
+o h′
+o h′
+oH
+oH
+a 0
+a 0
+a h
+a h
+Figure 4: The VPP2 training pipeline is designed to maximize generalization. Stage 1 uses large-
+scale, event-level video pretraining to learn a generalizable video model for manipulation. Stage 2
+post-trains and distills this model to predict long-horizon video chunks spanning 8 seconds in a single
+forward pass, taking approximately 0.1 seconds. Finally, Stage 3 trains an action expert to generate
+2-second action chunks conditioned on the one-step video latents.
+with conditioning inputs c containing the observation ot and the corresponding subtask instruction.
+The index t + ⌊fH⌋is capped at the final frame index T, and we optimize the same flow matching
+objective in Eq. equation 3, with x1 = E(y(t)
+chunk).
+Stage 2: Consistency Distillation. We distill the chunk-level video model for single-step genera-
+tion (Song et al., 2023) by enforcing consistent terminal predictions at adjacent flow times:
+LCD = E
+h
+λ(s, s′) ∥Fθ(xs, s, c) −stopgrad (F¯θ(bxs′, s′, c))∥2
+2
+i
+,
+(5)
+where 0 ≤s < s′ ≤1, bxs′ is obtained by integrating the frozen teacher flow from (xs, s) to s′, and ¯θ
+denotes the EMA student parameters. The student satisfies Fθ(x, 1, c) = x. To emphasize single-step
+generation, we sample s′ = 1 with probability 0.5; otherwise, we sample s′ from the remaining flow
+times. At inference, the video latent is generated in a single forward pass as Fθ(ϵ, 0, c).
+3.2
+ACTION MODELING
+Stage 3: Action Pretraining across Datasets. After training a generalizable video model, we
+train the action expert on our processed bimanual datasets with unified workspace and end-effector
+coordinate systems. The action expert is a 0.9B-parameter diffusion transformer (DiT) (Peebles
+& Xie, 2023) with a standard MoT architecture. Since the action expert is newly initialized, we
+freeze the base parameters of the video DiT during the early stages of action training and adapt the
+video backbone using only LoRA (Hu et al., 2022). This strategy helps preserve the pretrained video
+representations while limiting disruption from action-training gradients.
+Inference Latency. We generate video efficiently by reducing the video input to 17 × 416 × 240
+during post-training and distilling the video model for one-step generation, as described in Sec. 3.1.
+With bfloat16 precision and torch.compile, the video model takes approximately 0.12 seconds. The
+action expert then generates an action chunk conditioned on the video latents using five denoising
+steps, taking approximately 0.1 seconds. The total latency per action chunk is therefore approximately
+0.22 seconds.
+3.3
+VLM FOR HIGH-LEVEL PLANNING.
+Sub-task Planning. To tackle long-horizon tasks and handle ambiguous human instructions, we
+adopt a hierarchical architecture in which a VLM generates subtask plans (Shi et al., 2025). The
+VLM handles high-level reasoning, semantic understanding, and memory, allowing VPP2 to focus
+on mapping explicit instructions to trajectories. In practice, the VLM can be deployed locally or
+accessed through an API to a frontier model.
+5
+
+===== 第 6 页 =====
+Grab the black gas nozzle.
+Place the spoon on the iPad.
+Open the oven.
+Lift the lid off the white jar.
+Close the laptop.
+Grasp the tissue and use it to wipe the screen.
+Transfer the left slipper to the right side.
+Use scissors to cut the paper.
+Clean the white board.
+Pack the device into box.
+Put the cap back on bottle.
+Place the green block on the controller.
+Flip the package.
+Sweep the block into dustpan.
+Use the towel to wipe the plate.
+Open the upper-layer drawer.
+Figure 5: VPP2 video predictions for human-hand and robot manipulation. Trained on large-scale,
+diverse manipulation datasets, VPP2 generalizes across human hands and a wide range of robot
+embodiments. For robot manipulation, VPP2 jointly predicts one to three camera views arranged in
+a T-shaped composite. Due to space constraints, single-step video predictions after distillation are
+shown in Figure 10 in the appendix.
+Prompt Enhancement. VLM planning also generates detailed subtask descriptions that match
+the caption template used during training. Prior work on video generation likewise highlights the
+importance of detailed captions for generation quality (Wan et al., 2025; Yang et al., 2025).
+4
+EXPERIMENTS
+In this section, we conduct experiments to answer the following questions: (1) How does the motion
+quality of VPP2’s video predictions compare with that of state-of-the-art video foundation models on
+manipulation tasks? (2) How broad are VPP2’s zero-shot manipulation capabilities? (3) How well
+does VPP2 perform after domain-specific post-training?
+4.1
+VIDEO PREDICTION QUALITY ANALYSIS
+Video Prediction for Human and Robot Manipulation. Figure 5 visualizes predictions for human-
+hand manipulation and diverse robot embodiments from the pretrained VPP2 model. To assess
+generalization, we randomly sample test cases from prior work (Chen et al., 2025; Zhang et al.,
+2026b) and take photographs in office environments and robot workspaces, pairing them with freely
+chosen manipulation instructions. Trained on data spanning more than 20 robot embodiments, VPP2
+also generalizes to unseen embodiments and tasks, as shown in Figure 5. VPP2 also supports joint
+prediction across one to three camera views, with the primary view placed on the left and up to two
+auxiliary views stacked on the right.
+Quantitative Comparisons. We compare VPP2 with four video foundation models and one ablation
+variant: (1) Wan-2.1-I2V-14B-480p (Wan et al., 2025), our base model; (2) LVP (Chen et al., 2025),
+which also adapts Wan-2.1-I2V-14B-480p to manipulation tasks; (3) Cosmos3-Nano-16B, which is
+extensively trained on robot manipulation data; (4) Cosmos3-Super-Image2Video-64B, the strongest
+6
+
+===== 第 7 页 =====
+Method
+Human
+Robot
+Wan2.1-14B
+0.32
+0.04
+LVP
+0.62
+0.46
+Cosmos3-16B
+0.44
+0.32
+Cosmos3-64B
+0.70
+0.78
+VPP2-Fixed-Step
+0.48
+0.42
+VPP2 (ours)
+0.80
+0.90
+Table 2: Instruction following
+success rates.
+Baseline wins
+Ties
+VPP2 wins
+Human Hand
+Robot
+Wan-2.1-14B
+LVP
+Cosmos3-16B
+Cosmos3-64B
+4%
+44%
+52%
+12%
+58%
+30%
+10%
+44%
+46%
+18%
+54%
+28%
+0%
+20%
+40%
+60%
+80%
+100%
+0%
+4%
+96%
+6%
+44%
+50%
+10%
+22%
+68%
+12%
+64%
+24%
+0%
+20%
+40%
+60%
+80%
+100%
+Figure 6: Win rates of the pretrained VPP2 model against different
+baselines on video prediction tasks.
+Wan-14B
+Cosmos3-64B
+VPP2
+(b) Stack red paper cup on leftmost black paper cup.
+(a) Grasp leftmost bottle and place it in front of the short cup.
+Figure 7: Comparison of instruction-following capabilities among VPP2, Wan-14B, and Cosmos3-
+64B. VPP2 demonstrates better instruction following on complex tasks requiring spatial understand-
+ing.
+model in the Cosmos 3 family (Agarwal et al., 2026); and (5) VPP2-Fixed-Step, an ablation of
+our method that predicts a fixed-duration future chunk rather than a complete event, potentially
+misaligning the predicted future with the instruction describing the full event.
+We randomly collect 50 image–instruction pairs each for human-hand and robot manipulation and
+generate video predictions for every pair using each model. We first use a GPT-based evaluator to
+assess instruction-following success rates, reported in Table 2. Human evaluators then compare pairs
+of predictions to determine which better follows the instruction, yielding VPP2’s pairwise win rates
+against each baseline in Figure 6. VPP2’s advantages are most pronounced in complex manipulation
+scenarios requiring spatial understanding, as illustrated in Figure 7. We hypothesize that training with
+detailed captions encourages more accurate mappings from instructions to trajectories, contributing
+to these improvements.
+4.2
+POLICY PERFORMANCE ANALYSIS
+Zero-shot Performance on Real-world Aloha Robot. After pretraining a strong video foundation
+model for manipulation, we post-train and distill it into a fast, single-step generator to support action
+learning. With its generalizable video predictions, VPP2 demonstrates strong zero-shot capabilities
+across open-ended manipulation tasks. We deploy VPP2 directly on a robot embodiment seen during
+training, without task-specific fine-tuning. For comparison, we train π0.5 (Intelligence et al., 2025)
+and the Wan-14B version of Fast-WAM (Yuan et al., 2026) on the same data used in VPP2 training.
+We evaluate models on 10 different categories of zero-shot tasks and present results in Figure 8. VPP2
+achieves an average success rate of 58.5%, compared with 40.0% for π0.5 and 20.5% for Fast-WAM,
+and performs best in 9 of the 10 categories.
+LIBERO-ID, LIBERO-Pro, and LIBERO-OOD Benchmarks. All models are trained exclusively
+on the four standard LIBERO suites (Liu et al., 2023) and are evaluated under three complementary
+settings. LIBERO-ID measures standard in-distribution manipulation performance. To assess
+generalization beyond the training distribution, we further evaluate on LIBERO-Pro (Zhou et al.,
+2025) and LIBERO-OOD (Li, 2025) without additional training. Following HarnessVLA (Zhang et al.,
+2026d), we evaluate the Position and Task perturbations of LIBERO-Pro, which test generalization to
+changes in object positions and task specifications, respectively. We further follow (Mishra et al.,
+2026) to evaluate compositional generalization on LIBERO-OOD, which recombines familiar objects,
+7
+
+===== 第 8 页 =====
+π0.5
+FastWAM-14B
+VPP2
+0%
+50%
+100%
+Success rate
+40%
+25%
+65%
+Stack
+45%
+20%
+70%
+Pick
+55%
+40%
+75%
+Place
+80%
+35%
+70%
+Fold
+0%
+0%
+40%
+Pour
+35%
+20%
+50%
+Pull
+50%
+15%
+55%
+Insert
+20% 20%
+35%
+Open
+30%
+0%
+60%
+Close
+45%
+30%
+65%
+Wipe
+40%
+20.5%
+58.5%
+Average
+Figure 8: Zero-shot success rates on the real-world ALOHA across 10 randomly selected task
+categories. For a fair comparison, we finetune π0.5 and FastWAM on all ALOHA datasets exposed in
+VPP2’s training data and use the 14B variant of FastWAM.
+LIBERO-ID
+LIBERO-Pro
+LIBERO-OOD
+Method
+Overall
+Position
+Task
+Overall
+Spatial
+Object
+Goal
+Overall
+π0 (Black et al., 2024)
+94.2
+0.5
+0.0
+0.3
+0.7
+0.3
+4.3
+1.7
+π0.5 (Intelligence et al., 2025)
+96.9
+20.8
+1.3
+11.0
+36.7
+2.3
+41.7
+26.8
+MolmoAct (Lee et al., 2025)
+86.6
+1.5
+1.5
+1.5
+–
+–
+–
+–
+X-VLA (Zheng et al., 2026)
+98.1
+0.8
+6.8
+3.8
+–
+–
+–
+–
+AtomVLA (Sun et al., 2026)
+97.0
+7.3
+5.3
+6.3
+–
+–
+–
+–
+Cosmos-Policy (Kim et al., 2026)
+98.5
+–
+–
+–
+30.7
+0.3
+0.7
+10.5
+Fast-WAM (Yuan et al., 2026)
+97.6
+–
+–
+–
+12.7
+0.0
+15.7
+9.4
+DiT4DiT (Ma et al., 2026)
+98.6
+–
+–
+–
+9.0
+0.0
+10.3
+6.4
+Temporal Ratio (Mishra et al., 2026)
+94.0
+–
+–
+–
+58.6
+40.0
+80.3
+59.4
+VPP2 (Ours)
+98.8
+42.3
+47.8
+45.0
+59.3
+44.5
+87.7
+63.9
+Table 3: Post-training on LIBERO-ID, LIBERO-Pro, and LIBERO-OOD benchmarks. All models
+are trained exclusively on the four standard LIBERO suites (Liu et al., 2023) and are evaluated under
+three complementary settings.
+layouts, and goals into unseen task configurations along spatial, object, and goal dimensions. Per-suite
+LIBERO-ID results are provided in Appendix C.1.
+As shown in Table 3, while most baselines exceed 94% on LIBERO-ID, this in-distribution perfor-
+mance does not transfer to generalization. On LIBERO-Pro, VLA baselines drop to at most 11.0%
+overall, whereas VPP2 reaches 45.0%, with the largest gain on the Task perturbation (47.8% vs. 6.8%),
+indicating that VPP2 follows the given instruction rather than replaying memorized trajectories. On
+LIBERO-OOD, video-based policies such as Cosmos-Policy, Fast-WAM, and DiT4DiT reach at most
+10.5%, while VPP2 achieves 63.9%, also surpassing Temporal Ratio (Mishra et al., 2026), which
+specifically targets this generalization gap. We attribute these gains to next-event video prediction
+with detailed captions, which establishes consistent mappings from instructions to future trajectories.
+RoboDojo Benchmark. RoboDojo (Chen et al., 2026) is a unified sim-and-real benchmark for
+evaluating generalist robot manipulation policies. Its simulation benchmark contains 42 bimanual
+tasks covering five capability dimensions: generalization, memory, precision, long-horizon execution,
+and open-vocabulary instruction following. We follow the official training and evaluation protocol
+and report both the success rate and the average score, which captures partial task progress.
+As shown in Table 4, VPP2 achieves an average score of 39.26 and a success rate of 32.26%, achieving
+state-of-the-art performance.1 It outperforms representative VLAs such as π0.5 (Intelligence et al.,
+2025), X-VLA (Zheng et al., 2026), and Xiaomi-Robotics-1 (Guo et al., 2026), world action models
+such as Fast-WAM (Yuan et al., 2026) and OpenWAM-α (Wang et al., 2026a), and the frontier
+foundation model GPT-6-Astra (Zhang et al., 2026c) (28.97 / 22.48%). Per-dimension results are
+provided in Appendix C.2.
+VPP2 with Subtask Planning. The VPP2 results in Table 4 use full-task instructions without subtask
+planning. We further investigate VLM-based subtask planning on five selected RoboDojo task groups
+covering object classification, block stacking, block swapping, mahjong, and tic-tac-toe. To train
+the subtask-conditioned policy, we segment demonstrations and pair each segment with a subtask
+instruction. At test time, a vision-language model (VLM) uses visual observations and execution
+feedback to select the next subtask for VPP2 to execute.
+1Baseline results are taken from the official RoboDojo simulation leaderboard as of September 2026.
+8
+
+===== 第 9 页 =====
+π0
+π0.5
+X-VLA
+Fast-WAM OpenWAM-α
+Xiaomi-Robotics-1 GPT-6-Astra
+VPP2 (Ours)
+Avg. Score
+3.48
+11.44
+10.13
+3.48
+17.18
+20.07
+28.97
+39.26
+Success Rate (%)
+1.53
+6.93
+6.52
+2.03
+11.92
+13.93
+22.48
+32.26
+Table 4: Post-training results on the RoboDojo simulation benchmark. Average score captures partial
+task progress, and success rate measures binary task completion; both are averaged over the five
+capability dimensions. Baseline results are taken from the official leaderboard.
+Classify
+objects
+Stack
+by lang.
+Swap
+blocks
+Make
+kong
+Tic-tac-
+toe
+Average
+0
+50
+100
+46
+10
+44
+38
+0
+27.6
+70
+52
+76
+52
+38
+57.6
+Success rate (%)
+VPP2
+VPP2 + Subtask Planning
+Figure 9: Success rates with and without VLM-based subtask planning (50 trials per task). Average
+is the five-task mean; the baseline checkpoint matches Table 4.
+Figure 9 summarizes the results across the five selected task groups. The evaluated planning
+configurations achieve an average success rate of 57.6%, compared with 27.6% for the baseline. The
+largest gains occur in language-conditioned block stacking (10% to 52%) and tic-tac-toe (0% to
+38%).
+5
+RELATED WORKS
+Video Foundation Model. Video generation has advanced rapidly through latent diffusion mod-
+els (Blattmann et al., 2023b;a) and large-scale diffusion transformer models (Yang et al., 2025; Wan
+et al., 2025; Agarwal et al., 2025; 2026). Large-scale bidirectional video models provide strong
+general-purpose video priors; even recent autoregressive generators build on pretrained bidirectional
+models, using them for initialization or as teachers before causal adaptation and distillation (Yin et al.,
+2025; Huang et al., 2025). This motivates our strategy of first learning a generalizable video model
+and then adapting it for efficient prediction. Besides the training strategy, prompt enhancement is an
+important component of video foundation models (Yang et al., 2025; Wan et al., 2025). Similarly, we
+use a VLM to produce detailed, manipulation-specific descriptions that reduce ambiguity in these
+mappings. After establishing this manipulation-focused video prior, we post-train the model for
+fixed-horizon prediction and distill it for single-step generation to support efficient action learning.
+World Action Model. World action models (WAMs) leverage video prediction to facilitate robot
+policy learning. Early approaches first generate future frames and then infer actions through inverse
+dynamics (Du et al., 2023; Black et al., 2023; Bharadhwaj et al., 2024; Liang et al., 2024; Feng et al.,
+2025), but iterative video generation can incur substantial latency for closed-loop control. Hierarchical
+approaches also combine video-based motion planning with reactive VLA control (Zhang et al.,
+2026e). More recent approaches condition actions on features from video models (Hu et al., 2024;
+Liao et al., 2025; Jia et al., 2025; Yan et al., 2026b) or jointly learn visual prediction and action
+generation (Zhang et al., 2025; Guo et al., 2024; Li et al., 2025b; Zhu et al., 2025; Ma et al., 2026;
+Kim et al., 2026; Yan et al., 2026a; Ye et al., 2026; Li et al., 2026a; Bi et al., 2026; Motubrain Team
+et al., 2026). Recent work also explores event-grounded world-action learning (Li et al., 2026b) and
+large-scale manipulation-specific pretraining (AgiBot Research Team et al., 2026). Nevertheless,
+action learning can compromise pretrained capabilities, including video-model generalization (Mishra
+et al., 2026) and VLM semantic understanding (Zhang et al., 2026a). VPP2 emphasizes instruction-
+aligned future prediction, combining event-level pretraining with detailed captions, fixed-horizon
+post-training, and single-step distillation to provide an efficient video backbone for action learning.
+6
+CONCLUSION
+We presented Video Prediction Policy 2 (VPP2), a world action model that achieves strong zero-shot
+generalization in both video prediction and action generation. We first continue pretraining the
+base video model to produce generalizable, instruction-following predictions, then learn a policy
+while preserving these predictive capabilities. Experiments show that VPP2 follows manipulation
+9
+
+===== 第 10 页 =====
+instructions more faithfully than substantially larger video foundation models, exhibits strong zero-
+shot manipulation capabilities on a real-world ALOHA platform, and achieves the highest success
+rates after post-training on challenging benchmarks. We hope these findings encourage future WAM
+research to look beyond architectural choices for action modeling and place greater emphasis on
+learning generalizable video predictions and preserving this generalization during action learning.
+10
+
+===== 第 11 页 =====
+ACKNOWLEDGMENTS
+We thank Yucheng Hu and Jianke Zhang for insightful discussions that greatly benefited the develop-
+ment of VPP2.
+AI USE STATEMENT
+We used generative AI tools to assist with language polishing, improve the clarity and readability
+of the manuscript, and draft portions of the paper. In the research process, these tools were used to
+suggest experimental parameter settings and assist with searches for relevant literature and technical
+information. We also used AI tools to annotate human and robotic manipulation datasets at scale
+for model training. The authors evaluated the suggestions and made the final decisions regarding
+experimental design and parameter selection. All AI-assisted text was reviewed and revised by the
+authors, and retrieved information was checked against original sources before use. The authors take
+full responsibility for the final content of the paper, including its data, claims, results, and references.
+REPRODUCIBILITY STATEMENT
+We describe the model architecture, training objectives, and evaluation protocols in the main text,
+with additional data processing details provided in the appendix. Detailed training configurations,
+code, and model checkpoints are available on our project website.
+REFERENCES
+Niket Agarwal, Arslan Ali, Maciej Bala, Yogesh Balaji, Erik Barker, Tiffany Cai, Prithvijit Chat-
+topadhyay, Yongxin Chen, Yin Cui, Yifan Ding, et al. Cosmos world foundation model platform
+for physical ai. arXiv preprint arXiv:2501.03575, 2025.
+Niket Agarwal, Arslan Ali, Jon Allen, Martin Antolini, Adeline Aubame, Alisson Azzolini, Junjie
+Bai, Maciej Bala, Yogesh Balaji, Josh Bapst, et al. Cosmos 3: Omnimodal world models for
+physical ai. arXiv preprint arXiv:2606.02800, 2026.
+AgiBot Research Team, Renhang Liu, Wenzhi Zhao, Zhuo Yang, Liliang Chen, Pengfei Zhou,
+Shengcong Chen, Guanghui Ren, Youlun Peng, Rongjun Jin, et al. GE-Act 2.0: Pretraining and
+scaling a world-action model for robotic manipulation. arXiv preprint arXiv:2609.05588, 2026.
+URL https://arxiv.org/abs/2609.05588.
+Arthur Allshire, Himanshu Gaurav Singh, Ritvik Singh, Adam Rashid, Hongsuk Choi, David
+McAllister, Justin Yu, Yiyuan Chen, Huang Huang, Pieter Abbeel, et al. Scalable Behavior
+Cloning with Open Data, Training, and Evaluation. arXiv preprint arXiv:2606.27375, 2026. URL
+https://arxiv.org/abs/2606.27375.
+Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao
+Deng, Wei Ding, Chang Gao, Chunjiang Ge, et al. Qwen3-vl technical report. arXiv preprint
+arXiv:2511.21631, 2025.
+Homanga Bharadhwaj, Debidatta Dwibedi, Abhinav Gupta, Shubham Tulsiani, Carl Doersch, Ted
+Xiao, Dhruv Shah, Fei Xia, Dorsa Sadigh, and Sean Kirmani. Gen2act: Human video generation in
+novel scenarios enables generalizable robot manipulation. arXiv preprint arXiv:2409.16283, 2024.
+Hongzhe Bi, Hengkai Tan, Shenghao Xie, Zeyuan Wang, Shuhe Huang, Haitian Liu, Ruowen
+Zhao, Yao Feng, Chendong Xiang, Yinze Rong, Hongyan Zhao, Hanyu Liu, Zhizhong Su, Lei
+Ma, Hang Su, and Jun Zhu. Motus: A unified latent action world model. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pp. 35101–35113,
+2026.
+URL https://openaccess.thecvf.com/content/CVPR2026/html/Bi_
+Motus_A_Unified_Latent_Action_World_Model_CVPR_2026_paper.html.
+Kevin Black, Mitsuhiko Nakamoto, Pranav Atreya, Homer Walke, Chelsea Finn, Aviral Kumar, and
+Sergey Levine. Zero-shot robotic manipulation with pretrained image-editing diffusion models.
+arXiv preprint arXiv:2310.10639, 2023.
+11
+
+===== 第 12 页 =====
+Kevin Black, Noah Brown, Danny Driess, Adnan Esmail, Michael Equi, Chelsea Finn, Niccolo Fusai,
+Lachy Groom, Karol Hausman, Brian Ichter, et al. π0: A vision-language-action flow model for
+general robot control. arXiv preprint arXiv:2410.24164, 2024.
+Andreas Blattmann, Tim Dockhorn, Sumith Kulal, Daniel Mendelevitch, Maciej Kilian, Dominik
+Lorenz, Yam Levi, Zion English, Vikram Voleti, Adam Letts, et al. Stable video diffusion: Scaling
+latent video diffusion models to large datasets. arXiv preprint arXiv:2311.15127, 2023a.
+Andreas Blattmann, Robin Rombach, Huan Ling, Tim Dockhorn, Seung Wook Kim, Sanja Fidler, and
+Karsten Kreis. Align your latents: High-resolution video synthesis with latent diffusion models.
+In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pp.
+22563–22575, 2023b.
+Qingwen Bu, Jisong Cai, Li Chen, Xiuqi Cui, Yan Ding, Siyuan Feng, Xindong He, Xu Huang,
+et al. AgiBot World Colosseo: A Large-scale Manipulation Platform for Scalable and Intelligent
+Embodied Systems. In IEEE/RSJ International Conference on Intelligent Robots and Systems,
+2025. URL https://arxiv.org/abs/2503.06669.
+Bytedance Seed. Seed2.0 model card: Towards intelligence frontier for real-world complexity. arXiv
+preprint arXiv:2607.00248, 2026.
+Boyuan Chen, Tianyuan Zhang, Haoran Geng, Caiyi Zhang, Peihao Li, Kiwhan Song, William T Free-
+man, Jitendra Malik, Pieter Abbeel, Russ Tedrake, et al. Large video planner enables generalizable
+robot control. arXiv preprint arXiv:2512.15840, 2025.
+Tianxing Chen, Yue Chen, Zixuan Li, Junyuan Tang, Kailun Su, Haoran Lu, Weijie Wan, Baijun Chen,
+Songling Liu, Haowen Yan, et al. Robodojo: A unified sim-and-real benchmark for comprehensive
+evaluation of generalist robot manipulation policies. arXiv preprint arXiv:2607.04434, 2026.
+Tsai-Shien Chen, Aliaksandr Siarohin, Willi Menapace, Ekaterina Deyneka, Hsiang-wei Chao,
+Byung Eun Jeon, Yuwei Fang, Hsin-Ying Lee, Jian Ren, Ming-Hsuan Yang, and Sergey Tulyakov.
+Panda-70M: Captioning 70m videos with multiple cross-modality teachers. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2024. URL https:
+//snap-research.github.io/Panda-70M/.
+Dima Damen, Hazel Doughty, Giovanni Maria Farinella, Sanja Fidler, Antonino Furnari, Evangelos
+Kazakos, Davide Moltisanti, Jonathan Munro, Toby Perrett, Will Price, and Michael Wray. Scaling
+egocentric vision: The EPIC-KITCHENS dataset. In European Conference on Computer Vision,
+2018. URL https://arxiv.org/abs/1804.02748.
+Yilun Du, Sherry Yang, Bo Dai, Hanjun Dai, Ofir Nachum, Josh Tenenbaum, Dale Schuurmans, and
+Pieter Abbeel. Learning universal policies via text-guided video generation. Advances in Neural
+Information Processing Systems, 36, 2023.
+Hao-Shu Fang, Hongjie Fang, Zhenyu Tang, Jirong Liu, Chenxi Wang, Junbo Wang, Haoyi Zhu,
+and Cewu Lu. RH20T: A Comprehensive Robotic Dataset for Learning Diverse Skills in One-
+Shot. In IEEE International Conference on Robotics and Automation, 2024. URL https:
+//arxiv.org/abs/2307.00595.
+Yao Feng, Hengkai Tan, Xinyi Mao, Guodong Liu, Shuhe Huang, Chendong Xiang, Hang Su, and
+Jun Zhu. Vidar: Embodied video diffusion model for generalist bimanual manipulation. arXiv
+preprint arXiv:2507.12898, 2025.
+Raghav Goyal, Samira Ebrahimi Kahou, Vincent Michalski, Joanna Materzynska, Susanne
+Westphal, Heuna Kim, Valentin Haenel, Ingo Fruend, Peter Yianilos, Moritz Mueller-
+Freitag, Florian Hoppe, Christian Thurau, Ingo Bax, and Roland Memisevic.
+The
+“Something Something” video database for learning and evaluating visual common sense.
+In Proceedings of the IEEE International Conference on Computer Vision, pp. 5842–
+5850, 2017. URL https://openaccess.thecvf.com/content_iccv_2017/html/
+Goyal_The_Something_Something_ICCV_2017_paper.html.
+12
+
+===== 第 13 页 =====
+Kristen Grauman, Andrew Westbury, Eugene Byrne, Zachary Chavis, Antonino Furnari, Rohit
+Girdhar, Jackson Hamburger, Hao Jiang, Miao Liu, Xingyu Liu, et al. Ego4D: Around the world
+in 3,000 hours of egocentric video. In Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition, pp. 18995–19012, 2022.
+URL https://openaccess.
+thecvf.com/content/CVPR2022/html/Grauman_Ego4D_Around_the_World_
+in_3000_Hours_of_Egocentric_Video_CVPR_2022_paper.html.
+Jun Guo, Piaopiao Jin, Jason Li, Peiyan Li, Yingyan Li, Futeng Liu, Wanli Peng, Optimus Qin, Yifei
+Su, Nan Sun, et al. Xiaomi-robotics-1: Scaling vision-language-action models with over 100k
+hours of real-world trajectories. arXiv preprint arXiv:2607.15330, 2026.
+Yanjiang Guo, Yucheng Hu, Jianke Zhang, Yen-Jen Wang, Xiaoyu Chen, Chaochao Lu, and Jianyu
+Chen. Prediction with action: Visual policy learning via joint denoising process. Advances in
+Neural Information Processing Systems, 37:112386–112410, 2024.
+Ryan Hoque, Peide Huang, David J. Yoon, Mouli Sivapurapu, and Jian Zhang. EgoDex: Learning
+Dexterous Manipulation from Large-Scale Egocentric Video. arXiv preprint arXiv:2505.11709,
+2025. URL https://arxiv.org/abs/2505.11709.
+Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang,
+and Weizhu Chen. LoRA: Low-rank adaptation of large language models. In International
+Conference on Learning Representations, 2022. URL https://openreview.net/forum?
+id=nZeVKeeFYf9.
+Yucheng Hu, Yanjiang Guo, Pengchao Wang, Xiaoyu Chen, Yen-Jen Wang, Jianke Zhang, Koushil
+Sreenath, Chaochao Lu, and Jianyu Chen. Video prediction policy: A generalist robot policy with
+predictive visual representations. arXiv preprint arXiv:2412.14803, 2024.
+Xun Huang, Zhengqi Li, Guande He, Mingyuan Zhou, and Eli Shechtman.
+Self forc-
+ing:
+Bridging the train-test gap in autoregressive video diffusion.
+In Advances in Neu-
+ral Information Processing Systems, volume 38, 2025.
+doi:
+10.52202/085713-5576.
+URL
+https://proceedings.neurips.cc/paper_files/paper/2025/hash/
+f4823f831af67a3ef15e41a85434422a-Abstract-Conference.html.
+Physical Intelligence, Kevin Black, Noah Brown, James Darpinian, Karan Dhabalia, Danny Driess,
+Adnan Esmail, Michael Equi, Chelsea Finn, Niccolo Fusai, et al. π0.5: a vision-language-action
+model with open-world generalization. arXiv preprint arXiv:2504.16054, 2025.
+Yueru Jia, Jiaming Liu, Shengbang Liu, Rui Zhou, Wanhe Yu, Yuyang Yan, Xiaowei Chi, Yandong
+Guo, Boxin Shi, and Shanghang Zhang. Video2Act: A dual-system video diffusion policy
+with robotic spatio-motional modeling. arXiv preprint arXiv:2512.03044, 2025. URL https:
+//arxiv.org/abs/2512.03044.
+Tao Jiang, Tianyuan Yuan, Yicheng Liu, Chenhao Lu, Jianning Cui, Xiao Liu, Shuiqi Cheng, Jiyang
+Gao, Huazhe Xu, and Hang Zhao. Galaxea Open-World Dataset and G0 Dual-System VLA Model.
+arXiv preprint arXiv:2509.00576, 2025. URL https://arxiv.org/abs/2509.00576.
+Alexander Khazatsky, Karl Pertsch, Suraj Nair, Ashwin Balakrishna, Sudeep Dasari, Siddharth
+Karamcheti, Soroush Nasiriany, Mohan Kumar Srirama, Lawrence Yunliang Chen, Kirsty Ellis,
+et al. Droid: A large-scale in-the-wild robot manipulation dataset. arXiv preprint arXiv:2403.12945,
+2024.
+Moo Jin Kim, Yihuai Gao, Tsung-Yi Lin, Yen-Chen Lin, Yunhao Ge, Grace Lam, Percy Liang,
+Shuran Song, Ming-Yu Liu, Chelsea Finn, and Jinwei Gu. Cosmos policy: Fine-tuning video
+models for visuomotor control and planning. arXiv preprint arXiv:2601.16163, 2026.
+Jason Lee, Jiafei Duan, Haoquan Fang, Yuquan Deng, Shuo Liu, Boyang Li, Bohan Fang, Jieyu
+Zhang, Yi Ru Wang, Sangho Lee, et al. Molmoact: Action reasoning models that can reason in
+space. arXiv preprint arXiv:2508.07917, 2025.
+Lin Li, Qihang Zhang, Yiming Luo, Shuai Yang, Ruilin Wang, Fei Han, Mingrui Yu, Zelin Gao, Nan
+Xue, Xing Zhu, Yujun Shen, and Yinghao Xu. Causal world modeling for robot control. arXiv
+preprint arXiv:2601.21998, 2026a. doi: 10.48550/arXiv.2601.21998. URL https://arxiv.
+org/abs/2601.21998.
+13
+
+===== 第 14 页 =====
+Qixiu Li, Yu Deng, Yaobo Liang, Lin Luo, Lei Zhou, Chengtang Yao, Lingqi Zeng, Zhiyuan
+Feng, Huizhi Liang, Sicheng Xu, Yizhong Zhang, Xi Chen, Hao Chen, Lily Sun, Dong Chen,
+Jiaolong Yang, and Baining Guo. Scalable vision-language-action model pretraining for robotic
+manipulation with real-life human activity videos. arXiv preprint arXiv:2510.21571, 2025a. URL
+https://arxiv.org/abs/2510.21571.
+Quanyi Li. Vlas are confined yet capable of generalizing to novel instructions. arXiv preprint
+arXiv:2505.03500, 2025.
+Shalfun Li, Victor Yao, Charles Yang, Truth Qu, Regis Cheng, Ryan Yu, Howard Lu, Newton
+Von, Vincent Chen, Yohann Tang, et al. WALL-WM: Carving world action modeling at the
+event joints. arXiv preprint arXiv:2606.01955, 2026b. doi: 10.48550/arXiv.2606.01955. URL
+https://arxiv.org/abs/2606.01955.
+Shuang Li, Yihuai Gao, Dorsa Sadigh, and Shuran Song. Unified video action model. arXiv preprint
+arXiv:2503.00200, 2025b.
+Junbang Liang, Ruoshi Liu, Ege Ozguroglu, Sruthi Sudhakar, Achal Dave, Pavel Tokmakov, Shuran
+Song, and Carl Vondrick. Dreamitate: Real-world visuomotor policy learning via video generation.
+arXiv preprint arXiv:2406.16862, 2024.
+Weixin Liang, Lili Yu, Liang Luo, Srinivasan Iyer, Ning Dong, Chunting Zhou, Gargi Ghosh,
+Mike Lewis, Wen-tau Yih, Luke Zettlemoyer, and Xi Victoria Lin. Mixture-of-Transformers: A
+sparse and scalable architecture for multi-modal foundation models. Transactions on Machine
+Learning Research, 2025. ISSN 2835-8856. URL https://openreview.net/forum?
+id=OutjGuJnNk.
+Yue Liao, Pengfei Zhou, Siyuan Huang, Donglin Yang, Shengcong Chen, Yuxin Jiang, Yue Hu,
+Jingbin Cai, Si Liu, Jianlan Luo, et al. Genie envisioner: A unified world foundation platform for
+robotic manipulation. arXiv preprint arXiv:2508.05635, 2025.
+Yaron Lipman, Ricky T. Q. Chen, Heli Ben-Hamu, Maximilian Nickel, and Matt Le. Flow matching
+for generative modeling. In International Conference on Learning Representations, 2023. URL
+https://openreview.net/forum?id=PqvMRDCJT9t.
+Bo Liu, Yifeng Zhu, Chongkai Gao, Yihao Feng, Qiang Liu, Yuke Zhu, and Peter Stone. Libero:
+Benchmarking knowledge transfer for lifelong robot learning. Advances in Neural Information
+Processing Systems, 36, 2023.
+Songming Liu, Lingxuan Wu, Bangguo Li, Hengkai Tan, Huayu Chen, Zhengyi Wang, Ke Xu, Hang
+Su, and Jun Zhu. Rdt-1b: a diffusion foundation model for bimanual manipulation. arXiv preprint
+arXiv:2410.07864, 2024.
+Teli Ma, Jia Zheng, Zifan Wang, Chunli Jiang, Andy Cui, Junwei Liang, and Shuo Yang. Dit4dit:
+Jointly modeling video dynamics and actions for generalizable robot control. arXiv preprint
+arXiv:2603.10448, 2026.
+Farzaneh Mahdisoltani, Guillaume Berger, Waseem Gharbieh, David Fleet, and Roland Memisevic.
+On the effectiveness of task granularity for transfer learning. arXiv preprint arXiv:1804.09235,
+2018. URL https://arxiv.org/abs/1804.09235.
+Utkarsh A Mishra, Yongxin Chen, Danfei Xu, Yang Liu, Xi Chen, and Jiayuan Mao. Under-
+standing and mitigating the video-action generalization gap via temporal ratio. arXiv preprint
+arXiv:2607.08127, 2026.
+Motubrain Team, Chendong Xiang, Fan Bao, Haitian Liu, Hengkai Tan, Hongzhe Bi, James Li,
+Jiabao Liu, Jingrui Pang, Kiro Jing, Louis Liu, Mengchen Cai, Rongxu Cui, Ruowen Zhao,
+Runqing Wang, Shuhe Huang, Yao Feng, Yinze Rong, Zeyuan Wang, and Jun Zhu. Motubrain:
+An advanced world action model for robot control. arXiv preprint arXiv:2604.27792, 2026. doi:
+10.48550/arXiv.2604.27792. URL https://arxiv.org/abs/2604.27792.
+14
+
+===== 第 15 页 =====
+Kepan Nan, Rui Xie, Penghao Zhou, Tiehan Fan, Zhenheng Yang, Zhijie Chen, Xiang Li, Jian Yang,
+and Ying Tai. OpenVid-1M: A Large-Scale High-Quality Dataset for Text-to-video Generation.
+In International Conference on Learning Representations, 2025. URL https://arxiv.org/
+abs/2407.02371.
+Open X-Embodiment Collaboration. Open X-Embodiment: Robotic Learning Datasets and RT-X
+Models. arXiv preprint arXiv:2310.08864, 2023. URL https://arxiv.org/abs/2310.
+08864.
+William Peebles and Saining Xie.
+Scalable diffusion models with transformers.
+In Proceed-
+ings of the IEEE/CVF International Conference on Computer Vision, pp. 4195–4205, 2023.
+URL https://openaccess.thecvf.com/content/ICCV2023/html/Peebles_
+Scalable_Diffusion_Models_with_Transformers_ICCV_2023_paper.html.
+Lucy Xiaoyang Shi, Brian Ichter, Michael Equi, Liyiming Ke, Karl Pertsch, Quan Vuong, James
+Tanner, Anna Walling, Haohuan Wang, Niccolo Fusai, et al. Hi robot: Open-ended instruction
+following with hierarchical vision-language-action models. arXiv preprint arXiv:2502.19417,
+2025.
+Yang Song, Prafulla Dhariwal, Mark Chen, and Ilya Sutskever. Consistency models. In Proceedings
+of the 40th International Conference on Machine Learning, volume 202 of Proceedings of Machine
+Learning Research, pp. 32211–32252. PMLR, 2023. URL https://proceedings.mlr.
+press/v202/song23a.html.
+Xiaoquan Sun, Zetian Xu, Chen Cao, Zonghe Liu, Yihan Sun, Jingrui Pang, Ruijian Zhang, Zhen
+Yang, Kang Pang, Dingxin He, et al. Atomvla: Scalable post-training for robotic manipulation via
+predictive latent world models. arXiv preprint arXiv:2603.08519, 2026.
+Yang Tian, Yuyin Yang, Yiman Xie, Zetao Cai, Xu Shi, Ning Gao, Hangxu Liu, Xuekun Jiang, Zherui
+Qiu, Feng Yuan, et al. InternData-A1: Pioneering High-Fidelity Synthetic Data for Pre-training
+Generalist Policy. arXiv preprint arXiv:2511.16651, 2025. URL https://arxiv.org/abs/
+2511.16651.
+Team Wan, Ang Wang, Baole Ai, Bin Wen, Chaojie Mao, Chen-Wei Xie, Di Chen, Feiwu Yu,
+Haiming Zhao, Jianxiao Yang, et al. Wan: Open and advanced large-scale video generative models.
+arXiv preprint arXiv:2503.20314, 2025.
+Yuran Wang, Siqiao Huang, Mingleyang Li, Chenhao Zhang, Jiaqi Liang, Weiyang Jin, Yue Chen,
+Xuemin Chi, Donghao Zhou, Qize Yu, et al. Openwam: An open, modular exploration towards
+systematic world-action model pretraining. arXiv preprint arXiv:2609.07398, 2026a.
+Ziyu Wang, Chenyuan Liu, Yushun Xiang, Runhao Zhang, Qingbo Hao, Hongliang Lu, Houyu
+Chen, Zhizhong Feng, Kaiyue Zheng, Dehao Ye, et al. The Great March 100: 100 Detail-oriented
+Tasks for Evaluating Embodied AI Agents. arXiv preprint arXiv:2601.11421, 2026b. URL
+https://arxiv.org/abs/2601.11421.
+Kun Wu, Chengkai Hou, Jiaming Liu, Zhengping Che, Xiaozhu Ju, Zhuqin Yang, Meng Li, Yinuo
+Zhao, Zhiyuan Xu, Guang Yang, et al. RoboMIND: Benchmark on Multi-embodiment Intelligence
+Normative Data for Robot Manipulation.
+In Robotics: Science and Systems, 2025a.
+URL
+https://arxiv.org/abs/2412.13877.
+Shihan Wu, Xuecheng Liu, Shaoxuan Xie, Pengwei Wang, Xinghang Li, Bowen Yang, Zhe Li,
+Kai Zhu, Hongyu Wu, Yiheng Liu, et al. RoboCOIN: An Open-Sourced Bimanual Robotic
+Data Collection for Integrated Manipulation. arXiv preprint arXiv:2511.17441, 2025b. URL
+https://arxiv.org/abs/2511.17441.
+Haodong Yan, Junfeng Li, Junjie He, Zhide Zhong, MingMing Yu, Wenxuan Song, Jiaguan Zhu,
+Yangyang Zheng, Yuqiao Du, Jiadi You, et al. Robust-wam: Bridging generative pretraining and
+semantic foresight in world-action models. arXiv preprint arXiv:2608.05903, 2026a.
+Haodong Yan, Zhide Zhong, Jiaguan Zhu, Junjie He, Weilin Yuan, Wenxuan Song, Xin Gong, Yingjie
+Cai, Guanyi Zhao, Xu Yan, et al. S-vam: Shortcut video-action model by self-distilling geometric
+and semantic foresight. arXiv preprint arXiv:2603.16195, 2026b.
+15
+
+===== 第 16 页 =====
+Zhuoyi Yang, Jiayan Teng, Wendi Zheng, Ming Ding, Shiyu Huang, Jiazheng Xu, Yuanming
+Yang, Wenyi Hong, Xiaohan Zhang, Guanyu Feng, et al. CogVideoX: Text-to-video diffusion
+models with an expert transformer. In International Conference on Learning Representations,
+2025. URL https://proceedings.iclr.cc/paper_files/paper/2025/hash/
+ce31378e9f41d8907e97dab172b6c559-Abstract-Conference.html.
+Seonghyeon Ye, Yunhao Ge, Kaiyuan Zheng, Shenyuan Gao, Sihyun Yu, George Kurian, Suneel
+Indupuru, You Liang Tan, Chuning Zhu, Jiannan Xiang, et al. World action models are zero-
+shot policies. arXiv preprint arXiv:2602.15922, 2026. doi: 10.48550/arXiv.2602.15922. URL
+https://arxiv.org/abs/2602.15922.
+Tianwei Yin, Qiang Zhang, Richard Zhang, William T. Freeman, Fredo Durand, Eli Shechtman, and
+Xun Huang. From slow bidirectional to fast autoregressive video diffusion models. In Proceedings
+of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pp. 22963–22974,
+2025. URL https://openaccess.thecvf.com/content/CVPR2025/html/Yin_
+From_Slow_Bidirectional_to_Fast_Autoregressive_Video_Diffusion_
+Models_CVPR_2025_paper.html.
+Tianyuan Yuan, Zibin Dong, Yicheng Liu, and Hang Zhao. Fast-wam: Do world action models need
+test-time future imagination? arXiv preprint arXiv:2603.16666, 2026.
+Jianke Zhang, Yanjiang Guo, Yucheng Hu, Xiaoyu Chen, Xiang Zhu, and Jianyu Chen. UP-VLA:
+A unified understanding and prediction model for embodied agent. In Proceedings of the 42nd
+International Conference on Machine Learning, volume 267 of Proceedings of Machine Learning
+Research, pp. 74911–74922. PMLR, 2025. URL https://proceedings.mlr.press/
+v267/zhang25w.html.
+Jianke Zhang, Yuanfei Luo, Yucheng Hu, Xiaoyu Chen, Yanjiang Guo, Ziyang Liu, Hongbin Xu,
+Tian Lan, and Jianyu Chen. UAM: A dual-stream perspective on forgetting in VLA training. arXiv
+preprint arXiv:2605.15735, 2026a. doi: 10.48550/arXiv.2605.15735. URL https://arxiv.
+org/abs/2605.15735.
+Jie Zhang, Xiaoyue Chen, Anzhe Chen, Dayiheng Liu, Deqing Li, Gengze Zhou, Hale Yin, Haoqi
+Yuan, Haoyang Li, Jiahao Li, et al. Qwen-robotworld technical report: Unifying embodied world
+modeling through language-conditioned video generation. arXiv preprint arXiv:2606.17030,
+2026b.
+Wenbo Zhang, Kaixuan Wang, Yutao Ouyang, Xiaoyu Huang, Liyang Li, Kailun Su, Weiyang Jin,
+Wenhao Chai, Haotian Liang, Zhiyang Dou, et al. An unexpected robot policy: Early evaluations
+of gpt-6 astra on robodojo and beyond. arXiv preprint arXiv:2609.24170, 2026c.
+Yixian Zhang, Huanming Zhang, Feng Gao, Xiao Li, Zhihao Liu, Chunyang Zhu, Jiaxing Qiu,
+Yuchen Yan, Jiyuan Liu, Wenhao Tang, et al. Harness vla: Steering frozen vlas into reliable
+manipulation primitives via memory-guided agents. arXiv preprint arXiv:2607.08448, 2026d.
+Zhongru Zhang, Chenghan Yang, Qingzhou Lu, Yanjiang Guo, Jianke Zhang, Yucheng Hu, and
+Jianyu Chen. Veo-Act: Enhancing VLA policies with frontier video models. arXiv preprint
+arXiv:2604.04502, 2026e. doi: 10.48550/arXiv.2604.04502. URL https://arxiv.org/
+abs/2604.04502.
+Tony Z Zhao, Vikash Kumar, Sergey Levine, and Chelsea Finn. Learning fine-grained bimanual
+manipulation with low-cost hardware. arXiv preprint arXiv:2304.13705, 2023.
+Jinliang Zheng, Jianxiong Li, Zhihao Wang, Dongxiu Liu, Xirui Kang, Yuchun Feng, Yinan Zheng,
+Jiayin Zou, Yilun Chen, Jia Zeng, et al. X-vla: Soft-prompted transformer as scalable cross-
+embodiment vision-language-action model. In International Conference on Learning Representa-
+tions, 2026.
+Xueyang Zhou, Yangming Xu, Guiyao Tie, Yongchao Chen, Guowen Zhang, Duanfeng Chu, Pan
+Zhou, and Lichao Sun. Libero-pro: Towards robust and fair evaluation of vision-language-action
+models beyond memorization. arXiv preprint arXiv:2510.03827, 2025.
+16
+
+===== 第 17 页 =====
+Chuning Zhu, Raymond Yu, Siyuan Feng, Benjamin Burchfiel, Paarth Shah, and Abhishek Gupta.
+Unified world models: Coupling video and action diffusion for pretraining on large robotic datasets.
+arXiv preprint arXiv:2504.02792, 2025.
+17
+
+===== 第 18 页 =====
+A
+DATASET PROCESS DETAILS
+Dataset Sources. Table 5 provides the full dataset references for the training data summarized in
+Table 1.
+Data Type
+Embodiment Type
+Data Sources
+Robot
+Single-arm
+OXE (Open X-Embodiment Collaboration, 2023), RoboMIND (Wu
+et al., 2025a), DROID (Khazatsky et al., 2024), RH20T (Fang et al.,
+2024), MolmoAct (Lee et al., 2025)
+Dual-arm
+AgiBot World-Beta (Bu et al., 2025), RoboCOIN (Wu et al., 2025b),
+RDT (Liu et al., 2024), GM-100 (Wang et al., 2026b), ABC-130K (All-
+shire et al., 2026), Self-collected ALOHA Data
+Mobile & humanoid
+InternData-A1 (Tian et al., 2025), Galaxea Open-World (Jiang et al.,
+2025), Self-collected dexterous hands
+Human
+Human hands
+Open-source: EgoDex (Hoque et al., 2025), Ego4D (Grauman et al.,
+2022), EPIC-KITCHENS (Damen et al., 2018), Something-Something
+V2 (Goyal et al., 2017; Mahdisoltani et al., 2018), VITRA-1M (Li et al.,
+2025a)
+Self-collected egocentric data
+General Video
+Human hands
+OpenVid (Nan et al., 2025), Panda-70M (Chen et al., 2024)
+Table 5: Training data sources with references to the original datasets. Self-collected datasets are
+collected as part of this work.
+A.1
+VIDEO CAPTIONING.
+After segmentation, we use a VLM to generate detailed captions for each clip according to a predefined
+template. Our captioning pipeline aims to reduce uncertainty in future prediction and encourage
+consistent mappings from semantic descriptions to visual trajectories. Specifically, we address four
+major sources of uncertainty:
+(1) Detailed Task Description. We describe how the end effector completes the task, including the
+sequence and manner of manipulation.
+(2) Explicit End-Effector Identification. The active end effector must be visible in the first frame;
+otherwise, we trim the clip to begin when it first becomes visible. When multiple end effectors are
+involved, we describe the motion of each one explicitly.
+(3) Unambiguous Target-Object Specification. When multiple identical or similar objects are present,
+we identify the target using distinctive attributes or spatial relationships. The target object must also
+be visible in the first frame.
+(4) Camera-View Description. We use optical flow to remove egocentric clips with excessive
+viewpoint changes. For clips with moderate camera motion, a VLM describes the viewpoint changes
+and the camera views included in the video, and we incorporate this information into the caption.
+A.2
+UNIFIED ACTION SPACE
+We focus on egocentric bimanual datasets, including ALOHA-style, humanoid-style, and human
+egocentric datasets. These datasets account for more than 80% of the total data and share a similar
+bimanual structure and camera viewpoint. We explicitly align their coordinate systems at two
+levels: (1) workspace alignment, which applies a world-frame transformation so that different robots
+have comparable end-effector workspaces; and (2) end-effector alignment, which applies a local
+transformation to standardize end-effector origins and axis orientations.
+For an arm dataset d , let Td = WdTEd ∈SE(3) denote the original end-effector pose, where Wd and
+Ed are the dataset’s world and end-effector frames, respectively. We define the workspace alignment
+as Ad = ¯
+W TWd and the end-effector alignment as Bd = EdT ¯
+E, where ¯W and ¯E denote the canonical
+world and end-effector frames. The aligned end-effector pose is given by
+eTd = AdTdBd,
+(6)
+18
+
+===== 第 19 页 =====
+B
+MORE VIDEO PREDICTION RESULTS
+after
+distillation
+(a) Instruction: Transfer the bowl from the top left onto the towel.
+after
+distillation
+(b) Instruction: Stack the bowl in the middle on top of the bowl on the right.
+after
+distillation
+(c) Instruction: Grasp the two corners of the cloth and fold it upward.
+after
+distillation
+(d) Instruction: Move the green apple out of the basket and place it on the left.
+after
+distillation
+(e) Instruction: Place the candy on the left into the bowl filled with the same type of candy.
+after
+distillation
+(f) Instruction: Pull out a tissue and use it to wipe the plate.
+after
+distillation
+(g) Instruction: Place the blue bowl in the microwave.
+after
+distillation
+(h) Instruction: Remove the paper covering the bowl so that the bowl is fully visible.
+Figure 10: Additional video prediction results on open-ended tasks. We compare single-step video
+predictions before and after distillation. Distillation enables high-quality video prediction with just
+one sampling step.
+19
+
+===== 第 20 页 =====
+C
+DETAILED BENCHMARK RESULTS
+C.1
+DETAILED LIBERO RESULTS
+Table 6 reports per-suite success rates on the four standard LIBERO suites (Liu et al., 2023), which
+correspond to the LIBERO-ID results in Table 3. Baseline results are taken from the original papers
+and from Zhang et al. (2026d) and Mishra et al. (2026).
+Method
+Spatial
+Object
+Goal
+Long
+Avg.
+π0 (Black et al., 2024)
+96.8
+98.8
+95.8
+85.2
+94.2
+π0.5 (Intelligence et al., 2025)
+98.8
+98.2
+98.0
+92.4
+96.9
+MolmoAct (Lee et al., 2025)
+87.0
+95.4
+87.6
+77.2
+86.6
+X-VLA (Zheng et al., 2026)
+98.2
+98.6
+97.8
+97.6
+98.1
+AtomVLA (Sun et al., 2026)
+96.4
+99.6
+97.6
+94.4
+97.0
+Cosmos-Policy (Kim et al., 2026)
+98.1
+100.0
+98.2
+97.6
+98.5
+Fast-WAM (Yuan et al., 2026)
+98.2
+100.0
+97.0
+95.2
+97.6
+DiT4DiT (Ma et al., 2026)
+98.4
+99.6
+98.6
+97.6
+98.6
+Temporal Ratio (Mishra et al., 2026)
+96.3
+99.6
+97.6
+82.6
+94.0
+VPP2 (Ours)
+99.2
+99.8
+98.2
+98.0
+98.8
+Table 6: Per-suite success rates (%) on the standard LIBERO benchmark. Best results in each column
+are in bold.
+C.2
+DETAILED ROBODOJO RESULTS
+RoboDojo (Chen et al., 2026) evaluates generalist manipulation policies on 42 bimanual simulation
+tasks organized into five capability dimensions. Generalization tests robustness to unseen back-
+grounds, lighting, clutter, and target objects, and is evaluated under both standard and randomized
+settings. Precision requires fine-grained target localization and contact-rich control. Long-Horizon
+requires completing all sub-steps of multi-step tasks. Memory contains tasks whose correct actions
+depend on information observed earlier in the episode. Open evaluates unseen task specifications
+whose required skills appear in the training data under different contexts. We follow the official
+training and evaluation protocol. The average score captures partial task progress, and the success
+rate measures binary task completion.
+Tables 7 and 8 report the per-dimension average score and success rate, respectively, complementing
+Table 4. Baseline results are taken from the official RoboDojo simulation leaderboard as of September
+2026.
+Generalization
+Method
+Std.
+Rand.
+Precision Long-Horizon Memory
+Open
+Avg.
+π0 (Black et al., 2024)
+7.18
+0.71
+3.56
+6.19
+3.47
+0.25
+3.48
+π0.5 (Intelligence et al., 2025)
+20.93
+5.82
+12.40
+23.54
+5.89
+1.98
+11.44
+X-VLA (Zheng et al., 2026)
+17.90
+3.04
+18.32
+16.53
+4.76
+0.55
+10.13
+Fast-WAM (Yuan et al., 2026)
+4.33
+0.34
+1.96
+9.14
+3.55
+0.42
+3.48
+OpenWAM-α (Wang et al., 2026a)
+33.16
+8.26
+18.45
+34.93
+10.41
+1.41
+17.18
+Xiaomi-Robotics-1 (Guo et al., 2026) 35.65
+11.44
+26.69
+38.39
+7.81
+3.94
+20.07
+GPT-6-Astra (Zhang et al., 2026c)
+35.32
+31.40
+12.65
+21.45
+43.04
+34.36 28.97
+VPP2 (Ours)
+36.39
+43.03
+56.28
+56.01
+4.61
+39.26
+Table 7: Per-dimension average score on the RoboDojo simulation benchmark. Generalization is
+evaluated under standard (Std.) and randomized (Rand.) settings. Avg. is the mean over the five
+capability dimensions, where the generalization score is the mean of the Std. and Rand. settings. For
+VPP2, we report the generalization result pooled over both settings (25 episodes each, following the
+official protocol), which equals their mean. Baseline results are taken from the official leaderboard.
+20
+
+===== 第 21 页 =====
+Generalization
+Method
+Std.
+Rand.
+Precision Long-Horizon Memory
+Open
+Avg.
+π0 (Black et al., 2024)
+4.89
+0.22
+0.75
+2.00
+2.11
+0.25
+1.53
+π0.5 (Intelligence et al., 2025)
+14.89
+1.44
+5.50
+14.67
+4.67
+1.67
+6.93
+X-VLA (Zheng et al., 2026)
+12.22
+1.33
+12.00
+9.75
+3.56
+0.50
+6.52
+Fast-WAM (Yuan et al., 2026)
+2.11
+0.11
+0.00
+5.17
+3.44
+0.42
+2.03
+OpenWAM-α (Wang et al., 2026a)
+25.56
+4.11
+9.25
+25.33
+9.11
+1.08
+11.92
+Xiaomi-Robotics-1 (Guo et al., 2026) 28.00
+6.00
+18.83
+23.67
+6.56
+3.58
+13.93
+GPT-6-Astra (Zhang et al., 2026c)
+32.67
+28.33
+4.00
+8.25
+38.67
+31.00 22.48
+VPP2 (Ours)
+29.50
+35.17
+37.00
+55.56
+4.08
+32.26
+Table 8: Per-dimension success rate (%) on the RoboDojo simulation benchmark, computed in the
+same way as Table 7.
+21
