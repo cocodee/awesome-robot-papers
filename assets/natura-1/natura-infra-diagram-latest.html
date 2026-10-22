@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physical AI infrastructure</title>
+<!--
+  Physical AI infrastructure, animated diagram. Three ways to use it:
+  1. As its own page, in an iframe:
+       <iframe src="/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/natura-infra-diagram.html" style="width:100%;aspect-ratio:1920/1640;border:0" title="Physical AI infrastructure"></iframe>
+     Light by default. Add ?theme=dark for the dark version, ?motion=off for a still.
+  2. Inline: copy everything between the two "copy" comments below into your page.
+     Set data-theme="dark" on the wrapper for the dark version.
+  3. It scales to the width of its container; the artwork is drawn on a 1920x1640 stage.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* page chrome: only needed when this file is opened on its own or in an iframe */
+html,body{margin:0;background:#fcfcfc}
+html.nf-dark,html.nf-dark body{background:#0a0d10}
+</style>
+</head>
+<body data-nf-page>
+<!-- copy from here -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+.nf-embed{position:relative;width:100%;aspect-ratio:1920/1640;overflow:hidden}
+.nf-embed>.nf{transform-origin:0 0}
+.nf{--bg:#fcfcfc;--ink:#14181c;--sub:#4b5258;--pn:#f4f4f4;--b1:#ebebec;--b2:#e1e2e3;--card:#ffffff;--hx:#383d43;--hxb:#383d43;--hxt:#fcfcfc;--hxs:#c9cdd1;--ln:rgba(20,24,28,.22);--dot:rgba(20,24,28,.13);--ctl:#50575d;--dat:#14181c}
+.nf.dark{--bg:#0a0d10;--ink:#ede8dc;--sub:#b3afa5;--pn:#101417;--b1:#181d21;--b2:#22282d;--card:#0c1013;--hx:#4a5159;--hxb:#4a5159;--hxt:#f3efe6;--hxs:#c9c6bd;--ln:rgba(237,232,220,.24);--dot:rgba(237,232,220,.13);--ctl:#9d9a92;--dat:#ede8dc}
+.nf .pn{position:absolute;box-sizing:border-box;background:var(--pn);border:1px solid var(--ln);border-radius:10px}
+.nf .bd{position:absolute;box-sizing:border-box;border-radius:6px}
+.nf .c{position:absolute;box-sizing:border-box;padding:12px 13px 0;background:var(--card);border:1px solid var(--ln);border-radius:4px;font-size:19px;line-height:25px;color:var(--sub)}
+.nf .c b,.nf .t{font-family:'EB Garamond',Garamond,'Adobe Garamond Pro',Georgia,serif;font-weight:500;color:var(--ink)}
+.nf .c b{font-size:27px;line-height:32px}
+.nf .c i{font-style:normal;font-size:17px;display:block;margin-top:8px;padding-top:7px;border-top:1px solid var(--ln)}
+.nf .hx{background:var(--hx);border-color:var(--hxb);color:var(--hxs)}
+.nf .hx b{color:var(--hxt)}
+.nf .tx{background-image:radial-gradient(var(--dot) 1px,transparent 1.4px);background-size:26px 26px;background-position:12px 12px}
+.nf .rt{animation:nf-spin 5s linear infinite}
+.nf.still .rt{animation:none}
+@media (prefers-reduced-motion:reduce){.nf .rt{animation:none}}
+.nf .ic{position:absolute;right:12px;top:12px;width:26px;height:26px;fill:none;stroke:var(--sub);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.nf .i1{stroke:var(--ctl)}
+.nf .i2{stroke:var(--dat)}
+.nf .ib{top:auto;bottom:12px}
+.nf .im{top:54px}
+.nf .il{right:auto;left:14px;top:19px;width:28px;height:28px}
+.nf .mid{text-align:center}
+.nf .gt{position:absolute;font-family:'EB Garamond',Garamond,'Adobe Garamond Pro',Georgia,serif;font-style:italic;font-size:26px;line-height:30px;white-space:nowrap}
+.nf .pt{position:absolute;font-size:46px;line-height:52px;white-space:nowrap}
+.nf .el{position:absolute;font-size:17px;line-height:22px;white-space:nowrap;text-align:center}
+.nf .rot{transform:rotate(-90deg)}
+.nf .fl,.nf .fm{animation:nf-dash linear infinite}
+.nf .tw{animation:nf-tw ease-in-out infinite}
+.nf .sp{transform-origin:11px 11px;animation:nf-spin 2s linear infinite}
+@keyframes nf-spin{to{transform:rotate(360deg)}}
+@keyframes nf-dash{to{stroke-dashoffset:var(--o)}}
+@keyframes nf-tw{0%,100%{opacity:var(--a)}50%{opacity:var(--b)}}
+.nf.still .fl{display:none}
+.nf.still .fm,.nf.still .tw,.nf.still .sp{animation:none}
+@media (prefers-reduced-motion:reduce){.nf .fl{display:none}.nf .fm,.nf .tw,.nf .sp{animation:none}}
+</style>
+<div class="nf-embed" id="natura-infra-diagram">
+<div class="nf" role="img" aria-label="Architecture diagram of the physical AI infrastructure: a scalable training system and a robot serving runtime, joined by model delivery and resting on a shared GPU kernel layer. Three kinds of connection are drawn: control, data and state." style="position: relative; width: 1920px; height: 1640px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;">
+<div class="pn tx" data-n="tpanel" style="left: 36px; top: 92px; width: 910px; height: 1094px;">
+</div>
+<div class="pn tx" data-n="spanel" style="left: 974px; top: 92px; width: 910px; height: 1094px;">
+</div>
+<div class="pn" data-n="kern" style="left: 36px; top: 1400px; width: 1848px; height: 200px;">
+</div>
+<div class="bd" style="left: 46px; top: 176px; width: 890px; height: 144px; background: var(--b1);">
+</div>
+<div class="bd" data-n="core" style="left: 46px; top: 348px; width: 890px; height: 586px; background: var(--b2);">
+</div>
+<div class="bd" data-n="life" style="left: 46px; top: 964px; width: 890px; height: 166px; background: var(--b1);">
+</div>
+<div class="bd" style="left: 984px; top: 322px; width: 890px; height: 244px; background: var(--b1);">
+</div>
+<div class="bd" style="left: 984px; top: 800px; width: 890px; height: 366px; background: var(--b2);">
+</div>
+<div class="c" data-n="recipe" style="left: 352px; top: 400px; width: 262px; height: 426px; padding-top: 8px; background: var(--b2);">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M12 3l9 4.5-9 4.5-9-4.5zM3 12l9 4.5 9-4.5M3 16.5l9 4.5 9-4.5">
+</path>
+</svg>
+<b>Model recipe</b>
+</div>
+<div class="c" data-n="wstack" style="left: 1016px; top: 868px; width: 606px; height: 284px;">
+</div>
+<div class="c" style="left: 1008px; top: 860px; width: 606px; height: 284px;">
+</div>
+<div class="c" data-n="workers" style="left: 1000px; top: 852px; width: 606px; height: 284px;">
+<b>Inference workers</b>
+</div>
+<svg width="1920" height="1640" viewBox="0 0 1920 1640" aria-hidden="true" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1640px; fill: none; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;">
+<path d="M596 1427h.01M596 1440.5h.01M596 1454h.01M596 1467.5h.01M609.5 1427h.01M609.5 1440.5h.01M609.5 1467.5h.01M623 1427h.01M623 1440.5h.01M623 1454h.01M623 1467.5h.01M636.5 1427h.01M636.5 1440.5h.01M636.5 1454h.01M650 1440.5h.01M650 1454h.01M650 1467.5h.01M663.5 1427h.01M663.5 1454h.01M663.5 1467.5h.01M677 1427h.01M677 1440.5h.01M677 1454h.01M677 1467.5h.01M690.5 1427h.01M690.5 1440.5h.01M690.5 1454h.01M704 1427h.01M704 1440.5h.01M704 1454h.01M717.5 1427h.01M717.5 1440.5h.01M717.5 1454h.01M717.5 1467.5h.01M731 1427h.01M731 1454h.01M731 1467.5h.01M744.5 1427h.01M744.5 1467.5h.01M758 1427h.01M758 1440.5h.01M758 1454h.01M758 1467.5h.01M771.5 1427h.01M771.5 1454h.01M785 1427h.01M785 1440.5h.01M785 1454h.01M785 1467.5h.01M798.5 1427h.01M798.5 1440.5h.01M798.5 1467.5h.01M812 1427h.01M812 1440.5h.01M812 1454h.01M812 1467.5h.01M825.5 1427h.01M825.5 1440.5h.01M839 1427h.01M839 1440.5h.01M839 1467.5h.01M852.5 1427h.01M852.5 1440.5h.01M852.5 1454h.01M852.5 1467.5h.01M866 1427h.01M866 1440.5h.01M866 1454h.01M866 1467.5h.01M879.5 1427h.01M879.5 1440.5h.01M879.5 1467.5h.01M893 1427h.01M893 1440.5h.01M906.5 1427h.01M906.5 1440.5h.01M906.5 1454h.01M920 1427h.01M920 1440.5h.01M920 1454h.01M920 1467.5h.01M933.5 1427h.01M933.5 1440.5h.01M933.5 1454h.01M933.5 1467.5h.01M947 1440.5h.01M947 1454h.01M947 1467.5h.01M960.5 1427h.01M960.5 1467.5h.01M974 1427h.01M974 1440.5h.01M974 1454h.01M974 1467.5h.01M987.5 1427h.01M987.5 1440.5h.01M987.5 1467.5h.01M1001 1427h.01M1001 1440.5h.01M1001 1454h.01M1001 1467.5h.01M1014.5 1427h.01M1014.5 1440.5h.01M1014.5 1467.5h.01M1028 1427h.01M1028 1454h.01M1028 1467.5h.01M1041.5 1427h.01M1041.5 1454h.01M1041.5 1467.5h.01M1055 1427h.01M1055 1440.5h.01M1055 1454h.01M1068.5 1427h.01M1068.5 1440.5h.01M1068.5 1467.5h.01M1082 1454h.01M1082 1467.5h.01M1095.5 1427h.01M1095.5 1440.5h.01M1095.5 1454h.01M1095.5 1467.5h.01M1109 1454h.01M1109 1467.5h.01M1122.5 1427h.01M1122.5 1440.5h.01M1136 1427h.01M1136 1440.5h.01M1136 1454h.01M1136 1467.5h.01M1149.5 1427h.01M1149.5 1440.5h.01M1149.5 1454h.01M1149.5 1467.5h.01M1163 1427h.01M1163 1440.5h.01M1163 1454h.01M1163 1467.5h.01M1176.5 1427h.01M1176.5 1440.5h.01M1176.5 1454h.01M1176.5 1467.5h.01M1190 1467.5h.01M1203.5 1440.5h.01M1203.5 1467.5h.01M1217 1427h.01M1217 1440.5h.01M1217 1454h.01M1230.5 1440.5h.01M1230.5 1454h.01M1244 1427h.01M1244 1454h.01M1244 1467.5h.01M1257.5 1427h.01M1257.5 1440.5h.01M1257.5 1454h.01M1257.5 1467.5h.01M1271 1427h.01M1271 1440.5h.01M1271 1454h.01M1271 1467.5h.01M1284.5 1440.5h.01M1284.5 1467.5h.01M1298 1427h.01M1298 1440.5h.01M1298 1454h.01M1298 1467.5h.01M1311.5 1440.5h.01M1311.5 1454h.01M1311.5 1467.5h.01M1325 1427h.01M1325 1454h.01M1325 1467.5h.01M1338.5 1427h.01M1338.5 1440.5h.01M1338.5 1454h.01M1338.5 1467.5h.01M1352 1427h.01M1365.5 1440.5h.01M1365.5 1454h.01M1365.5 1467.5h.01M1379 1427h.01M1379 1440.5h.01M1379 1467.5h.01M1392.5 1427h.01M1392.5 1454h.01M1392.5 1467.5h.01M1406 1440.5h.01M1406 1467.5h.01M1419.5 1427h.01M1419.5 1440.5h.01M1419.5 1454h.01M1419.5 1467.5h.01M1433 1427h.01M1433 1440.5h.01M1433 1454h.01M1433 1467.5h.01M1446.5 1427h.01M1446.5 1440.5h.01M1446.5 1454h.01M1446.5 1467.5h.01M1460 1440.5h.01M1460 1454h.01M1473.5 1440.5h.01M1473.5 1467.5h.01M1487 1427h.01M1487 1440.5h.01M1487 1454h.01M1487 1467.5h.01M1500.5 1427h.01M1500.5 1440.5h.01M1500.5 1454h.01M1500.5 1467.5h.01M1514 1427h.01M1514 1440.5h.01M1527.5 1427h.01M1527.5 1440.5h.01M1527.5 1467.5h.01M1541 1427h.01M1541 1454h.01M1541 1467.5h.01M1554.5 1427h.01M1554.5 1440.5h.01M1554.5 1454h.01M1554.5 1467.5h.01M1568 1427h.01M1568 1440.5h.01M1568 1454h.01M1568 1467.5h.01M1581.5 1427h.01M1581.5 1454h.01M1595 1427h.01M1595 1440.5h.01M1595 1454h.01M1595 1467.5h.01M1608.5 1427h.01M1622 1440.5h.01M1622 1454h.01M1622 1467.5h.01M1635.5 1427h.01M1635.5 1440.5h.01M1635.5 1454h.01M1635.5 1467.5h.01M1649 1427h.01M1649 1440.5h.01M1649 1454h.01M1649 1467.5h.01M1662.5 1427h.01M1662.5 1440.5h.01M1662.5 1454h.01M1662.5 1467.5h.01M1676 1440.5h.01M1676 1454h.01M1676 1467.5h.01M1689.5 1427h.01M1689.5 1454h.01M1689.5 1467.5h.01M1703 1427h.01M1703 1454h.01M1703 1467.5h.01M1716.5 1440.5h.01M1716.5 1454h.01M1716.5 1467.5h.01M1730 1454h.01M1730 1467.5h.01M1743.5 1427h.01M1743.5 1440.5h.01M1743.5 1454h.01M1743.5 1467.5h.01M1757 1427h.01M1757 1454h.01M1757 1467.5h.01M1770.5 1427h.01M1770.5 1440.5h.01M1770.5 1454h.01M1770.5 1467.5h.01M1784 1427h.01M1797.5 1427h.01M1797.5 1440.5h.01M1811 1440.5h.01M1811 1454h.01M1824.5 1427h.01M1824.5 1454h.01M1824.5 1467.5h.01M1838 1427h.01M1851.5 1427h.01M1851.5 1440.5h.01M1851.5 1467.5h.01" style="stroke: var(--ink); stroke-width: 1.8; opacity: 0.22;">
+</path>
+<path class="tw" d="M606 1450.5h7v7h-7ZM687 1464h7v7h-7ZM741 1437h7v7h-7ZM741 1450.5h7v7h-7ZM768 1437h7v7h-7ZM768 1464h7v7h-7ZM795 1450.5h7v7h-7ZM876 1450.5h7v7h-7ZM889.5 1464h7v7h-7ZM984 1450.5h7v7h-7ZM1038 1437h7v7h-7ZM1051.5 1464h7v7h-7ZM1078.5 1423.5h7v7h-7ZM1078.5 1437h7v7h-7ZM1105.5 1423.5h7v7h-7ZM1119 1450.5h7v7h-7ZM1119 1464h7v7h-7ZM1186.5 1423.5h7v7h-7ZM1227 1423.5h7v7h-7ZM1281 1450.5h7v7h-7ZM1308 1423.5h7v7h-7ZM1362 1423.5h7v7h-7ZM1375.5 1450.5h7v7h-7ZM1389 1437h7v7h-7ZM1456.5 1464h7v7h-7ZM1510.5 1450.5h7v7h-7ZM1578 1437h7v7h-7ZM1618.5 1423.5h7v7h-7ZM1726.5 1423.5h7v7h-7ZM1726.5 1437h7v7h-7ZM1753.5 1437h7v7h-7ZM1780.5 1450.5h7v7h-7ZM1807.5 1423.5h7v7h-7ZM1807.5 1464h7v7h-7ZM1821 1437h7v7h-7ZM1834.5 1437h7v7h-7ZM1834.5 1450.5h7v7h-7ZM1834.5 1464h7v7h-7ZM1848 1450.5h7v7h-7Z" style="fill: var(--ctl); opacity: 0.8; --a: 0.9; --b: 0.3; animation-duration: 2.5s;">
+</path>
+<path class="tw" d="M660 1437h7v7h-7ZM822 1464h7v7h-7ZM835.5 1450.5h7v7h-7ZM889.5 1450.5h7v7h-7ZM903 1464h7v7h-7ZM943.5 1423.5h7v7h-7ZM957 1437h7v7h-7ZM957 1450.5h7v7h-7ZM1011 1450.5h7v7h-7ZM1186.5 1437h7v7h-7ZM1200 1423.5h7v7h-7ZM1213.5 1464h7v7h-7ZM1227 1464h7v7h-7ZM1240.5 1437h7v7h-7ZM1281 1423.5h7v7h-7ZM1321.5 1437h7v7h-7ZM1348.5 1437h7v7h-7ZM1348.5 1464h7v7h-7ZM1402.5 1450.5h7v7h-7ZM1456.5 1423.5h7v7h-7ZM1470 1423.5h7v7h-7ZM1510.5 1464h7v7h-7ZM1524 1450.5h7v7h-7ZM1537.5 1437h7v7h-7ZM1578 1464h7v7h-7ZM1605 1437h7v7h-7ZM1605 1450.5h7v7h-7ZM1672.5 1423.5h7v7h-7ZM1699.5 1437h7v7h-7ZM1713 1423.5h7v7h-7ZM1780.5 1464h7v7h-7ZM1794 1464h7v7h-7Z" style="fill: var(--dat); opacity: 0.8; --a: 0.3; --b: 0.95; animation-duration: 2s;">
+</path>
+<path class="tw" d="M633 1464h7v7h-7ZM646.5 1423.5h7v7h-7ZM700.5 1464h7v7h-7ZM727.5 1437h7v7h-7ZM822 1450.5h7v7h-7ZM1024.5 1437h7v7h-7ZM1065 1450.5h7v7h-7ZM1105.5 1437h7v7h-7ZM1186.5 1450.5h7v7h-7ZM1200 1450.5h7v7h-7ZM1348.5 1450.5h7v7h-7ZM1402.5 1423.5h7v7h-7ZM1470 1450.5h7v7h-7ZM1605 1464h7v7h-7ZM1686 1437h7v7h-7ZM1780.5 1437h7v7h-7ZM1794 1450.5h7v7h-7Z" style="fill: var(--ctl); opacity: 0.5; --a: 0.25; --b: 0.85; animation-duration: 3.333s;">
+</path>
+<path class="fm" d="M604 760L622 760Q631 760 631 751L631 482.4Q631 473.4 640 473.4L661 473.4M912 502L918 502Q924 502 924 508L924 957M784 1118L784 1243M920 1292L1003 1292M1290 1292L1373 1292M1500 1250L1500 1159M1725 372L1725 259M1818.1 640L1818.1 485" style="stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 5, 6; --o: -11px; animation-duration: 1s; opacity: 0.6; stroke-linecap: butt;">
+</path>
+<path d="M374 266L407 266M667 308L667 319Q667 328 658 328L199.5 328Q193 328 193 334.5L193 341M667 308L667 319Q667 328 658 328L489.5 328Q483 328 483 334.5L483 341M667 308L667 319Q667 328 676 328L783.5 328Q790 328 790 334.5L790 341M668 430.6L621 430.6M790 604L790 693M487 856L487 833M299.9 1186L299.9 1393M1793 1186L1793 1393M1266 425L1289 425M1562 425L1585 425M1783.5 478L1783.5 633M1573 731L1573 845M1154.5 968L1154.5 1009" style="stroke: var(--ctl); stroke-width: 1.5;">
+</path>
+<path d="M193 484L193 507M193 598L193 621M193 712L193 735M324 784L334 784Q343 784 343 775L343 507Q343 501 349 501L355 501M483 554L483 587M483 678L483 711M668 763L659 763Q650 763 650 754L650 653.4Q650 644.4 641 644.4L611 644.4M1133 252L1133 365M1191.5 372L1191.5 259M1634.6 478L1634.6 509Q1634.6 518 1625.6 518L1142 518Q1133 518 1133 509L1133 485M1674.5 485L1674.5 594Q1674.5 603 1665.5 603L1199 603Q1190 603 1190 612L1190 633M1190 731L1190 845M1451.5 975L1451.5 1009M1629 995.8L1659 995.8" style="stroke: var(--dat); stroke-width: 2.6;">
+</path>
+<path class="fl" d="M374 266L407 266M667 308L667 319Q667 328 658 328L199.5 328Q193 328 193 334.5L193 341M667 308L667 319Q667 328 658 328L489.5 328Q483 328 483 334.5L483 341M667 308L667 319Q667 328 676 328L783.5 328Q790 328 790 334.5L790 341M668 430.6L621 430.6M790 604L790 693M487 856L487 833M299.9 1186L299.9 1393M1793 1186L1793 1393M1266 425L1289 425M1562 425L1585 425M1783.5 478L1783.5 633M1573 731L1573 845M1154.5 968L1154.5 1009" style="stroke: var(--ctl); stroke-width: 4.6; stroke-dasharray: 1, 39; --o: -40px; animation-duration: 1.25s;">
+</path>
+<path class="fl" d="M193 484L193 507M193 598L193 621M193 712L193 735M324 784L334 784Q343 784 343 775L343 507Q343 501 349 501L355 501M483 554L483 587M483 678L483 711M668 763L659 763Q650 763 650 754L650 653.4Q650 644.4 641 644.4L611 644.4M1133 252L1133 365M1191.5 372L1191.5 259M1634.6 478L1634.6 509Q1634.6 518 1625.6 518L1142 518Q1133 518 1133 509L1133 485M1674.5 485L1674.5 594Q1674.5 603 1665.5 603L1199 603Q1190 603 1190 612L1190 633M1190 731L1190 845M1451.5 975L1451.5 1009M1629 995.8L1659 995.8" style="stroke: var(--dat); stroke-width: 6; stroke-dasharray: 1, 49; --o: -50px; animation-duration: 2s;">
+</path>
+<path d="M668 473.4L658 478L658 468.8ZM924 964L919.4 954L928.6 954ZM784 1250L779.4 1240L788.6 1240ZM1010 1292L1000 1296.6L1000 1287.4ZM1380 1292L1370 1296.6L1370 1287.4ZM1500 1152L1504.6 1162L1495.4 1162ZM1725 252L1729.6 262L1720.4 262ZM1818.1 478L1822.7 488L1813.5 488Z" style="fill: var(--ink); opacity: 0.65;">
+</path>
+<path d="M414 266L404 270.6L404 261.4ZM193 348L188.4 338L197.6 338ZM483 348L478.4 338L487.6 338ZM790 348L785.4 338L794.6 338ZM614 430.6L624 426L624 435.2ZM790 700L785.4 690L794.6 690ZM487 826L491.6 836L482.4 836ZM299.9 1400L295.3 1390L304.5 1390ZM1793 1400L1788.4 1390L1797.6 1390ZM1296 425L1286 429.6L1286 420.4ZM1592 425L1582 429.6L1582 420.4ZM1783.5 640L1778.9 630L1788.1 630ZM1573 852L1568.4 842L1577.6 842ZM1573 724L1577.6 734L1568.4 734ZM1154.5 1016L1149.9 1006L1159.1 1006Z" style="fill: var(--ctl);">
+</path>
+<path d="M193 514L188.4 504L197.6 504ZM193 628L188.4 618L197.6 618ZM193 742L188.4 732L197.6 732ZM362 501L352 505.6L352 496.4ZM483 594L478.4 584L487.6 584ZM483 718L478.4 708L487.6 708ZM604 644.4L614 639.8L614 649ZM1133 372L1128.4 362L1137.6 362ZM1191.5 252L1196.1 262L1186.9 262ZM1133 478L1137.6 488L1128.4 488ZM1190 640L1185.4 630L1194.6 630ZM1674.5 478L1679.1 488L1669.9 488ZM1190 852L1185.4 842L1194.6 842ZM1190 724L1194.6 734L1185.4 734ZM1451.5 1016L1446.9 1006L1456.1 1006ZM1451.5 968L1456.1 978L1446.9 978ZM1666 995.8L1656 1000.4L1656 991.2ZM1622 995.8L1632 991.2L1632 1000.4Z" style="fill: var(--dat);">
+</path>
+</svg>
+<div class="pt t" style="left: 62px; top: 106px;">Scalable training</div>
+<div style="position: absolute; left: 480px; top: 114px; width: 440px; text-align: right; font-size: 19px; line-height: 40px; color: var(--sub);">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" style="vertical-align: -3px; margin-right: 9px;">
+<circle cx="11" cy="11" r="8" style="fill: none; stroke: var(--ln); stroke-width: 3;">
+</circle>
+<circle cx="11" cy="11" r="8" pathLength="100" transform="rotate(-90 11 11)" style="fill: none; stroke: var(--dat); stroke-width: 3; stroke-dasharray: 50, 100;">
+</circle>
+</svg>
+<span class="t" style="font-size: 32px;">50%+</span> MFU <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" style="vertical-align: -3px; margin: 0px 9px 0px 22px;">
+<circle cx="11" cy="11" r="8" style="fill: none; stroke: var(--ln); stroke-width: 3;">
+</circle>
+<circle cx="11" cy="11" r="8" pathLength="100" transform="rotate(-90 11 11)" style="fill: none; stroke: var(--dat); stroke-width: 3; stroke-dasharray: 98, 100;">
+</circle>
+</svg>
+<span class="t" style="font-size: 32px;">98%</span> GPU utilization</div>
+<div class="gt" style="left: 62px; top: 184px; color: var(--ctl);">Configuration &amp; assembly</div>
+<div class="c" data-n="cfg" style="left: 62px; top: 224px; width: 312px; height: 84px;">
+<svg class="ic i1" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M3 6h4m4 0h10M3 12h10m4 0h4M3 18h2m4 0h12M7 6a2 2 0 1 0 4 0a2 2 0 1 0-4 0M13 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0">
+</path>
+</svg>
+<b>Configuration</b>
+<br>recipes · validation · overrides</div>
+<div class="c" data-n="setup" style="left: 414px; top: 224px; width: 506px; height: 84px;">
+<svg class="ic i1" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M4 13h7v7H4zM13 13h7v7h-7zM8.5 4h7v7h-7z">
+</path>
+</svg>
+<b>Trainer setup</b>
+<br>model · data · optimizer · hooks · resume</div>
+<div class="gt" style="left: 62px; top: 358px; color: var(--dat);">Data pipeline</div>
+<div class="gt" style="left: 352px; top: 358px; color: var(--dat);">Model &amp; objectives</div>
+<div class="gt" style="left: 668px; top: 358px; color: var(--dat);">Training loop</div>
+<div class="c" data-n="rd" style="left: 62px; top: 400px; width: 262px; height: 84px;">
+<svg class="ic i2" viewBox="0 0 46 12" aria-hidden="true" style="width: 46px; height: 12px; top: 20px;">
+<path d="M1.5 6h7" style="stroke-width: 3;">
+</path>
+<path d="M13 1.5h9v9h-9zM17.5 1.5v9M13 6h9" style="stroke-width: 1.2;">
+</path>
+<path d="M26 1.5h9v9h-9zM38.5 1.5l7 4.5-7 4.5z" style="fill: var(--dat); stroke: none;">
+</path>
+</svg>
+<b>Dataset readers</b>
+<br>trajectories · metadata</div>
+<div class="c" data-n="dist" style="left: 62px; top: 514px; width: 262px; height: 84px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M3 12h17M9 12c4 0 3-6 7-6h4M9 12c4 0 3 6 7 6h4">
+</path>
+</svg>
+<b>Data distributor</b>
+<br>rank assignment · staging</div>
+<div class="c" data-n="batch" style="left: 62px; top: 628px; width: 262px; height: 84px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M3 5h18v14H3zM3 9.7h18M3 14.3h18M14 5v4.7M8.5 9.7v4.6M12.5 14.3V19">
+</path>
+</svg>
+<b>Batch assembly</b>
+<br>process · collate</div>
+<div class="c" data-n="load" style="left: 62px; top: 742px; width: 262px; height: 84px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M3 8c4 0 5 4 9 4h8M3 16c4 0 5-4 9-4M17 9l3 3-3 3">
+</path>
+</svg>
+<b>Data loader</b>
+<br>stream mixing · prefetch</div>
+<div class="c" data-n="prep" style="left: 362px; top: 448px; width: 242px; height: 106px;">
+<b>Input preparation</b>
+<br>encoding<br>tensor assembly</div>
+<div class="c hx" data-n="exec" style="left: 362px; top: 594px; width: 242px; height: 84px;">
+<b>Model execution</b>
+<br>forward computation</div>
+<div class="c" data-n="obj" style="left: 362px; top: 718px; width: 242px; height: 84px;">
+<b>Training objectives</b>
+<br>losses · regularization</div>
+<div class="c" data-n="loop" style="left: 668px; top: 400px; width: 244px; height: 204px;">
+<svg class="ic i2 rt" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M19.5 12a7.5 7.5 0 0 1-13.2 4.9M4.5 12a7.5 7.5 0 0 1 13.2-4.9M17.9 3.6v3.6h-3.6M6.1 20.4v-3.6h3.6">
+</path>
+</svg>
+<b>Training loop</b>
+<br>forward → backward<br>gradient accumulation<br>cross-rank consensus<i>steps · samples<br>training state</i>
+</div>
+<div class="c" data-n="opt" style="left: 668px; top: 700px; width: 244px; height: 126px; padding-top: 20px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true" style="top: 21px;">
+<path d="M4 4v16h16M7.5 7c1.5 6 4.5 9 10.5 9.5">
+</path>
+</svg>
+<b>Optimization</b>
+<br>optimizer · scheduler<br>gradient clipping</div>
+<div class="c" data-n="dexec" style="left: 62px; top: 856px; width: 850px; height: 64px; padding-top: 15px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true" style="top: 20px;">
+<path d="M5 6h4v4H5zM15 6h4v4h-4zM10 15h4v4h-4zM9 8h6M7.5 10l3.5 5M16.5 10L13 15">
+</path>
+</svg>
+<b>Distributed execution</b>
+<span style="margin-left: 24px;">FSDP / HSDP · context parallel · precision · compilation</span>
+</div>
+<div class="gt" style="left: 62px; top: 972px; color: var(--ctl);">Training lifecycle</div>
+<div class="c" data-n="val" style="left: 62px; top: 1012px; width: 272px; height: 106px;">
+<svg class="ic i1 ib" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18M8 12.5l3 3 5-6">
+</path>
+</svg>
+<b>Validation &amp; rollouts</b>
+<br>evaluation<br>generated samples</div>
+<div class="c" data-n="tel" style="left: 355px; top: 1012px; width: 272px; height: 106px;">
+<svg class="ic i1 ib" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M2 12h5l2.5-6 4 12 2.5-6h6">
+</path>
+</svg>
+<b>Telemetry &amp; profiling</b>
+<br>metrics · traces · memory</div>
+<div class="c" data-n="ckpt" style="left: 648px; top: 1012px; width: 272px; height: 106px;">
+<svg class="ic i1 ib" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M5 6c0-1.7 3.1-3 7-3s7 1.3 7 3-3.1 3-7 3-7-1.3-7-3zM5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6">
+</path>
+</svg>
+<b>Checkpoint manager</b>
+<br>save / restore<br>full training state</div>
+<div style="position: absolute; left: 62px; top: 1144px; font-size: 19px; line-height: 25px; color: var(--sub);">Native PyTorch · modular recipes · stateful recovery</div>
+<div class="el rot" style="left: 318px; top: 631px; width: 50px; background: var(--b2); color: var(--dat);">batch</div>
+<div class="el" style="left: 615px; top: 404px; width: 50px; font-size: 16px; color: var(--ctl);">invoke</div>
+<div class="el rot" style="left: 575px; top: 549px; width: 112px; background: var(--b2); color: var(--sub);">loss / metrics</div>
+<div class="el rot" style="left: 618px; top: 693px; width: 64px; background: var(--b2); color: var(--dat);">weights</div>
+<div class="el" style="left: 802px; top: 641px; color: var(--ctl);">update</div>
+<div class="el" style="left: 800px; top: 938px; width: 116px; text-align: right; color: var(--sub);">hooks / state</div>
+<div class="pt t" style="left: 1000px; top: 106px;">Robot serving</div>
+<div style="position: absolute; left: 1418px; top: 114px; width: 440px; text-align: right; font-size: 19px; line-height: 40px; color: var(--sub);">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" style="vertical-align: -3px; margin-right: 10px; overflow: visible;">
+<circle cx="11" cy="11" r="8" style="fill: none; stroke: var(--ctl); stroke-width: 1.6;">
+</circle>
+<circle class="sp" cx="11" cy="3" r="3" style="fill: var(--ctl);">
+</circle>
+</svg>within <span class="t" style="font-size: 32px;">100 ms</span> end to end</div>
+<div class="c" data-n="clients" style="left: 1000px; top: 184px; width: 266px; height: 68px; padding-top: 17px; padding-left: 54px;">
+<svg class="ic il" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M4 20h8M8 20v-2.7M8.8 15l3.5-4.9M14.2 9.4L19 11M19 11l2-2M19 11l1.5 2.6M6.7 16a1.3 1.3 0 1 0 2.6 0a1.3 1.3 0 1 0-2.6 0M11.7 9a1.3 1.3 0 1 0 2.6 0a1.3 1.3 0 1 0-2.6 0">
+</path>
+</svg>
+<b>Robot clients</b>
+</div>
+<div class="c" data-n="stel" style="left: 1592px; top: 184px; width: 266px; height: 68px; padding-top: 17px; padding-left: 54px;">
+<svg class="ic il" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M4 17a8 8 0 0 1 16 0M12 17l4.5-5.5M3 20h18">
+</path>
+</svg>
+<b>Service telemetry</b>
+</div>
+<div class="gt" style="left: 1366px; top: 332px; color: var(--ctl);">Orchestrator</div>
+<div class="c" data-n="gw" style="left: 1000px; top: 372px; width: 266px; height: 106px;">
+<svg class="ic i1 im" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M14 4h5v16h-5M4 12h10M10.5 8.5L14 12l-3.5 3.5">
+</path>
+</svg>
+<b>Session gateway</b>
+<br>connections<br>request validation</div>
+<div class="c" data-n="pre" style="left: 1296px; top: 372px; width: 266px; height: 106px;">
+<svg class="ic i1 im" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M4 5h16l-6 7v6l-4 2v-8z">
+</path>
+</svg>
+<b>Input preprocessing</b>
+<br>decode · tokenize<br>CPU pool</div>
+<div class="c" data-n="sched" style="left: 1592px; top: 372px; width: 266px; height: 106px;">
+<svg class="ic i1 im" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18M12 7.5V12l3 2">
+</path>
+</svg>
+<b>Session scheduler</b>
+<br>batching · sessions<br>resource ownership</div>
+<div class="c" data-n="arena" style="left: 1000px; top: 640px; width: 380px; height: 84px;">
+<svg class="ic i2" viewBox="0 0 81 12" aria-hidden="true" style="width: 81px; height: 12px; right: 16px; top: 36px;">
+<path d="M.6.6h10.8v10.8H.6zM13.6.6h10.8v10.8H13.6zM26.6.6h10.8v10.8H26.6zM43.6.6h10.8v10.8H43.6zM56.6.6h10.8v10.8H56.6zM69.6.6h10.8v10.8H69.6z" style="stroke-width: 1.2;">
+</path>
+<path class="tw" d="M.6.6h10.8v10.8H.6zM13.6.6h10.8v10.8H13.6zM56.6.6h10.8v10.8H56.6z" style="fill: var(--dat); stroke: none; --a: 0.95; --b: 0.35; animation-duration: 2s;">
+</path>
+</svg>
+<b>Data plane</b>
+<br>shared inputs / outputs</div>
+<div class="c" data-n="ctl" style="left: 1478px; top: 640px; width: 380px; height: 84px;">
+<svg class="ic i1" viewBox="0 0 24 24" aria-hidden="true" style="right: 16px; top: 30px;">
+<path d="M4 9h14M14 5l4 4-4 4M20 15H6M10 11l-4 4 4 4">
+</path>
+</svg>
+<b>Control plane</b>
+<br>plans / completions</div>
+<div class="gt" style="left: 1640px; top: 810px; color: var(--dat);">Multi-GPU execution</div>
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true" style="left: 1520px; right: auto; top: 870px; width: 20px; height: 20px;">
+<path d="M7 7h10v10H7zM10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4">
+</path>
+</svg>
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true" style="left: 1545px; right: auto; top: 870px; width: 20px; height: 20px;">
+<path d="M7 7h10v10H7zM10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4">
+</path>
+</svg>
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true" style="left: 1570px; right: auto; top: 870px; width: 20px; height: 20px;">
+<path d="M7 7h10v10H7zM10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4">
+</path>
+</svg>
+<div class="c hx mid" data-n="mexec" style="left: 1014px; top: 908px; width: 578px; height: 60px; padding-top: 13px;">
+<b>Model execution</b>
+</div>
+<div class="c" data-n="replay" style="left: 1014px; top: 1016px; width: 281px; height: 106px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M4 5v5h5M4.6 14.5a8 8 0 1 0 1.9-8.3L4 10M10.3 9v6l5-3z">
+</path>
+</svg>
+<b>CUDA graph replay</b>
+<br>captured execution<br>shape reuse</div>
+<div class="c" data-n="caches" style="left: 1311px; top: 1016px; width: 281px; height: 106px;">
+<svg class="ic i2" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M4 6h16v5H4zM4 13h16v5H4zM7.5 8.5h.01M7.5 15.5h.01M11 8.5h5M11 15.5h5">
+</path>
+</svg>
+<b>GPU state caches</b>
+<br>persistent<br>device-resident state</div>
+<div class="c mid" data-n="coll" style="left: 1666px; top: 852px; width: 192px; height: 300px; padding-top: 130px;">
+<svg class="ic i2" viewBox="0 0 92 26" aria-hidden="true" style="left: 49px; right: auto; top: 82px; width: 92px; height: 26px;">
+<path class="tw" d="M1 1h8v24H1z" style="fill: var(--dat); stroke: none; --a: 0.75; --b: 0.25; animation-duration: 2.5s;">
+</path>
+<path class="tw" d="M34 9h24v8H34z" style="fill: var(--dat); stroke: none; --a: 0.25; --b: 0.75; animation-duration: 2.5s;">
+</path>
+<path class="tw" d="M79 13h12v12H79z" style="fill: var(--dat); stroke: none; --a: 0.75; --b: 0.25; animation-duration: 3.333s;">
+</path>
+<path d="M1 1h24v24H1zM34 1h24v24H34zM67 1h24v24H67zM9 1v24M17 1v24M34 9h24M34 17h24M79 1v24M67 13h24" style="stroke-width: 1.3;">
+</path>
+</svg>
+<b>Hybrid<br>parallelism</b>
+<br>TP · CP · EP</div>
+<div class="el" style="left: 1003px; top: 276px; width: 120px; text-align: right; color: var(--dat);">observations</div>
+<div class="el" style="left: 1202px; top: 276px; color: var(--dat);">actions</div>
+<div class="el" style="left: 1737px; top: 276px; color: var(--sub);">metrics / health</div>
+<div class="el" style="left: 1274px; top: 491px; width: 220px; color: var(--dat);">outputs / session updates</div>
+<div class="el" style="left: 1206px; top: 576px; color: var(--dat);">inputs / outputs</div>
+<div class="gt" style="left: 1010px; top: 1208px; color: var(--sub);">Model delivery</div>
+<div class="c" data-n="exp" style="left: 640px; top: 1250px; width: 280px; height: 84px;">
+<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M5 12v7h14v-7M12 15V4M8 8l4-4 4 4">
+</path>
+</svg>
+<b>Model export</b>
+<br>checkpoint conversion</div>
+<div class="c" data-n="pkg" style="left: 1010px; top: 1250px; width: 280px; height: 84px;">
+<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9">
+</path>
+</svg>
+<b>Model package</b>
+<br>weights · configuration</div>
+<div class="c" data-n="ldr" style="left: 1380px; top: 1250px; width: 320px; height: 84px;">
+<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M12 4v11M8 11l4 4 4-4M5 19h14">
+</path>
+</svg>
+<b>Model loader</b>
+<br>device placement · initialization</div>
+<div class="el" style="left: 1300px; top: 1264px; width: 70px; color: var(--sub);">deploy</div>
+<div class="el" style="left: 1512px; top: 1200px; color: var(--sub);">load weights</div>
+<div class="el" style="left: 312px; top: 1352px; color: var(--ctl);">training kernels</div>
+<div class="el" style="left: 1621px; top: 1352px; width: 160px; text-align: right; color: var(--ctl);">inference kernels</div>
+<div class="pt t" style="left: 62px; top: 1414px;">Shared GPU kernel layer</div>
+<div class="c" data-n="ka" style="left: 62px; top: 1492px; width: 434px; height: 84px;">
+<svg class="ic" viewBox="0 0 54 54" aria-hidden="true" style="width: 40px; height: 40px; right: 14px; top: 22px;">
+<path d="M9 3h.01M15 3h.01M21 3h.01M27 3h.01M33 3h.01M39 3h.01M45 3h.01M51 3h.01M15 9h.01M21 9h.01M27 9h.01M33 9h.01M39 9h.01M45 9h.01M51 9h.01M21 15h.01M27 15h.01M33 15h.01M39 15h.01M45 15h.01M51 15h.01M27 21h.01M33 21h.01M39 21h.01M45 21h.01M51 21h.01M33 27h.01M39 27h.01M45 27h.01M51 27h.01M39 33h.01M45 33h.01M51 33h.01M45 39h.01M51 39h.01M51 45h.01" style="stroke-width: 1.7; opacity: 0.4;">
+</path>
+<path d="M0.9 0.9h4.2v4.2h-4.2ZM0.9 6.9h4.2v4.2h-4.2ZM6.9 6.9h4.2v4.2h-4.2ZM0.9 12.9h4.2v4.2h-4.2ZM6.9 12.9h4.2v4.2h-4.2ZM12.9 12.9h4.2v4.2h-4.2ZM0.9 18.9h4.2v4.2h-4.2ZM6.9 18.9h4.2v4.2h-4.2ZM12.9 18.9h4.2v4.2h-4.2ZM18.9 18.9h4.2v4.2h-4.2ZM0.9 24.9h4.2v4.2h-4.2ZM6.9 24.9h4.2v4.2h-4.2ZM12.9 24.9h4.2v4.2h-4.2ZM18.9 24.9h4.2v4.2h-4.2ZM24.9 24.9h4.2v4.2h-4.2ZM0.9 30.9h4.2v4.2h-4.2ZM6.9 30.9h4.2v4.2h-4.2ZM12.9 30.9h4.2v4.2h-4.2ZM18.9 30.9h4.2v4.2h-4.2ZM24.9 30.9h4.2v4.2h-4.2ZM30.9 30.9h4.2v4.2h-4.2ZM0.9 36.9h4.2v4.2h-4.2ZM6.9 36.9h4.2v4.2h-4.2ZM12.9 36.9h4.2v4.2h-4.2ZM18.9 36.9h4.2v4.2h-4.2ZM24.9 36.9h4.2v4.2h-4.2ZM30.9 36.9h4.2v4.2h-4.2ZM36.9 36.9h4.2v4.2h-4.2ZM0.9 42.9h4.2v4.2h-4.2ZM6.9 42.9h4.2v4.2h-4.2ZM12.9 42.9h4.2v4.2h-4.2ZM18.9 42.9h4.2v4.2h-4.2ZM24.9 42.9h4.2v4.2h-4.2ZM30.9 42.9h4.2v4.2h-4.2ZM36.9 42.9h4.2v4.2h-4.2ZM42.9 42.9h4.2v4.2h-4.2ZM0.9 48.9h4.2v4.2h-4.2ZM6.9 48.9h4.2v4.2h-4.2ZM12.9 48.9h4.2v4.2h-4.2ZM18.9 48.9h4.2v4.2h-4.2ZM24.9 48.9h4.2v4.2h-4.2ZM30.9 48.9h4.2v4.2h-4.2ZM36.9 48.9h4.2v4.2h-4.2ZM42.9 48.9h4.2v4.2h-4.2ZM48.9 48.9h4.2v4.2h-4.2Z" style="fill: var(--ctl); stroke: none;">
+</path>
+</svg>
+<b>Attention kernels</b>
+<br>Forward / Backward</div>
+<div class="c" data-n="kf" style="left: 516px; top: 1492px; width: 434px; height: 84px;">
+<svg class="ic" viewBox="0 0 100 24" aria-hidden="true" style="width: 100px; height: 24px; right: 14px; top: 16px;">
+<path d="M2 7h10v10H2zM16 7h10v10H16zM30 7h10v10H30zM47 12h15M58 8l4 4-4 4">
+</path>
+<path d="M70 7h28v10H70z" style="fill: var(--dat); stroke: var(--dat);">
+</path>
+</svg>
+<b>Fused tensor kernels</b>
+<br>normalization · elementwise fusion</div>
+<div class="c" data-n="km" style="left: 970px; top: 1492px; width: 434px; height: 84px;">
+<svg class="ic" viewBox="0 0 80 28" aria-hidden="true" style="width: 80px; height: 28px; right: 14px; top: 14px;">
+<path d="M6 3H3v22h3M24 3h3v22h-3M36 10.5l7 7M43 10.5l-7 7M55 3h-3v22h3M73 3h3v22h-3">
+</path>
+<path d="M9 8h.01M15 8h.01M21 8h.01M9 14h.01M15 14h.01M21 14h.01M9 20h.01M15 20h.01M21 20h.01M58 8h.01M64 8h.01M70 8h.01M58 14h.01M64 14h.01M70 14h.01M58 20h.01M64 20h.01M70 20h.01" style="stroke: var(--ctl); stroke-width: 3.2;">
+</path>
+</svg>
+<b>Matrix &amp; encoder kernels</b>
+<br>grouped GEMM · encoding operators</div>
+<div class="c" data-n="kg" style="left: 1424px; top: 1492px; width: 434px; height: 84px;">
+<svg class="ic" viewBox="0 0 60 46" aria-hidden="true" style="width: 60px; height: 46px; right: 16px; top: 19px;">
+<path d="M6 23L46 5M6 23L46 23M6 23L46 32M46 1h8v8h-8zM46 10h8v8h-8zM46 19h8v8h-8zM46 28h8v8h-8zM46 37h8v8h-8z" style="stroke-width: 1.1; opacity: 0.55;">
+</path>
+<path d="M6 23L46 14M6 23L46 41" style="stroke: var(--dat); stroke-width: 1.6;">
+</path>
+<path class="tw" d="M46 10h8v8h-8zM46 37h8v8h-8z" style="fill: var(--dat); stroke: var(--dat); stroke-width: 1.1; --a: 1; --b: 0.4; animation-duration: 2.5s;">
+</path>
+<path d="M3 23a3 3 0 1 0 6 0a3 3 0 1 0-6 0" style="fill: var(--ink); stroke: none;">
+</path>
+</svg>
+<b>MegaKernels</b>
+<br>MegaMoE</div>
+<div style="position: absolute; left: 40px; top: 36px; display: flex; align-items: center; gap: 40px; font-size: 19px; line-height: 28px; color: var(--sub);">
+<div style="display: flex; align-items: center; gap: 12px;">
+<svg width="46" height="14" viewBox="0 0 46 14" aria-hidden="true">
+<path d="M1 7H36" style="fill: none; stroke: var(--ctl); stroke-width: 1.5; stroke-linecap: round;">
+</path>
+<path d="M45 7L35 2.4V11.6Z" style="fill: var(--ctl);">
+</path>
+</svg>
+<div>control / invoke</div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px;">
+<svg width="46" height="14" viewBox="0 0 46 14" aria-hidden="true">
+<path d="M1.5 7H36" style="fill: none; stroke: var(--dat); stroke-width: 2.6; stroke-linecap: round;">
+</path>
+<path d="M45 7L35 2.4V11.6Z" style="fill: var(--dat);">
+</path>
+</svg>
+<div>data / tensors</div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px;">
+<svg width="46" height="14" viewBox="0 0 46 14" aria-hidden="true">
+<path d="M1 7H36" style="fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 5, 6; opacity: 0.6;">
+</path>
+<path d="M45 7L35 2.4V11.6Z" style="fill: var(--ink); opacity: 0.65;">
+</path>
+</svg>
+<div>state / artifacts</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function () {
+  var wrap = document.getElementById('natura-infra-diagram'), stage = wrap.querySelector('.nf');
+  var q = new URLSearchParams(location.search), page = document.body.hasAttribute('data-nf-page');
+  if (wrap.getAttribute('data-theme') === 'dark' || (page && q.get('theme') === 'dark')) {
+    stage.classList.add('dark');
+    if (page) document.documentElement.classList.add('nf-dark');
+  }
+  if (wrap.getAttribute('data-motion') === 'off' || (page && q.get('motion') === 'off')) stage.classList.add('still');
+  function fit() { stage.style.transform = 'scale(' + wrap.clientWidth / 1920 + ')'; }
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap); else window.addEventListener('resize', fit);
+})();
+</script>
+<!-- copy to here -->
+</body>
+</html>

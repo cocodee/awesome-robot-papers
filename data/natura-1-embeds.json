@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Natura-1 Benchmark Results",
+    "url": "https://www.naturewill.com/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/score-embed.html",
+    "local_path": "assets/natura-1/score-embed.html"
+  },
+  {
+    "title": "Explore egocentric human experience",
+    "url": "https://www.naturewill.com/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/egocentric-data-demo.html?embed=1",
+    "local_path": "assets/natura-1/egocentric-data-demo.html"
+  },
+  {
+    "title": "The Natura-1 data system",
+    "url": "https://www.naturewill.com/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/natura-data-bench.html",
+    "local_path": "assets/natura-1/natura-data-bench.html"
+  },
+  {
+    "title": "Physical AI infrastructure",
+    "url": "https://www.naturewill.com/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/natura-infra-diagram-latest.html",
+    "local_path": "assets/natura-1/natura-infra-diagram-latest.html"
+  },
+  {
+    "title": "Natura-1: one sequence, one state",
+    "url": "https://www.naturewill.com/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/natura-1-diagram-v4.html",
+    "local_path": "assets/natura-1/natura-1-diagram-v4.html"
+  },
+  {
+    "title": "Natura-1 Scaling Validation",
+    "url": "https://www.naturewill.com/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/scaling-embed.html",
+    "local_path": "assets/natura-1/scaling-embed.html"
+  }
+]

@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Natura-1 — one sequence, one state</title>
+<!--
+  Natura-1 animated diagram. Three ways to use it:
+  1. As its own page, in an iframe:
+       <iframe src="/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/natura-1-diagram.html" style="width:100%;aspect-ratio:16/9;border:0" title="Natura-1 diagram"></iframe>
+     Light by default. Add ?theme=dark for the dark version, ?motion=off for a still.
+  2. Inline: copy everything between the two "copy" comments below into your page.
+     Set data-theme="dark" (and data-motion="off" for a still) on the wrapper.
+  3. It scales to the width of its container; the artwork is drawn on a 1920x1080 stage.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* page chrome: only needed when this file is opened on its own or in an iframe */
+html,body{margin:0;background:#fcfcfc}
+html.n1-dark,html.n1-dark body{background:#0a0d10}
+</style>
+</head>
+<body data-n1-page>
+<!-- copy from here -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+.n1-embed{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden}
+.n1-embed>.n1{transform-origin:0 0}
+.n1{--bg:#fcfcfc;--ink:#14181c;--vid:#1f5aa6;--act:#c8452c;--glow:0.14;--tu:0;--pa:0.015;--pb:0.09;--gl:0.1;--gd:0;--hg:0.45;--cm:0.45}
+.n1.dark{--bg:#0a0d10;--ink:#ede8dc;--vid:#8cb0f0;--act:#f08a6c;--glow:0.4}
+.n1 .fl{animation:n1-dash linear infinite}
+.n1 .tw{animation:n1-tw ease-in-out infinite}
+.n1 .br{transform-box:fill-box;transform-origin:center;animation:n1-br 3.333s ease-in-out infinite}
+@keyframes n1-dash{to{stroke-dashoffset:var(--o)}}
+@keyframes n1-tw{0%,100%{opacity:var(--a)}50%{opacity:var(--b)}}
+@keyframes n1-br{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
+.n1.still .fl{display:none}
+.n1.still .tw,.n1.still .br{animation:none}
+@media (prefers-reduced-motion:reduce){.n1 .fl{display:none}.n1 .tw,.n1 .br{animation:none}}
+</style>
+<div class="n1-embed" id="natura-1-diagram"></div>
+<template id="natura-1-template">
+<div data-h-class="n1 {{cls}}" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif">
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-label="Animated diagram of Natura-1. One physical-state trajectory casts two projections: video frames on a wall, in which a robot arm with a five-fingered hand picks a cup up from a counter and sets it on a shelf, and an action trace on a floor. A plane marking the present sweeps along it: behind the plane the trajectory is resolved, ahead of it the trajectory is still a fan of possible futures, one per instruction, that narrows as the present approaches. Below runs the single token sequence of language, image, video and action tokens, each routed to a few experts." style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; fill: none; stroke-linecap: round; stroke-linejoin: round">
+<defs>
+<filter id="n1-glow" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="7"></feGaussianBlur></filter>
+<linearGradient id="n1-pw" gradientUnits="userSpaceOnUse" data-h-x1="{{gx0}}" y1="0" data-h-x2="{{gx1}}" y2="0"><stop offset="0" style="stop-color: var(--vid); stop-opacity: var(--pa)"></stop><stop offset="1" style="stop-color: var(--vid); stop-opacity: var(--pb)"></stop></linearGradient>
+<linearGradient id="n1-pf" gradientUnits="userSpaceOnUse" data-h-x1="{{gx0}}" y1="0" data-h-x2="{{gx1}}" y2="0"><stop offset="0" style="stop-color: var(--act); stop-opacity: var(--pa)"></stop><stop offset="1" style="stop-color: var(--act); stop-opacity: var(--pb)"></stop></linearGradient>
+</defs>
+<path data-h-d="{{wallFill}}" style="fill: var(--vid); opacity: var(--tu)"></path>
+<path data-h-d="{{floorFill}}" style="fill: var(--act); opacity: var(--tu)"></path>
+<path data-h-d="{{wallPastFill}}" style="fill: url(#n1-pw)"></path>
+<path data-h-d="{{floorPastFill}}" style="fill: url(#n1-pf)"></path>
+<path data-h-d="{{wallGrid}}" style="stroke: var(--vid); stroke-width: 1; opacity: var(--gl)"></path>
+<path data-h-d="{{floorGrid}}" style="stroke: var(--act); stroke-width: 1; opacity: var(--gl)"></path>
+<path data-h-d="{{wallDots}}" style="stroke: var(--ink); stroke-width: 1.6; opacity: var(--gd)"></path>
+<path data-h-d="{{floorDots}}" style="stroke: var(--ink); stroke-width: 1.6; opacity: var(--gd)"></path>
+<path data-h-d="{{wallBox}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.22"></path>
+<path data-h-d="{{floorBox}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.22"></path>
+<path data-h-d="{{hinge}}" style="stroke: var(--ink); stroke-width: 1.4; opacity: var(--hg)"></path>
+<path data-h-d="{{corners}}" style="stroke: var(--ink); stroke-width: 1.2; opacity: var(--cm)"></path>
+<path data-h-d="{{ruler}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.4"></path>
+<path data-h-d="{{fanFloor}}" style="stroke: var(--act); stroke-width: 0.9; opacity: 0.16"></path>
+<path class="tw" data-h-d="{{tailF}}" style="stroke: var(--act); stroke-width: 2; opacity: 0.6; --a: 0.35; --b: 0.8; animation-duration: 3.333s"></path>
+<path class="fl" data-h-d="{{floorGhost}}" style="stroke: var(--act); stroke-width: 1.4; stroke-dasharray: 1 7; --o: -8px; animation-duration: 1.25s; opacity: 0.55"></path>
+<path data-h-d="{{floorFut}}" style="stroke: var(--act); stroke-width: 1.6; opacity: 0.85"></path>
+<path data-h-d="{{floorPast}}" style="stroke: var(--act); stroke-width: 2; opacity: 0.95"></path>
+<path data-h-d="{{floorTriFut}}" style="fill: var(--act); stroke: var(--bg); stroke-width: 1.5; opacity: 0.9"></path>
+<path data-h-d="{{floorTri}}" style="fill: var(--act); stroke: var(--bg); stroke-width: 2"></path>
+<path data-h-d="{{fanWall}}" style="stroke: var(--vid); stroke-width: 0.9; opacity: 0.13"></path>
+<path class="tw" data-h-d="{{tailW}}" style="stroke: var(--vid); stroke-width: 2; opacity: 0.55; --a: 0.3; --b: 0.75; animation-duration: 5s"></path>
+<path class="fl" data-h-d="{{wallGhost}}" style="stroke: var(--vid); stroke-width: 1.4; stroke-dasharray: 1 7; --o: -8px; animation-duration: 1.25s; opacity: 0.55"></path>
+<path data-h-d="{{wallFut}}" style="stroke: var(--vid); stroke-width: 1.6; opacity: 0.85"></path>
+<path data-h-d="{{wallPast}}" style="stroke: var(--vid); stroke-width: 2; opacity: 0.95"></path>
+<path data-h-d="{{frameTicks}}" style="stroke: var(--vid); stroke-width: 1; opacity: 0.6"></path>
+<sc-for data-h-list="{{frames}}" as="f" hint-placeholder-count="0">
+<path data-h-d="{{f.d}}" style="fill: var(--bg)"></path>
+<path data-h-d="{{f.tbl}}" data-h-opacity="{{f.e}}" style="fill: var(--ink); fill-opacity: 0.14"></path>
+<path data-h-d="{{f.env}}" data-h-opacity="{{f.e}}" style="stroke: var(--ink); stroke-width: 1"></path>
+<g data-h-opacity="{{f.o}}">
+<path data-h-d="{{f.arm}}" style="fill: var(--bg); stroke: var(--vid); stroke-width: 1.4"></path>
+<path data-h-d="{{f.joints}}" style="fill: var(--vid)"></path>
+<path data-h-d="{{f.pins}}" style="fill: var(--bg)"></path>
+<path data-h-d="{{f.obj}}" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.5"></path>
+<path data-h-d="{{f.digits}}" style="stroke: var(--vid); stroke-width: 1.8"></path>
+</g>
+<path data-h-d="{{f.d}}" data-h-stroke-opacity="{{f.o}}" data-h-stroke-width="{{f.w}}" style="stroke: var(--vid)"></path>
+</sc-for>
+<sc-for data-h-list="{{futFrames}}" as="f" hint-placeholder-count="0">
+<path data-h-d="{{f.dots}}" data-h-opacity="{{f.t}}" style="stroke: var(--vid); stroke-width: 1.8"></path>
+<path data-h-d="{{f.env}}" data-h-opacity="{{f.e}}" style="stroke: var(--ink); stroke-width: 1"></path>
+<g data-h-opacity="{{f.o}}">
+<path data-h-d="{{f.arm}}" style="fill: var(--bg); stroke: var(--vid); stroke-width: 1.3"></path>
+<path data-h-d="{{f.joints}}" style="fill: var(--vid)"></path>
+<path data-h-d="{{f.pins}}" style="fill: var(--bg)"></path>
+<path data-h-d="{{f.obj}}" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.4"></path>
+<path data-h-d="{{f.digits}}" style="stroke: var(--vid); stroke-width: 1.7"></path>
+</g>
+</sc-for>
+<path data-h-d="{{wallSqFut}}" style="fill: var(--vid); stroke: var(--bg); stroke-width: 1.5; opacity: 0.9"></path>
+<path data-h-d="{{wallSq}}" style="fill: var(--vid); stroke: var(--bg); stroke-width: 2"></path>
+<path data-h-d="{{curtWall}}" style="stroke: var(--vid); stroke-width: 1; opacity: 0.2"></path>
+<path data-h-d="{{curtFloor}}" style="stroke: var(--act); stroke-width: 1; opacity: 0.14"></path>
+<path data-h-d="{{dropWall}}" style="stroke: var(--vid); stroke-width: 1; opacity: 0.45"></path>
+<path data-h-d="{{dropFloor}}" style="stroke: var(--act); stroke-width: 1; opacity: 0.45"></path>
+<path data-h-d="{{pane}}" data-h-opacity="{{paneO}}" style="fill: var(--ink); fill-opacity: 0.035; stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.4"></path>
+<path data-h-d="{{nowLine}}" style="stroke: var(--ink); stroke-width: 1; stroke-dasharray: 1 6; opacity: 0.5"></path>
+<path data-h-d="{{fanGhost}}" style="stroke: var(--ink); stroke-width: 0.9; opacity: 0.1"></path>
+<path data-h-d="{{fanState}}" style="stroke: var(--ink); stroke-width: 0.9; opacity: 0.17"></path>
+<path class="tw" data-h-d="{{tailS1}}" style="stroke: var(--ink); stroke-width: 2; opacity: 0.45; --a: 0.2; --b: 0.7; animation-duration: 2.5s"></path>
+<path class="tw" data-h-d="{{tailS2}}" style="stroke: var(--ink); stroke-width: 2; opacity: 0.45; --a: 0.65; --b: 0.2; animation-duration: 5s"></path>
+<path data-h-d="{{tailSB}}" style="stroke: var(--ink); stroke-width: 2.8; opacity: 0.9"></path>
+<path class="fl" data-h-d="{{ghost}}" style="stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 1 7; --o: -8px; animation-duration: 1.25s; opacity: 0.75"></path>
+<path data-h-d="{{ghost}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.25"></path>
+<path data-h-d="{{ghostTips}}" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.4; stroke-opacity: 0.7"></path>
+<path data-h-d="{{statePast}}" filter="url(#n1-glow)" style="stroke: var(--ink); stroke-width: 7; opacity: var(--glow)"></path>
+<path data-h-d="{{stateFut}}" style="stroke: var(--ink); stroke-width: 2.4; opacity: 0.92"></path>
+<path data-h-d="{{statePast}}" style="stroke: var(--ink); stroke-width: 3"></path>
+<path data-h-d="{{beadsFut}}" style="stroke: var(--bg); stroke-width: 9"></path>
+<path data-h-d="{{beadsFut}}" style="stroke: var(--ink); stroke-width: 5"></path>
+<path data-h-d="{{beads}}" style="stroke: var(--bg); stroke-width: 13"></path>
+<path data-h-d="{{beads}}" style="stroke: var(--ink); stroke-width: 7.5"></path>
+<path class="br" data-h-d="{{nowRing}}" style="stroke: var(--ink); stroke-width: 1.5"></path>
+<path data-h-d="{{nowDot}}" style="stroke: var(--bg); stroke-width: 13"></path>
+<path data-h-d="{{nowDot}}" style="stroke: var(--ink); stroke-width: 7.5"></path>
+<path data-h-d="{{mainTip}}" style="fill: var(--bg); stroke: var(--ink); stroke-width: 2"></path>
+<path data-h-d="{{arcs}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.26"></path>
+<path class="fl" data-h-d="{{arcs}}" style="stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 1 29; --o: -30px; animation-duration: 2.5s; opacity: 0.75"></path>
+<path data-h-d="{{stems}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.16"></path>
+<path data-h-d="{{stepTicks}}" style="stroke: var(--ink); stroke-width: 1; opacity: 0.4"></path>
+<path data-h-d="{{expBase}}" style="stroke: var(--ink); stroke-width: 1.8; opacity: 0.22"></path>
+<path class="tw" data-h-d="{{expBaseF}}" style="stroke: var(--ink); stroke-width: 1.8; opacity: 0.14; --a: 0.08; --b: 0.24; animation-duration: 5s"></path>
+<path data-h-d="{{tokL}}" style="stroke: var(--ink); stroke-width: 3.6"></path>
+<path data-h-d="{{tokI}}" style="stroke: var(--vid); stroke-width: 1.2; stroke-linejoin: miter"></path>
+<path data-h-d="{{tokV}}" style="fill: var(--vid); stroke: none"></path>
+<path data-h-d="{{tokA}}" style="fill: var(--act); stroke: none"></path>
+<path class="tw" data-h-d="{{tokVf}}" style="stroke: var(--vid); stroke-width: 1; opacity: 0.6; --a: 0.35; --b: 0.8; animation-duration: 3.333s"></path>
+<path class="tw" data-h-d="{{tokAf}}" style="stroke: var(--act); stroke-width: 1; opacity: 0.85; --a: 0.5; --b: 1; animation-duration: 2.5s"></path>
+<path data-h-d="{{litL}}" style="stroke: var(--ink); stroke-width: 3"></path>
+<path data-h-d="{{litI}}" style="stroke: var(--vid); stroke-width: 1.1; stroke-linejoin: miter"></path>
+<path data-h-d="{{litV}}" style="fill: var(--vid); stroke: none"></path>
+<path data-h-d="{{litA}}" style="fill: var(--act); stroke: none"></path>
+<path class="tw" data-h-d="{{litVf}}" style="fill: var(--vid); stroke: none; opacity: 0.5; --a: 0.2; --b: 0.7; animation-duration: 2s"></path>
+<path class="tw" data-h-d="{{litAf}}" style="fill: var(--act); stroke: none; opacity: 0.65; --a: 0.8; --b: 0.3; animation-duration: 2.5s"></path>
+</svg>
+<div style="position: absolute; left: 170px; top: 134px; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px; color: var(--vid)">Video <span style="font-family: 'Inter', system-ui, sans-serif; font-weight: 400; font-size: 24px; color: var(--ink); opacity: 0.72; margin-left: 14px">what the camera sees</span></div>
+<div data-h-style="position: absolute; left: {{pastL}}px; top: 50px; width: 400px; text-align: right; white-space: nowrap; opacity: {{pastO}}; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px"><span style="font-family: 'Inter', system-ui, sans-serif; font-weight: 400; font-size: 24px; opacity: 0.72; margin-right: 14px">kept as memory</span> Past</div>
+<div data-h-style="position: absolute; left: {{futL}}px; top: 50px; white-space: nowrap; opacity: {{futO}}; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px">Future <span style="font-family: 'Inter', system-ui, sans-serif; font-weight: 400; font-size: 24px; opacity: 0.72; margin-left: 14px">the world-modeling target</span></div>
+<div style="position: absolute; left: 170px; top: 355px; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px">State</div>
+<div style="position: absolute; left: 304px; top: 676px; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px; color: var(--act)">Action <span style="font-family: 'Inter', system-ui, sans-serif; font-weight: 400; font-size: 24px; color: var(--ink); opacity: 0.72; margin-left: 14px">what the hand does</span></div>
+<div style="position: absolute; left: 1614px; top: 388px; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px">Language</div>
+<div style="position: absolute; left: 1614px; top: 440px; width: 280px; font-size: 24px; line-height: 31px; opacity: 0.72">another instruction,<br>another future</div>
+<div style="position: absolute; left: 1614px; top: 548px; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px">Flow matching</div>
+<div style="position: absolute; left: 1614px; top: 600px; width: 280px; font-size: 24px; line-height: 31px; opacity: 0.72">joint denoising</div>
+<div style="position: absolute; left: 142px; top: 752px; display: flex; align-items: center; gap: 28px; font-size: 24px; line-height: 48px">
+<div style="font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; margin-right: 6px">One sequence</div>
+<div style="display: flex; align-items: center; gap: 9px"><svg width="23" height="20" viewBox="0 0 16 14" aria-hidden="true"><path d="M3 7h10" style="fill: none; stroke: var(--ink); stroke-width: 4.5; stroke-linecap: round"></path></svg><div style="opacity: 0.8">language</div></div>
+<div style="display: flex; align-items: center; gap: 9px"><svg width="23" height="20" viewBox="0 0 16 14" aria-hidden="true"><path d="M2 1h12v12h-12ZM8 1v12M2 7h12" style="fill: none; stroke: var(--vid); stroke-width: 1.4"></path></svg><div style="opacity: 0.8">image</div></div>
+<div style="display: flex; align-items: center; gap: 9px"><svg width="23" height="20" viewBox="0 0 16 14" aria-hidden="true"><path d="M2 1h12v12h-12Z" style="fill: var(--vid)"></path></svg><div style="opacity: 0.8">video</div></div>
+<div style="display: flex; align-items: center; gap: 9px"><svg width="23" height="20" viewBox="0 0 16 14" aria-hidden="true"><path d="M3 1L14 7L3 13Z" style="fill: var(--act)"></path></svg><div style="opacity: 0.8">action</div></div>
+</div>
+<div style="position: absolute; left: 1060px; top: 752px; white-space: nowrap; font-family: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif; font-weight: 500; font-size: 42px; line-height: 48px">Mixture of experts</div>
+</div>
+</template>
+<script>
+(function () {
+  var wrap = document.getElementById('natura-1-diagram');
+  var q = new URLSearchParams(location.search), page = document.body.hasAttribute('data-n1-page');
+  var dark = wrap.getAttribute('data-theme') === 'dark' || (page && q.get('theme') === 'dark');
+  var motion = !(wrap.getAttribute('data-motion') === 'off' || (page && q.get('motion') === 'off'));
+  if (page && dark) document.documentElement.classList.add('n1-dark');
+
+  // the drawing: all geometry is computed here, once per frame
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.forceUpdate = function () { render(); };
+class Component extends DCLogic {
+  // everything that does not depend on where the present is, plus frame(now): the picture with the present at trajectory time `now` (0..1)
+  make(seed) {
+    // two streams of noise: one for the figure, one for the little pictures on the wall, so that either can change without disturbing the other
+    const stream = (s) => { const rnd = () => { s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; return { rnd: rnd, gauss: () => { const u = Math.max(rnd(), 1e-9), v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.283185307 * v); } }; };
+    const noise = stream((seed | 0) || 1), rnd = noise.rnd, gauss = noise.gauss, pics = stream(((seed | 0) || 1) + 7919);
+    const r1 = (n) => Math.round(n * 10) / 10, r2 = (n) => Math.round(n * 100) / 100, clamp = (v) => Math.max(0, Math.min(1, v));
+    const pt = (p) => r1(p[0]) + ' ' + r1(p[1]);
+    const line = (pts) => { let d = ''; for (let i = 0; i < pts.length; i++) d += (i ? 'L' : 'M') + pt(pts[i]); return d; };
+    const dot = (p) => 'M' + pt(p) + 'h.01';
+    const seg = (a, b) => 'M' + pt(a) + 'L' + pt(b);
+    const ring = (c, r) => 'M' + r1(c[0] - r) + ' ' + r1(c[1]) + 'a' + r + ' ' + r + ' 0 1 0 ' + (2 * r) + ' 0a' + r + ' ' + r + ' 0 1 0 ' + (-2 * r) + ' 0';
+    const rect = (x, y, w, h) => 'M' + r1(x) + ' ' + r1(y) + 'h' + w + 'v' + h + 'h' + (-w) + 'Z';
+    const sq = (p, w) => rect(p[0] - w / 2, p[1] - w / 2, w, w);
+    const tri = (p, d, w) => { const l = Math.hypot(d[0], d[1]) || 1, ux = d[0] / l, uy = d[1] / l; return line([[p[0] + ux * w * 1.2, p[1] + uy * w * 1.2], [p[0] - ux * w * 0.8 - uy * w, p[1] - uy * w * 0.8 + ux * w], [p[0] - ux * w * 0.8 + uy * w, p[1] - uy * w * 0.8 - ux * w]]) + 'Z'; };
+
+    // oblique projection: X = time, Y = up (the wall), Z = toward the viewer (the floor)
+    const OX = 142, OY = 560, ZX = 0.42, ZY = 0.5, WALL_W = 1380, WALL_H = 448, FLOOR_D = 340;
+    const P = (x, y, z) => [OX + x + z * ZX, OY - y + z * ZY];
+    const STEPS = 18, TAU = Math.PI * 2, HZ = 7 / 18, GRASP = 10;
+    const X = (t) => 86.7 + 1215 * t;
+    const Y = (t) => 190 + 70 * Math.sin(TAU * 1.15 * t + 0.6) + 28 * Math.sin(TAU * 2.7 * t + 1.9);
+    const Z = (t) => 140 + 170 * t * t + 28 * Math.sin(TAU * 1.6 * t + 0.4);
+    const main = (t) => [X(t), Y(t), Z(t)];
+    const state = (c) => P(c[0], c[1], c[2]), wall = (c) => P(c[0], c[1], 0), floor = (c) => P(c[0], 0, c[2]);
+    const sample = (fn, proj, a, b, n) => { const o = []; for (let i = 0; i <= n; i++) o.push(proj(fn(a + (b - a) * i / n))); return o; };
+    const dir = (t) => { const a = floor(main(t - 0.004)), b = floor(main(t + 0.004)); return [b[0] - a[0], b[1] - a[1]]; };
+    // a future drifts away from the realised trajectory over one horizon (HZ) past the present, then holds
+    const grow = (u) => { u = clamp(u); return u * u * (3 - 2 * u); };
+    const branch = (A, B, now) => (t) => { const k = grow((t - now) / HZ); return [X(t), Y(t) + A * k, Z(t) + B * k]; };
+    const strand = (th, base, now) => (t) => { const c = base(t), u = Math.max(0, (t - now) / HZ), e = th.S * Math.pow(Math.min(1, u), 1.2); return [c[0], c[1] + e * (th.a1 + 0.4 * Math.sin(TAU * th.f1 * u + th.p1)), c[2] + e * (th.a2 + 0.4 * Math.sin(TAU * th.f2 * u + th.p2))]; };
+
+    // the two planes, with one tick per step along the front of the floor
+    const S = {};
+    S.wallBox = line([P(0, 0, 0), P(WALL_W, 0, 0), P(WALL_W, WALL_H, 0), P(0, WALL_H, 0)]) + 'Z';
+    S.floorBox = line([P(0, 0, 0), P(WALL_W, 0, 0), P(WALL_W, 0, FLOOR_D), P(0, 0, FLOOR_D)]) + 'Z';
+    S.wallDots = ''; S.floorDots = ''; S.ruler = ''; S.wallGrid = ''; S.floorGrid = '';
+    for (let k = 0; k <= STEPS; k++) {
+      const x = X(k / STEPS), e = P(x, 0, FLOOR_D);
+      for (let j = 1; j < 8; j++) S.wallDots += dot(P(x, j * WALL_H / 8, 0));
+      for (let j = 1; j < 6; j++) S.floorDots += dot(P(x, 0, j * FLOOR_D / 6));
+      S.ruler += seg(e, [e[0], e[1] + 6]);
+      // a fine grid: one line per step on each plane
+      S.wallGrid += seg(P(x, 0, 0), P(x, WALL_H, 0)); S.floorGrid += seg(P(x, 0, 0), P(x, 0, FLOOR_D));
+    }
+    for (let j = 1; j < 8; j++) S.wallGrid += seg(P(0, j * WALL_H / 8, 0), P(WALL_W, j * WALL_H / 8, 0));
+    for (let j = 1; j < 6; j++) S.floorGrid += seg(P(0, 0, j * FLOOR_D / 6), P(WALL_W, 0, j * FLOOR_D / 6));
+    // the planes themselves, tinted with the colour of what is projected on them
+    S.wallFill = S.wallBox; S.floorFill = S.floorBox;
+    // the hinge where wall and floor meet is the time axis
+    S.hinge = seg(P(0, 0, 0), P(WALL_W, 0, 0));
+    // registration marks just outside the outer corners
+    const mark = (c, dx, dy) => 'M' + pt([c[0] + dx * 22, c[1]]) + 'L' + pt([c[0] + dx * 8, c[1]]) + 'M' + pt([c[0], c[1] + dy * 22]) + 'L' + pt([c[0], c[1] + dy * 8]);
+    S.corners = mark(P(0, WALL_H, 0), -1, -1) + mark(P(WALL_W, WALL_H, 0), 1, -1) + mark(P(0, 0, FLOOR_D), -1, 1) + mark(P(WALL_W, 0, FLOOR_D), 1, 1);
+    S.mainTip = ring(state(main(1)), 6);
+
+    // per step: state = circle, video = square, action = arrow, and the lines that tie the three together
+    const STEP = [], CURT = [];
+    for (let k = 0; k <= STEPS; k++) { const t = k / STEPS, c = main(t); STEP.push({ bead: dot(state(c)), wsq: sq(wall(c), 7), wsqF: sq(wall(c), 5.5), ftri: tri(floor(c), dir(t), 5.5), ftriF: tri(floor(c), dir(t), 4.5), dw: seg(state(c), wall(c)), df: seg(state(c), floor(c)) }); }
+    for (let i = 0; i <= STEPS * 6; i++) { const c = main(i / 6 / STEPS); CURT.push(i % 6 ? [seg(state(c), wall(c)), seg(state(c), floor(c))] : ['', '']); }
+
+    // the video frames, one picture every other step: a robot arm with a hand stands at a counter. Its open hand hangs over a cup, swings down and round,
+    // takes the cup from the side at step 10 and sets it on a shelf. The scene is laid out in a 96 x 72 picture and scaled to the frame.
+    // The hand's height follows the state; its way across, the way it points and how far it opens are staged, so that every picture is a possible one
+    const FW = 120, FH = 90, FS = FW / 96, EVERY = 2, TG = GRASP / STEPS, DEG = Math.PI / 180;
+    const SHOULDER = [16, 46], UPPER = 31, FORE = 27.5, WRIST = 6, PALM = 7.5, REACH = 6.2, COUNTER = 61, CUP = 62, SHELF = 76, LEDGE = 27.2, PUT = 84, LOW = COUNTER - 6.2, HIGH = LEDGE - 6.2, OVER = 31;
+    // the hand at time t: the point it closes on, the way it points (0 is level, to the right) and how far it is open (1) or closed (0)
+    const hand = (t) => {
+      const k = t * STEPS, rise = Math.max(0, (Y(t) - Y(TG)) / (Y(1) - Y(TG)));
+      if (t <= TG) return { T: [CUP - 7.5 * (0.67 + 0.33 * grow(k / 5)) * (1 - grow((k - 6.5) / 3.5)), LOW - rise * (LOW - OVER)], phi: 62 * DEG * (1 - Math.pow(grow((k - 4.5) / (GRASP - 4.5)), 0.8)), g: (0.45 + 0.55 * grow(k / 5)) * (1 - grow((k - 8.6) / 1.4)) };
+      const u = (t - TG) / (1 - TG);
+      return { T: [CUP + (PUT - CUP) * (0.22 * (1 - Math.pow(1 - Math.min(1, u / 0.78), 2)) + 0.78 * grow((u - 0.8) / 0.2)), LOW - rise * (LOW - HIGH)], phi: 0, g: 0 };
+    };
+    const scene = (x0, y0, t, held, j, sc) => {
+      const q = (p) => [x0 + p[0] * FS, y0 + p[1] * FS], disc = (c, r) => ring(q(c), r1(r * FS));
+      const h = hand(t), phi = h.phi + (held ? 0 : j[2] * sc * 4 * DEG), g = held ? 0 : clamp(h.g + j[3] * sc * 0.08), reach = UPPER + FORE - 0.5;
+      const u = [Math.cos(phi), Math.sin(phi)], n = [-u[1], u[0]], at = (o, a, b) => [o[0] + a * u[0] + b * n[0], o[1] + a * u[1] + b * n[1]];
+      // from the hand back to the shoulder: the root of the palm, a short wrist link that turns half-way between hand and forearm, then forearm and upper arm, elbow up
+      let T = [h.T[0] + j[0] * sc, h.T[1] + j[1] * sc], H = at(T, -(REACH + PALM), 0), W = H, K = SHOULDER, turn = 0;
+      for (let i = 0; i < 4; i++) {
+        W = [H[0] - WRIST * Math.cos(phi + turn), H[1] - WRIST * Math.sin(phi + turn)];
+        let dx = W[0] - SHOULDER[0], dy = W[1] - SHOULDER[1], dd = Math.hypot(dx, dy) || 1;
+        // a noisy guess may ask for more than the arm can reach; the whole hand is brought back within range
+        if (dd > reach) { const back = 1 - reach / dd, mx = dx * back, my = dy * back; T = [T[0] - mx, T[1] - my]; H = [H[0] - mx, H[1] - my]; W = [W[0] - mx, W[1] - my]; dx -= mx; dy -= my; dd = reach; }
+        const a = (UPPER * UPPER - FORE * FORE + dd * dd) / (2 * dd), up = Math.sqrt(Math.max(0, UPPER * UPPER - a * a));
+        K = [SHOULDER[0] + (a * dx + up * dy) / dd, SHOULDER[1] + (a * dy - up * dx) / dd];
+        turn = Math.atan2(W[1] - K[1], W[0] - K[0]) - phi;
+        while (turn > Math.PI) turn -= TAU;
+        while (turn < -Math.PI) turn += TAU;
+        turn *= 0.5;
+      }
+      const link = (A, B, wa, wb) => { const l = Math.hypot(B[0] - A[0], B[1] - A[1]) || 1, nx = (A[1] - B[1]) / l, ny = (B[0] - A[0]) / l; return line([q([A[0] + nx * wa, A[1] + ny * wa]), q([B[0] + nx * wb, B[1] + ny * wb]), q([B[0] - nx * wb, B[1] - ny * wb]), q([A[0] - nx * wa, A[1] - ny * wa])]) + 'Z'; };
+      const band = (A, B, f, w) => { const l = Math.hypot(B[0] - A[0], B[1] - A[1]) || 1, nx = (A[1] - B[1]) / l * w, ny = (B[0] - A[0]) / l * w, c = [A[0] + (B[0] - A[0]) * f, A[1] + (B[1] - A[1]) * f]; return seg(q([c[0] + nx, c[1] + ny]), q([c[0] - nx, c[1] - ny])); };
+      const X0 = SHOULDER[0], Kn = at(H, PALM, 0);
+      // the base is a foot and a short column with the seam of its turning joint; the long links carry a collar each; the palm is seen from the back of the hand
+      const arm = line([q([X0 - 6.5, COUNTER]), q([X0 - 4.6, COUNTER - 3.2]), q([X0 + 4.6, COUNTER - 3.2]), q([X0 + 6.5, COUNTER])]) + 'Z'
+        + line([q([X0 - 3.7, COUNTER - 3.2]), q([X0 - 3.1, SHOULDER[1] + 1.5]), q([X0 + 3.1, SHOULDER[1] + 1.5]), q([X0 + 3.7, COUNTER - 3.2])]) + 'Z'
+        + seg(q([X0 - 3.45, COUNTER - 6.6]), q([X0 + 3.45, COUNTER - 6.6]))
+        + link(SHOULDER, K, 2.7, 2.2) + link(K, W, 2.1, 1.6) + link(W, H, 1.5, 1.5)
+        + band(SHOULDER, K, 0.3, 2.55) + band(SHOULDER, K, 0.37, 2.5) + band(K, W, 0.6, 1.8) + band(K, W, 0.68, 1.75)
+        + line([q(at(H, 0.3, -2.3)), q(at(H, 3.2, -4.4)), q(at(Kn, 0, -4.5)), q(at(Kn, 0, 4.5)), q(at(H, 2.6, 4.1)), q(at(H, 0.3, 2.3))]) + 'Z';
+      // four fingers and a thumb: fanned out when the hand is open, lying side by side across the cup when it holds it, the thumb behind the cup
+      const FAN = [-15, -5, 4, 13], OPEN = [9.2, 10, 9.3, 7.7], HOLD = [8.4, 8.8, 8.6, 7.6];
+      let digits = '';
+      for (let i = 0; i < 4; i++) {
+        const b = at(Kn, 0, -3.45 + 2.3 * i), len = HOLD[i] + (OPEN[i] - HOLD[i]) * g, a1 = phi + FAN[i] * g * DEG, a2 = phi + 0.35 * FAN[i] * g * DEG;
+        const m = [b[0] + 0.52 * len * Math.cos(a1), b[1] + 0.52 * len * Math.sin(a1)];
+        digits += line([q(b), q(m), q([m[0] + 0.48 * len * Math.cos(a2), m[1] + 0.48 * len * Math.sin(a2)])]);
+      }
+      const tr = at(H, 2.9, -3.9), ta = phi - (held ? 34 : 38 + 22 * g) * DEG, tb = phi - (14 + 10 * g) * DEG, tl = held ? 3.1 : 4.2, tm = [tr[0] + tl * Math.cos(ta), tr[1] + tl * Math.sin(ta)];
+      digits += held ? seg(q(tr), q(tm)) : line([q(tr), q(tm), q([tm[0] + 3.6 * Math.cos(tb), tm[1] + 3.6 * Math.sin(tb)])]);
+      // the cup stands on the counter until it is picked up, then it is in the hand; where the fingers lie across it, its side is not drawn
+      const O = held ? T : [CUP, LOW], top = O[1] - 6.2, bot = O[1] + 6.2, side = (y) => O[0] - 5.6 + 1.2 * (y - top) / 12.4;
+      const body = 'L' + pt(q([O[0] - 4.4, bot - 1.3])) + 'Q' + pt(q([O[0] - 4.4, bot])) + ' ' + pt(q([O[0] - 3.1, bot])) + 'L' + pt(q([O[0] + 3.1, bot])) + 'Q' + pt(q([O[0] + 4.4, bot])) + ' ' + pt(q([O[0] + 4.4, bot - 1.3])) + 'L' + pt(q([O[0] + 5.6, top])) + 'L' + pt(q([O[0] - 5.6, top]));
+      return {
+        arm: arm,
+        joints: disc(SHOULDER, 3.5) + disc(K, 3) + disc(W, 2.2) + disc(H, 1.9),
+        pins: disc(SHOULDER, 1.2) + disc(K, 1),
+        digits: digits,
+        obj: (held ? 'M' + pt(q([side(O[1] + 4.5), O[1] + 4.5])) + body + 'L' + pt(q([side(O[1] - 4.5), O[1] - 4.5])) : 'M' + pt(q([O[0] - 5.6, top])) + body + 'Z') + seg(q([O[0] - 5.1, top + 2.6]), q([O[0] + 5.1, top + 2.6]))
+      };
+    };
+    const FR = [];
+    for (let k = 0; k <= STEPS; k += EVERY) {
+      const t = k / STEPS, w = wall(main(t)), x0 = w[0] - FW / 2, per = 2 * (FW + FH), edge = [];
+      // the picture clears the highest point the wall trace reaches under it
+      let high = w[1];
+      for (let i = -6; i <= 6; i++) { const u = t + i / 6 * FW / 2 / 1215; if (u >= 0 && u <= 1) high = Math.min(high, wall(main(u))[1]); }
+      const y0 = high - 12 - FH, q = (x, y) => [x0 + x * FS, y0 + y * FS];
+      for (let e = 0; e < per; e += 5) {
+        let p;
+        if (e < FW) p = [x0 + e, y0]; else if (e < FW + FH) p = [x0 + FW, y0 + e - FW]; else if (e < 2 * FW + FH) p = [x0 + 2 * FW + FH - e, y0 + FH]; else p = [x0, y0 + per - e];
+        edge.push([p[0], p[1], pics.gauss(), pics.gauss()]);
+      }
+      const f = scene(x0, y0, t, k >= GRASP, [0, 0, 0, 0], 0);
+      f.d = rect(x0, y0, FW, FH); f.tbl = line([q(0, COUNTER), q(96, COUNTER), q(96, 72), q(0, 72)]) + 'Z';
+      f.env = seg(q(0, COUNTER), q(96, COUNTER)) + line([q(96, LEDGE), q(SHELF, LEDGE), q(SHELF, LEDGE + 3), q(96, LEDGE + 3)]) + line([q(91.5, LEDGE + 3), q(91.5, LEDGE + 9.5), q(85.5, LEDGE + 3)]);
+      // the noise a guess at this picture starts from: where the hand is, the way it points, how far it is open
+      f.tick = seg([w[0], w[1] - 5], [w[0], y0 + FH]); f.k = k; f.t = t; f.x0 = x0; f.y0 = y0; f.edge = edge; f.j = [pics.gauss(), pics.gauss(), pics.gauss(), pics.gauss()];
+      FR.push(f);
+    }
+    // the main stream moves on by what the pictures used to draw from it, which keeps the rest of the figure as it was
+    for (let i = 0; i < 5320; i++) rnd();
+
+    // sampled futures: each thread has its own drift and wobble, and a sprinkle of noise fixed in trajectory time
+    const mk = (n, spread, nd) => { const o = []; for (let i = 0; i < n; i++) { const th = { a1: gauss(), a2: gauss(), f1: 0.5 + rnd() * 1.1, f2: 0.5 + rnd() * 1.1, p1: rnd() * TAU, p2: rnd() * TAU, end: 0.93 + rnd() * 0.07, S: spread, dots: [] }; for (let j = 0; j < nd; j++) th.dots.push([0.03 + 0.97 * rnd(), gauss(), gauss(), gauss(), rnd()]); o.push(th); } return o; };
+    const TM = mk(30, 30, 40), T1 = mk(8, 20, 0), T2 = mk(8, 20, 0);
+
+    // one sequence: language, image, then video and action interleaved, each kind with its own glyph
+    const seq = [];
+    for (let i = 0; i < 9; i++) seq.push('L');
+    seq.push('');
+    for (let i = 0; i < 6; i++) seq.push('I');
+    seq.push('');
+    const first = seq.length;
+    for (let k = 0; k < STEPS; k++) { for (let i = 0; i < 4; i++) seq.push('V'); seq.push('A'); }
+    const PITCH = 13.5, RY = 822, ROWS = 8, ROWP = 11, RX = OX + X(0) + FLOOR_D * ZX - first * PITCH, AY = RY + 30 + ROWS * ROWP;
+    const glyph = { L: (x, y, w) => 'M' + r1(x - w * 0.36) + ' ' + r1(y) + 'h' + r1(w * 0.72), I: (x, y, w) => rect(x - w / 2, y - w / 2, w, w) + 'M' + r1(x) + ' ' + r1(y - w / 2) + 'v' + w + 'M' + r1(x - w / 2) + ' ' + r1(y) + 'h' + w, V: (x, y, w) => rect(x - w / 2, y - w / 2, w, w), A: (x, y, w) => 'M' + r1(x - w / 2) + ' ' + r1(y - w / 2) + 'L' + r1(x + w / 2) + ' ' + r1(y) + 'L' + r1(x - w / 2) + ' ' + r1(y + w / 2) + 'Z' };
+    const COL = seq.map((m) => { if (!m) return null; const a = Math.floor(rnd() * ROWS); let b = Math.floor(rnd() * (ROWS - 1)); if (b >= a) b++; const rows = []; for (let r = 0; r < ROWS; r++) rows.push([gauss(), gauss(), rnd()]); return { m: m, a: a, b: b, r: rnd(), j: [gauss(), gauss()], rows: rows }; });
+    S.stepTicks = '';
+    for (let k = 0; k <= STEPS; k++) { const x = RX + (first + k * 5) * PITCH; S.stepTicks += seg([x, RY - 12], [x, RY - 6]); }
+
+    const frame = (now) => {
+      const g = {}, kn = now * STEPS, kp = Math.floor(kn + 1e-6), xn = X(now), cn = main(now), here = state(cn);
+
+      // behind the present: one resolved trajectory and its two shadows
+      const np = Math.max(1, Math.ceil(240 * now));
+      g.statePast = now > 0 ? line(sample(main, state, 0, now, np)) : '';
+      g.wallPast = now > 0 ? line(sample(main, wall, 0, now, np)) : '';
+      g.floorPast = now > 0 ? line(sample(main, floor, 0, now, np)) : '';
+      g.beads = ''; g.wallSq = ''; g.floorTri = ''; g.dropWall = ''; g.dropFloor = ''; g.beadsFut = ''; g.wallSqFut = ''; g.floorTriFut = ''; g.curtWall = ''; g.curtFloor = '';
+      for (let k = 0; k <= STEPS; k++) {
+        const q = STEP[k];
+        if (k <= kp) { g.beads += q.bead; g.wallSq += q.wsq; g.floorTri += q.ftri; g.dropWall += q.dw; g.dropFloor += q.df; }
+        else if (k < STEPS) { g.beadsFut += q.bead; g.wallSqFut += q.wsqF; g.floorTriFut += q.ftriF; }
+      }
+      for (let i = 1; i <= Math.floor(kn * 6 + 1e-6); i++) { g.curtWall += CURT[i][0]; g.curtFloor += CURT[i][1]; }
+
+      // frames: memory behind the present, dotted targets ahead of it that sharpen as it approaches
+      const frames = [], fut = [];
+      g.frameTicks = '';
+      for (const f of FR) {
+        const age = kn - f.k;
+        if (age >= -1e-6) {
+          const a = Math.max(0.62, 1 - 0.035 * age), hot = Math.max(0, 1 - age / (0.9 * EVERY));
+          frames.push({ d: f.d, tbl: f.tbl, env: f.env, arm: f.arm, joints: f.joints, pins: f.pins, digits: f.digits, obj: f.obj, o: r2(a), e: r2(a * 0.45), w: r1(1.5 + 1.8 * hot) });
+          g.frameTicks += f.tick;
+        } else {
+          const u = -age / (HZ * STEPS);
+          if (u > 1.1) continue;
+          const v = Math.min(1, u), fade = clamp((1.1 - u) / 0.18), sg = 3.5 * Math.pow(v, 1.5), sc = scene(f.x0, f.y0, f.t, f.k >= GRASP, f.j, 1.2 * v);
+          let dots = '';
+          for (const p of f.edge) dots += dot([p[0] + p[2] * sg, p[1] + p[3] * sg]);
+          fut.push({ dots: dots, env: f.env, arm: sc.arm, joints: sc.joints, pins: sc.pins, digits: sc.digits, obj: sc.obj, t: r2(0.75 * fade), o: r2((0.9 - 0.3 * v) * fade), e: r2((0.45 - 0.15 * v) * fade) });
+          g.frameTicks += f.tick;
+        }
+      }
+      g.frames = frames; g.futFrames = fut;
+
+      // the present: a plane, and the state on it with its two projections
+      g.pane = line([P(xn, 0, 0), P(xn, WALL_H, 0), P(xn, WALL_H, FLOOR_D), P(xn, 0, FLOOR_D)]) + 'Z';
+      // behind the present the planes are filled in: what has been seen and done
+      g.wallPastFill = now > 0 ? line([P(0, 0, 0), P(xn, 0, 0), P(xn, WALL_H, 0), P(0, WALL_H, 0)]) + 'Z' : '';
+      g.floorPastFill = now > 0 ? line([P(0, 0, 0), P(xn, 0, 0), P(xn, 0, FLOOR_D), P(0, 0, FLOOR_D)]) + 'Z' : '';
+      g.gx0 = r1(OX); g.gx1 = r1(OX + Math.max(xn, 1));
+      g.nowRing = ring(here, 13); g.nowDot = dot(here); g.paneO = r2(clamp(now / 0.05));
+      g.dropWall += seg(here, wall(cn)); g.dropFloor += seg(here, floor(cn)); g.wallSq += sq(wall(cn), 7); g.floorTri += tri(floor(cn), dir(now), 5.5);
+
+      // ahead of the present: the instructed future, and two that another instruction would have produced
+      const left = 1 - now, nf = Math.max(1, Math.ceil(120 * left)), b1 = branch(72, -16, now), b2 = branch(-76, 24, now);
+      g.stateFut = line(sample(main, state, now, 1, nf)); g.wallFut = line(sample(main, wall, now, 1, nf)); g.floorFut = line(sample(main, floor, now, 1, nf));
+      g.ghost = line(sample(b1, state, now, 1, nf)) + line(sample(b2, state, now, 1, nf));
+      g.wallGhost = line(sample(b1, wall, now, 1, nf)) + line(sample(b2, wall, now, 1, nf));
+      g.floorGhost = line(sample(b1, floor, now, 1, nf)) + line(sample(b2, floor, now, 1, nf));
+      g.ghostTips = left > 0.02 ? ring(state(b1(1)), 5) + ring(state(b2(1)), 5) : '';
+
+      // every future is a fan of sampled trajectories; the same samples are projected onto the wall and the floor,
+      // so video and action resolve together, and all of it tightens as the present moves in
+      const F = { fanState: '', fanWall: '', fanFloor: '', fanGhost: '', tailS1: '', tailS2: '', tailSB: '', tailW: '', tailF: '' };
+      for (const th of TM) {
+        if (th.end <= now) continue;
+        const fn = strand(th, main, now), n = Math.max(1, Math.ceil((th.end - now) / 0.013));
+        let a = '', b = '', c = '';
+        for (let i = 0; i <= n; i++) { const q = fn(now + (th.end - now) * i / n), m = i ? 'L' : 'M'; a += m + pt(state(q)); b += m + pt(wall(q)); c += m + pt(floor(q)); }
+        F.fanState += a; F.fanWall += b; F.fanFloor += c;
+        for (const d of th.dots) {
+          const u = (d[0] - now) / HZ;
+          if (u < 0.12 || d[0] > th.end) continue;
+          const v = Math.min(1, u), sg = 0.5 + 11 * v * v, p = fn(d[0]), q = [p[0] + d[1] * sg, p[1] + d[2] * sg, p[2] + d[3] * sg];
+          if (d[4] < 0.1 * v) F.tailSB += dot(state(q)); else if (d[4] < 0.55) F.tailS1 += dot(state(q)); else F.tailS2 += dot(state(q));
+          if (d[4] > 0.75) { F.tailW += dot(wall(q)); F.tailF += dot(floor(q)); }
+        }
+      }
+      for (const pair of [[T1, b1], [T2, b2]]) for (const th of pair[0]) {
+        if (th.end <= now) continue;
+        F.fanGhost += line(sample(strand(th, pair[1], now), state, now, th.end, Math.max(1, Math.ceil((th.end - now) / 0.013))));
+      }
+      Object.assign(g, F);
+
+      // the sequence: tokens lock in as the present passes them; ahead of it they are still noise
+      const ncf = first + (seq.length - first) * now, bx = RX + ncf * PITCH;
+      const R = { tokL: '', tokI: '', tokV: '', tokA: '', tokVf: '', tokAf: '', litL: '', litI: '', litV: '', litA: '', litVf: '', litAf: '', expBase: '', expBaseF: '', stems: '', arcs: '' };
+      for (let c = 0; c < seq.length; c++) {
+        const q = COL[c];
+        if (!q) continue;
+        const m = q.m, x = RX + c * PITCH + PITCH / 2, y = RY + 5, ahead = c >= first && c + 0.5 > ncf, u = ahead ? clamp((c + 0.5 - ncf) / 35) : 0, sg = 7 * Math.pow(u, 1.3);
+        if (!ahead) { R['tok' + m] += glyph[m](x, y, 9.5); R.stems += seg([x, y + 9], [x, RY + 26 + Math.max(q.a, q.b) * ROWP - 6]); }
+        else if (q.r > u * 0.7) R['tok' + m + 'f'] += glyph[m](x + q.j[0] * sg * 0.5, y + q.j[1] * sg * 0.5, 8.5);
+        for (let r = 0; r < ROWS; r++) {
+          const w = q.rows[r], p = [x + w[0] * sg, RY + 26 + r * ROWP + w[1] * sg];
+          if (r === q.a || r === q.b) { if (!ahead || w[2] > u * 0.6) R['lit' + m + (ahead ? 'f' : '')] += glyph[m](p[0], p[1], 7); }
+          else if (!ahead) R.expBase += dot(p);
+          else if (w[2] > u * 0.5) R.expBaseF += dot(p);
+        }
+      }
+      // causal attention: the present looks back over everything before it
+      const cols = [0, 4, 8, 10, 13, 15];
+      for (let k = 0; k < STEPS; k++) cols.push(first + k * 5 + 2);
+      for (const c of cols) {
+        const x0 = RX + c * PITCH + PITCH / 2, w = bx - x0;
+        if (w < 24) continue;
+        const h = 8 + w * 0.04;
+        R.arcs += 'M' + r1(x0) + ' ' + AY + 'C' + r1(x0) + ' ' + r1(AY + h * 1.33) + ' ' + r1(bx) + ' ' + r1(AY + h * 1.33) + ' ' + r1(bx) + ' ' + AY;
+      }
+      Object.assign(g, R);
+      const front = P(xn, 0, FLOOR_D);
+      g.nowLine = seg(front, [front[0], front[1] + 10]) + seg([front[0], RY - 14], [front[0], AY]);
+
+      // the two labels that ride on the present
+      g.pastL = r1(OX + xn - 418); g.pastO = r2(clamp((now - 0.13) / 0.06));
+      g.futL = r1(OX + xn + 18); g.futO = r2(clamp((0.94 - now) / 0.06));
+      return g;
+    };
+    return { S: S, frame: frame };
+  }
+  // where the present is: it sweeps the whole trajectory in 8 s, rests, then rewinds; one loop is 10 s
+  clock() {
+    if ((this.props.motion ?? true) === false || this._still) return 11 / 18;
+    const w = typeof window === 'undefined' ? null : window;
+    const t = w && typeof w.__n1Time === 'number' ? w.__n1Time : (w && w.performance ? w.performance.now() / 1000 : 0);
+    const p = (((t % 10) + 10) % 10) / 10;
+    let now;
+    if (p < 0.04) now = 0;
+    else if (p < 0.84) now = (p - 0.04) / 0.8;
+    else if (p < 0.92) now = 1;
+    else { const q = (p - 0.92) / 0.08; now = 1 - q * q * (3 - 2 * q); }
+    return Math.round(now * 5000) / 5000;
+  }
+  componentDidMount() {
+    const w = window;
+    this._still = !!(w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    let last = 0;
+    const tick = (ts) => {
+      this._raf = w.requestAnimationFrame(tick);
+      if (ts - last < 30) return;
+      last = ts;
+      if (this.clock() !== this._at) this.forceUpdate();
+    };
+    this._raf = w.requestAnimationFrame(tick);
+    if (this._still) this.forceUpdate();
+  }
+  componentWillUnmount() { if (this._raf) window.cancelAnimationFrame(this._raf); }
+  renderVals() {
+    const seed = this.props.seed ?? 7;
+    if (!this._m || this._seed !== seed) { this._m = this.make(seed); this._seed = seed; this._at = null; }
+    const now = this.clock();
+    if (this._at !== now || !this._vals) { this._vals = Object.assign({}, this._m.S, this._m.frame(now)); this._at = now; }
+    const still = (this.props.motion ?? true) === false || this._still;
+    this._vals.cls = ((this.props.theme ?? 'light') === 'dark' ? 'dark' : '') + (still ? ' still' : '');
+    return this._vals;
+  }
+}
+
+  // a small binder: fills {{name}} attributes of the template from the values the drawing returns
+  var HOLE = /\{\{\s*([\w.$]+)\s*\}\}/g, WHOLE = /^\{\{\s*([\w.$]+)\s*\}\}$/;
+  function look(scope, path) { var o = scope, ks = path.split('.'); for (var i = 0; i < ks.length && o != null; i++) o = o[ks[i]]; return o; }
+  function collect(node, out) {
+    var as = Array.prototype.slice.call(node.attributes);
+    for (var i = 0; i < as.length; i++) if (as[i].name.indexOf('data-h-') === 0) {
+      var m = WHOLE.exec(as[i].value);
+      out.push({ el: node, name: as[i].name.slice(7), tpl: as[i].value, key: m ? m[1] : null, last: undefined });
+      node.removeAttribute(as[i].name);
+    }
+    for (var c = node.firstElementChild; c; c = c.nextElementSibling) collect(c, out);
+  }
+  function apply(list, scope) {
+    for (var i = 0; i < list.length; i++) {
+      var b = list[i], v = b.key ? look(scope, b.key) : b.tpl.replace(HOLE, function (_, p) { var x = look(scope, p); return x == null ? '' : x; });
+      if (v === b.last) continue;
+      b.last = v;
+      if (v == null || v === false) b.el.removeAttribute(b.name); else b.el.setAttribute(b.name, v);
+    }
+  }
+  var root = document.getElementById('natura-1-template').content.cloneNode(true), binds = [], loops = [];
+  Array.prototype.forEach.call(root.querySelectorAll('sc-for'), function (f) {
+    var mark = document.createComment('for'), parts = Array.prototype.slice.call(f.children);
+    loops.push({ mark: mark, parts: parts, key: WHOLE.exec(f.getAttribute('data-h-list'))[1], as: f.getAttribute('as'), items: [] });
+    f.parentNode.replaceChild(mark, f);
+  });
+  Array.prototype.forEach.call(root.children, function (el) { collect(el, binds); });
+  var logic = new Component({ theme: dark ? 'dark' : 'light', motion: motion });
+  function render() {
+    var vals = logic.renderVals();
+    apply(binds, vals);
+    loops.forEach(function (L) {
+      var list = look(vals, L.key) || [];
+      while (L.items.length < list.length) {
+        var it = { nodes: [], binds: [] };
+        L.parts.forEach(function (p) { var n = p.cloneNode(true); collect(n, it.binds); L.mark.parentNode.insertBefore(n, L.mark); it.nodes.push(n); });
+        L.items.push(it);
+      }
+      while (L.items.length > list.length) L.items.pop().nodes.forEach(function (n) { n.parentNode.removeChild(n); });
+      for (var i = 0; i < list.length; i++) { var scope = Object.create(vals); scope[L.as] = list[i]; apply(L.items[i].binds, scope); }
+    });
+  }
+  render();
+  wrap.appendChild(root);
+  var stage = wrap.querySelector('.n1');
+  function fit() { stage.style.transform = 'scale(' + wrap.clientWidth / 1920 + ')'; }
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap); else window.addEventListener('resize', fit);
+  logic.componentDidMount();
+  window.__n1Render = render;
+})();
+</script>
+<!-- copy to here -->
+</body>
+</html>

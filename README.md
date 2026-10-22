@@ -21,7 +21,7 @@ python scripts/update_readme_zh_notes.py
 <!-- ZH_NOTES_LIST_START -->
 ## 中文论文笔记
 
-共 30 篇中文笔记。此列表由 `python scripts/update_readme_zh_notes.py` 生成。
+共 31 篇中文笔记。此列表由 `python scripts/update_readme_zh_notes.py` 生成。
 
 | 论文 | 会议/年份 | 链接 |
 | --- | --- | --- |
@@ -53,6 +53,7 @@ python scripts/update_readme_zh_notes.py
 | World Action Models 综述：少做梦，多行动 | arXiv，2026 | [笔记](notes/World-Action-Models-A-Survey.zh-CN.md) / [来源](https://arxiv.org/pdf/2606.20781) / [项目](https://world-action-models.github.io/) |
 | XRZero-G0：用接口、质量与比例推进灵巧机器人操作前沿 | arXiv，2026 | [笔记](notes/XRZero-G0-Pushing-the-Frontier-of-Dexterous-Robotic-Manipulation-with-Interfaces-Quality-and-Ratios.zh-CN.md) / [来源](https://arxiv.org/pdf/2604.13001) / [代码](https://github.com/X-Square-Robot/XRZero-G0) |
 | Xiaomi-Robotics-1：用超过 10 万小时真实轨迹扩展视觉-语言-动作模型 | arXiv，2026 | [笔记](notes/Xiaomi-Robotics-1-Scaling-Vision-Language-Action-Models-with-over-100K-Hours-of-Real-World-Trajectories.zh-CN.md) / [来源](https://arxiv.org/pdf/2607.15330) / [项目](https://robotics.xiaomi.com/xiaomi-robotics-1.html) |
+| Natura-1 精读教程：从人类经验到灵巧操作 | 官方技术博客，2026；不是已核实的同行评审论文。 | [笔记](notes/natura-1-close-reading.zh-CN.md) / [来源](https://www.naturewill.com/blog/natura-1?lang=en) |
 | OpenWAM：可组合世界动作模型的开放框架 | arXiv，2026 | [笔记](notes/openwam-an-open-framework-for-composable-world-action-models.zh-CN.md) / [来源](https://arxiv.org/abs/2610.07922) / [项目](https://openwam.stanford.edu/) / [代码](https://github.com/OpenWAM/OpenWAM) |
 | TEMPO：为动态机器人操作学习时间上下文 | CoRL 2026；arXiv:2609.16864v1。 | [笔记](notes/tempo-learning-temporal-context-for-dynamic-robot-manipulation.zh-CN.md) / [来源](https://arxiv.org/abs/2609.16864) / [项目](https://tempo-robot.github.io/) / [代码](https://github.com/tempo-robot/TEMPO) |
 

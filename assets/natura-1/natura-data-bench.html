@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Natura-1 data system</title>
+<!--
+  The data system behind Natura-1, as an optical bench. Animated diagram. Three ways to use it:
+  1. As its own page, in an iframe:
+       <iframe src="/_releases/b6d92871e3f8a0c84d9490786d7fa7d1e08c9ad9a452b981b187ade9422853ea/assets/natura-1/local/visualizations/natura-data-bench.html" style="width:100%;aspect-ratio:1920/1250;border:0" title="The Natura-1 data system"></iframe>
+     Light by default. Add ?theme=dark for the dark version, ?motion=off for a still.
+  2. Inline: copy everything between the two "copy" comments below into your page (one copy per page).
+     Set data-theme="dark" on the wrapper for the dark version, data-motion="off" for a still.
+  3. It scales to the width of its container; the artwork is drawn on a 1920x1250 stage.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* page chrome: only needed when this file is opened on its own or in an iframe */
+html,body{margin:0;background:#fcfcfc}
+html.nd-dark,html.nd-dark body{background:#0a0d10}
+</style>
+</head>
+<body data-nd-page>
+<!-- copy from here -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+.nd-embed{position:relative;width:100%;aspect-ratio:1920/1250;overflow:hidden}
+.nd-embed>.nd{transform-origin:0 0}
+.nd{--bg:#fcfcfc;--ink:#1b1e22;--sub:#5c6167;--vid:#2c5791;--act:#b8492f;--gls:#3d5a73;--gln:#2b3138;--ga:0.06;--ba:0.07;--bv:0.07;--bl:0.045;--bar:0.32}
+.nd.dark{--bg:#0a0d10;--ink:#ebe6da;--sub:#b0aca2;--vid:#93b2e6;--act:#e8957a;--gls:#b9cbdc;--gln:#d9d6ce;--ga:0.07;--ba:0.1;--bv:0.12;--bl:0.07;--bar:0.42}
+.nd .h{position:absolute;white-space:nowrap;font-family:'EB Garamond',Garamond,'Adobe Garamond Pro',Georgia,serif;font-weight:500;font-size:40px;line-height:46px}
+.nd .n{position:absolute;white-space:nowrap;font-size:24px;line-height:30px;color:var(--sub)}
+.nd .i{position:absolute;white-space:nowrap;font-family:'EB Garamond',Garamond,'Adobe Garamond Pro',Georgia,serif;font-style:italic;font-size:30px;line-height:34px}
+.nd .t{font-family:'EB Garamond',Garamond,'Adobe Garamond Pro',Georgia,serif;font-weight:500;font-size:34px;color:var(--ink)}
+.nd .k{color:var(--ink);font-weight:500}
+.nd .ph{animation:nd-dash linear infinite}
+.nd .mv{animation:nd-mv linear infinite}
+@keyframes nd-dash{to{stroke-dashoffset:var(--o)}}
+@keyframes nd-mv{to{transform:translate(var(--dx),var(--dy))}}
+.nd.still .ph,.nd.still .mv{animation:none}
+.nd.still .ph.dot{display:none}
+@media (prefers-reduced-motion:reduce){.nd .ph,.nd .mv{animation:none}.nd .ph.dot{display:none}}
+</style>
+<div class="nd-embed" id="natura-data-bench">
+<div class="nd" style="position: relative; width: 1920px; height: 1250px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;">
+<svg width="1920" height="1250" viewBox="0 0 1920 1250" role="img" aria-label="Controlled acquisition and internet ego video supply a shared cleaning pipeline. Internet segments receive additional quality checks. Motion reconstruction and language annotation produce video-language-action trajectories. Task and scene trees guide sampling and collection. An agentic workflow screens vendor task lists against the data distribution to balance each collection batch. Sources include monocular, stereo, multi-camera, and wrist-mounted recordings. Kubernetes runs the pipeline; a Lakehouse manages tens of PB. The system processes 350,000 hours per week." style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1250px; fill: none; stroke-linecap: round; stroke-linejoin: round;">
+<defs>
+<linearGradient id="nd-in" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" style="stop-color: var(--ink); stop-opacity: 0.01;">
+</stop>
+<stop offset="1" style="stop-color: var(--ink); stop-opacity: var(--ba);">
+</stop>
+</linearGradient>
+<linearGradient id="nd-out" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" style="stop-color: var(--ink); stop-opacity: var(--ba);">
+</stop>
+<stop offset="1" style="stop-color: var(--ink); stop-opacity: 0.015;">
+</stop>
+</linearGradient>
+<clipPath id="nd-cr">
+<path d="M1312.8 530h165.2v80h-165.2Z">
+</path>
+</clipPath>
+<clipPath id="nd-ca">
+<path d="M974.6 799.3L1183.1 610.1L1169.7 595.3L961.2 784.5Z">
+</path>
+</clipPath>
+<clipPath id="nd-cb">
+<path d="M753.2 625L925.4 798.5L939.6 784.4L767.4 610.9Z">
+</path>
+</clipPath>
+</defs>
+<path d="M333.1 692L333.1 700M360.4 685.6L360.4 700M387.6 679.2L387.6 700M414.9 672.8L414.9 700M374 706L374 894M475 661.3L475 894M680 680L680 894M950 862L950 894M1500 636L1500 894M1674 760L1674 894" style="stroke: var(--ink); stroke-width: 1.1; opacity: 0.32;">
+</path>
+<!-- Label leaders and the language annotation mount. -->
+<path d="M950 246V298" style="stroke:var(--ink);stroke-width:1.1;opacity:0.32;"></path>
+<path d="M938.5 240h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5Z" style="fill:var(--bg);stroke:var(--ink);stroke-width:1.1;stroke-opacity:0.6;"></path>
+<!-- The taxonomy label points to the first task bar, with space below its caption. -->
+<path id="nd-taxonomy-leader" d="M1720 420V228" style="stroke:var(--ink);stroke-width:1.1;opacity:0.4;"></path>
+<path id="nd-taxonomy-foot" d="M1708.5 222h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5Z" style="fill:var(--bg);stroke:var(--ink);stroke-width:1.1;stroke-opacity:0.6;"></path>
+<path d="M63 900h1794a3 3 0 0 1 3 3v3a3 3 0 0 1 -3 3h-1794a3 3 0 0 1 -3 -3v-3a3 3 0 0 1 3 -3Z" style="fill: var(--ink); fill-opacity: 0.06; stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.45;">
+</path>
+<path class="ph dot" d="M66 904.5L1854 904.5" style="stroke: var(--ink); stroke-width: 3; stroke-dasharray: 0.01, 120; opacity: 0.4; --o: -120px; animation-duration: 6s;">
+</path>
+<path d="M325.1 700h97.8a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-97.8a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2ZM362.5 894h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5ZM463.5 894h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5ZM668.5 894h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5ZM938.5 894h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5ZM1488.5 894h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5ZM1662.5 894h23a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -1.5 1.5h-23a1.5 1.5 0 0 1 -1.5 -1.5v-3a1.5 1.5 0 0 1 1.5 -1.5Z" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.1; stroke-opacity: 0.6;">
+</path>
+<path d="M1834 580C1860 580 1860 536 1860 510L1860 220C1860 137.2 1792.8 70 1710 70L342 70C281.2 70 232 119.2 232 180L232 386" style="stroke: var(--ink); stroke-width: 1.3; stroke-dasharray: 6, 6; stroke-linecap: butt; opacity: 0.5;">
+</path>
+<path class="ph dot" d="M1834 580C1860 580 1860 536 1860 510L1860 220C1860 137.2 1792.8 70 1710 70L342 70C281.2 70 232 119.2 232 180L232 386" style="stroke: var(--ink); stroke-width: 4.5; stroke-dasharray: 0.01, 300; opacity: 0.6; --o: -300px; animation-duration: 15s;">
+</path>
+<path d="M232 395L227 385L237 385Z" style="fill: var(--ink); opacity: 0.7;">
+</path>
+<g transform="translate(-284 0)">
+<path d="M497 142h38a7 7 0 0 1 7 7v38a7 7 0 0 1 -7 7h-38a7 7 0 0 1 -7 -7v-38a7 7 0 0 1 7 -7Z" style="fill: var(--bg);">
+</path>
+<path d="M497 142h38a7 7 0 0 1 7 7v38a7 7 0 0 1 -7 7h-38a7 7 0 0 1 -7 -7v-38a7 7 0 0 1 7 -7Z" style="fill: var(--ink); fill-opacity: 0.08;">
+</path>
+<path d="M499 152a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM507 160a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM507 168a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM499 176a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM507 184a2 2 0 1 0 4 0a2 2 0 1 0 -4 0Z" style="fill: var(--ink); opacity: 0.78;">
+</path>
+<path d="" style="stroke: var(--ink); stroke-width: 1.4;">
+</path>
+<path d="" style="stroke: var(--bg); stroke-width: 2.4;">
+</path>
+<path d="M507 152L529 152M515 160L529 160M515 168L525 168M507 176L525 176M515 184L527 184" style="stroke: var(--ink); stroke-width: 3; opacity: 0.8;">
+</path>
+</g>
+<path d="M262 414L638.2 556L618.4 592L262 572Z" style="fill: url(&quot;#nd-in&quot;);">
+</path>
+<path d="M254.8 673.4L614 600L609.6 608L261.2 700.6Z" style="fill: url(&quot;#nd-in&quot;);">
+</path>
+<path d="M638.2 556L716.3 546L722.9 558L629.4 572Z" style="fill: var(--ink); fill-opacity: var(--bl);">
+</path>
+<path d="M629.4 572L731.7 574L738.3 586L620.6 588Z" style="fill: var(--vid); fill-opacity: var(--bv);">
+</path>
+<path d="M620.6 588L747.1 602L753.7 614L611.8 604Z" style="fill: var(--act); fill-opacity: var(--bv);">
+</path>
+<path d="M724.8 558.1L951.2 366.1L940.8 353.9L714.4 545.9ZM954 340L1155.2 536L1168.4 576L954 380ZM1155.2 536L1488 536L1488 576L1168.4 576Z" style="fill: var(--ink); fill-opacity: var(--bl);">
+</path>
+<path d="M735 572L1488 572L1488 588L735 588Z" style="fill: var(--vid); fill-opacity: var(--bv);">
+</path>
+<!-- Straight incident and outgoing rays meet inside the lens; a single mitered band prevents gaps and overlapping end caps. -->
+<path id="nd-action-band" d="M750.4 608L949.5306 808.5932L1183.8 596H1488" style="fill:none;stroke:var(--act);stroke-width:16;stroke-opacity:var(--bv);stroke-linecap:butt;stroke-linejoin:miter;"></path>
+<path d="M1510 540L1670 404L1670 756L1510 620Z" style="fill: url(&quot;#nd-out&quot;);">
+</path>
+<path d="M320.6 649.7L325.5 648.6L335.6 691.4L330.7 692.5ZM347.9 643.3L352.8 642.2L362.8 685L357.9 686.1ZM375.2 636.9L380 635.8L390.1 678.6L385.2 679.8ZM402.4 630.5L407.3 629.4L417.3 672.2L412.5 673.4ZM472 473h6a2 2 0 0 1 2 2v184.3a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2v-184.3a2 2 0 0 1 2 -2ZM570 680L680 480L790 680ZM1120 480L1340 480L1230 680ZM930 298H970Q941 360 970 422H930Q959 360 930 298ZM933 738H967Q941 800 967 862H933Q959 800 933 738ZM1488 524L1512 524Q1500 580 1512 636L1488 636Q1500 580 1488 524ZM1672 400h4a2 2 0 0 1 2 2v356a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-356a2 2 0 0 1 2 -2Z" style="fill: var(--gls); fill-opacity: var(--ga);">
+</path>
+<path d="M229 396h6a3 3 0 0 1 3 3v178a3 3 0 0 1 -3 3h-6a3 3 0 0 1 -3 -3v-178a3 3 0 0 1 3 -3Z" style="fill: var(--ink); fill-opacity: 0.08; stroke: var(--ink); stroke-width: 1.4;">
+</path>
+<path d="M217 612h30a3 3 0 0 1 3 3v144a3 3 0 0 1 -3 3h-30a3 3 0 0 1 -3 -3v-144a3 3 0 0 1 3 -3Z" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.2; stroke-opacity: 0.6;">
+</path>
+<path d="M219 650h26v15h-26ZM219 678h26v15h-26ZM219 734h26v15h-26Z" style="fill: var(--ink); fill-opacity: 0.05; stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.55;">
+</path>
+<path d="M219 622h26v15h-26ZM219 706h26v15h-26Z" style="fill: var(--ink); fill-opacity: 0.2; stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.7;">
+</path>
+<path d="M262 424L638.2 556M262 470L631.6 568M262 516L625 580M262 562L618.4 592M255.9 678.2L373.8 650.8M258 687L611.8 604M260.1 695.8L462.3 639.4" style="stroke: var(--ink); stroke-width: 1.1; opacity: 0.45;">
+</path>
+<path d="M262 479L462 530.2" style="stroke: var(--ink); stroke-width: 1.1; stroke-dasharray: 7, 6; stroke-linecap: butt; opacity: 0.5;">
+</path>
+<path class="ph" d="M719.6 552L946 360" style="stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 5, 5; stroke-linecap: butt; opacity: 0.75; --o: -10px; animation-duration: 0.5s;">
+</path>
+<path class="ph" d="M954 348L1155.2 544L1304.8 544L1488 544" style="stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 20, 7; stroke-linecap: butt; opacity: 0.78; --o: -27px; animation-duration: 1.35s;">
+</path>
+<path class="ph" d="M954 360L1161.8 556L1298.2 556L1488 556" style="stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 9, 6; stroke-linecap: butt; opacity: 0.78; --o: -15px; animation-duration: 0.75s;">
+</path>
+<path class="ph" d="M954 372L1168.4 568L1291.6 568L1488 568" style="stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 2.5, 4; stroke-linecap: butt; opacity: 0.78; --o: -6.5px; animation-duration: 0.325s;">
+</path>
+<path d="M735 580L1175 580L1285 580L1488 580" style="stroke: var(--vid); stroke-width: 2.3;">
+</path>
+<path d="M750.4 608L949.5306 808.5932" style="stroke: var(--act); stroke-width: 1.4; opacity: 0.55;">
+</path>
+<path d="M949.5306 808.5932L1183.8 596L1276.2 596L1488 596" style="stroke: var(--act); stroke-width: 2.3;">
+</path>
+<path d="M1508 552L1670 424M1508 596.8L1670 684" style="stroke: var(--ink); stroke-width: 2.2; opacity: 0.32;">
+</path>
+<path d="M1508 574.4L1670 528M1508 585.6L1670 632" style="stroke: var(--ink); stroke-width: 1.5; opacity: 0.3;">
+</path>
+<path d="M1508 563.2L1670 476M1508 608L1670 736" style="stroke: var(--ink); stroke-width: 1; opacity: 0.3;">
+</path>
+<path class="ph dot" d="M262 424L638.2 556M262 470L631.6 568M262 516L625 580M262 562L618.4 592M262 479L462 530.2M255.9 678.2L373.8 650.8M258 687L611.8 604M260.1 695.8L462.3 639.4" style="stroke: var(--ink); stroke-width: 3.6; stroke-dasharray: 0.01, 50; opacity: 0.6; --o: -50px; animation-duration: 2.5s;">
+</path>
+<path class="ph dot" d="M1508 552L1670 424M1508 563.2L1670 476M1508 574.4L1670 528M1508 585.6L1670 632M1508 596.8L1670 684M1508 608L1670 736" style="stroke: var(--ink); stroke-width: 3.4; stroke-dasharray: 0.01, 66; opacity: 0.5; --o: -66px; animation-duration: 3.3s;">
+</path>
+<path class="ph" d="M745 580L1476 580" style="stroke: var(--vid); stroke-width: 10; stroke-dasharray: 10, 28; stroke-linecap: butt; --o: -38px; animation-duration: 1.9s;">
+</path>
+<g clip-path="url(#nd-ca)">
+<path class="mv" d="M945.8 812L941.7 823L934.4 815ZM974 786.4L969.8 797.5L962.5 789.5ZM1002.1 760.9L997.9 772L990.7 764ZM1030.2 735.3L1026.1 746.4L1018.8 738.4ZM1058.4 709.8L1054.2 720.9L1047 712.9ZM1086.5 684.3L1082.4 695.3L1075.1 687.3ZM1114.7 658.7L1110.5 669.8L1103.2 661.8ZM1142.8 633.2L1138.6 644.3L1131.4 636.3ZM1170.9 607.7L1166.8 618.7L1159.5 610.7Z" style="fill: var(--act); stroke: var(--bg); stroke-width: 1.6; paint-order: stroke; --dx: 28.1px; --dy: -25.5px; animation-duration: 1.9s;">
+</path>
+</g>
+<g clip-path="url(#nd-cr)">
+<g class="mv" style="--dx: 38px; --dy: 0px; animation-duration: 1.9s;">
+<path d="M1282 534L1282 606M1320 534L1320 606M1358 534L1358 606M1396 534L1396 606M1434 534L1434 606M1472 534L1472 606M1510 534L1510 606" style="stroke: var(--ink); stroke-width: 1; opacity: 0.25;">
+</path>
+<path d="M1288.2 596L1277.7 601.4L1277.7 590.6ZM1326.2 596L1315.7 601.4L1315.7 590.6ZM1364.2 596L1353.7 601.4L1353.7 590.6ZM1402.2 596L1391.7 601.4L1391.7 590.6ZM1440.2 596L1429.7 601.4L1429.7 590.6ZM1478.2 596L1467.7 601.4L1467.7 590.6ZM1516.2 596L1505.7 601.4L1505.7 590.6Z" style="fill: var(--act); stroke: var(--bg); stroke-width: 1.6; paint-order: stroke;">
+</path>
+</g>
+</g>
+<g clip-path="url(#nd-cb)">
+<path class="mv" d="M748.8 606.4L738.4 603L745.5 596ZM775.6 633.4L765.2 630L772.3 622.9ZM802.4 660.3L791.9 656.9L799 649.9ZM829.1 687.3L818.7 683.9L825.8 676.9ZM855.9 714.3L845.5 710.9L852.6 703.8ZM882.7 741.2L872.3 737.8L879.4 730.8ZM909.4 768.2L899 764.8L906.1 757.8ZM936.2 795.2L925.8 791.8L932.9 784.7Z" style="fill: var(--bg); stroke: var(--act); stroke-width: 1.4; opacity: 0.8; --dx: 26.8px; --dy: 27px; animation-duration: 1.9s;">
+</path>
+</g>
+<path d="M320.6 649.7L325.5 648.6L335.6 691.4L330.7 692.5ZM347.9 643.3L352.8 642.2L362.8 685L357.9 686.1ZM375.2 636.9L380 635.8L390.1 678.6L385.2 679.8ZM402.4 630.5L407.3 629.4L417.3 672.2L412.5 673.4ZM472 473h6a2 2 0 0 1 2 2v184.3a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2v-184.3a2 2 0 0 1 2 -2ZM570 680L680 480L790 680ZM1120 480L1340 480L1230 680ZM930 298H970Q941 360 970 422H930Q959 360 930 298ZM933 738H967Q941 800 967 862H933Q959 800 933 738ZM1488 524L1512 524Q1500 580 1512 636L1488 636Q1500 580 1488 524ZM1672 400h4a2 2 0 0 1 2 2v356a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-356a2 2 0 0 1 2 -2Z" style="stroke: var(--gln); stroke-width: 1.25;">
+</path>
+<path d="M585.4 670.7L680 498.7L774.6 670.7ZM1135.4 489.3L1324.6 489.3L1230 661.3Z" style="stroke: var(--gls); stroke-width: 0.9; opacity: 0.35;">
+</path>
+<path d="M472 484L478 478M472 492L478 486M472 500L478 494M472 508L478 502M472 516L478 510M472 524L478 518M472 532L478 526M472 540L478 534M472 548L478 542M472 556L478 550M472 564L478 558M472 572L478 566M472 580L478 574M472 588L478 582M472 596L478 590M472 604L478 598M472 612L478 606M472 620L478 614M472 628L478 622M472 636L478 630M472 644L478 638M472 652L478 646M472 660L478 654" style="stroke: var(--ink); stroke-width: 0.9; opacity: 0.38;">
+</path>
+<path d="M242.4 424a5.6 5.6 0 1 0 11.2 0a5.6 5.6 0 1 0 -11.2 0ZM243.6 463.5a4.4 4.4 0 1 0 8.8 0a4.4 4.4 0 1 0 -8.8 0ZM243.6 476.5a4.4 4.4 0 1 0 8.8 0a4.4 4.4 0 1 0 -8.8 0ZM242.2 506.5a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0 -7.6 0ZM247.7 516a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0 -7.6 0ZM242.2 525.5a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0 -7.6 0ZM244.3 562a5.2 5.2 0 1 0 10.4 0a5.2 5.2 0 1 0 -10.4 0Z" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.4;">
+</path>
+<path d="M242.5 551Q237 562 242.5 573" style="stroke: var(--ink); stroke-width: 2.4;">
+</path>
+<path d="M460.5 536.1L463.5 524.4M375.1 656.6L372.4 644.9M463.9 645.2L460.7 633.6" style="stroke: var(--ink); stroke-width: 2.2; stroke-linecap: butt; opacity: 0.85;">
+</path>
+<path d="M1689 420h86a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-86a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1ZM1689 472h28a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-28a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1ZM1689 524h58a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-58a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1ZM1689 628h58a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-58a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1ZM1689 680h86a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-86a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1ZM1689 732h28a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-28a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1Z" style="fill: var(--ink); opacity: var(--bar);">
+</path>
+<path d="M1720 472h28v8h-28ZM1720 732h28v8h-28Z" style="stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 4, 3; stroke-linecap: butt; opacity: 0.75;">
+</path>
+<path d="M1786 424L1810 424M1786 476L1810 476M1786 528L1810 528M1810 424L1810 528M1810 476L1834 476M1786 632L1810 632M1786 684L1810 684M1786 736L1810 736M1810 632L1810 736M1810 684L1834 684M1834 476L1834 684" style="stroke: var(--ink); stroke-width: 1.2; opacity: 0.6;">
+</path>
+<path d="M1786 424h.01M1786 476h.01M1786 528h.01M1786 632h.01M1786 684h.01M1786 736h.01" style="stroke: var(--ink); stroke-width: 4; opacity: 0.75;">
+</path>
+<path d="M1810 476h.01M1810 684h.01M1834 580h.01" style="stroke: var(--ink); stroke-width: 6.5;">
+</path>
+</svg>
+<div class="n" id="nd-coverage-note" style="left: 342px; width: 1368px; text-align: center; top: 32px; font-size: 24px; line-height: 30px;">Map vendor data, identify coverage gaps, and prioritize acquisition</div>
+<div class="h" style="left: 54.1px; top: 248px;"><span>Controlled</span> <span>acquisition</span></div>
+<div class="n" style="right: 1710px; top: 409px; font-size: 22px;">monocular</div>
+<div class="n" style="right: 1710px; top: 455px; font-size: 22px;">stereo</div>
+<div class="n" style="right: 1710px; top: 501px; font-size: 22px;">multi-camera</div>
+<div class="n" style="right: 1710px; top: 547px; font-size: 22px;">wrist-mounted</div>
+<div class="h" style="left: 782.2px; top: 118px;">Language annotation</div>
+<div class="n" style="left: 782.2px; top: 168px;">
+<svg width="50" height="10" viewBox="0 0 50 10" aria-hidden="true" style="margin-right: 14px; vertical-align: 2px;">
+<path d="M0 5H50" style="fill: none; stroke: var(--ink); stroke-width: 1.9; stroke-dasharray: 20, 7;">
+</path>
+</svg>task goals</div>
+<div class="n" style="left: 982.2px; top: 168px;">
+<svg width="50" height="10" viewBox="0 0 50 10" aria-hidden="true" style="margin-right: 14px; vertical-align: 2px;">
+<path d="M0 5H50" style="fill: none; stroke: var(--ink); stroke-width: 1.9; stroke-dasharray: 9, 6;">
+</path>
+</svg>subtasks</div>
+<div class="n" style="left: 782.2px; top: 198px;">
+<svg width="50" height="10" viewBox="0 0 50 10" aria-hidden="true" style="margin-right: 14px; vertical-align: 2px;">
+<path d="M0 5H50" style="fill: none; stroke: var(--ink); stroke-width: 1.9; stroke-dasharray: 2.5, 4;">
+</path>
+</svg>actions</div>
+<div class="h" style="left: 1460px; top: 118px;">Task taxonomy</div>
+<div class="n" style="left: 1460px; top: 168px;">Match vendor proposals to tasks</div>
+<div class="i" style="left: 790px; top: 352px;">language</div>
+<div class="i" style="left: 790px; top: 532px; color: var(--vid);">video</div>
+<div class="i" style="left: 790px; top: 716px; color: var(--act);">action</div>
+<div class="i" style="left: 1352px; top: 496px;">trajectories</div>
+<div class="h" style="left: 60px; top: 790px;">Internet ego video</div>
+<div class="h" style="left: 60px; top: 928px;">Segment selection</div>
+<div class="n" style="left: 60px; top: 978px;">Check quality and hand visibility</div>
+<div class="h" style="left: 500px; top: 928px;">Cleaning</div>
+<div class="n" style="left: 500px; top: 978px;">Deduplicate and validate recordings</div>
+<div class="h" style="left: 940px; top: 928px;">Motion reconstruction</div>
+<div class="n" style="left: 940px; top: 978px;">Recover dense hand and body motion</div>
+<div class="h" style="left: 1460px; top: 928px;">Data distribution</div>
+<div class="n" style="left: 1460px; top: 978px;">Guide sampling and collection</div>
+<div class="h" style="left: 60px; top: 1050px;">
+<svg width="56" height="20" viewBox="0 0 56 20" aria-hidden="true" style="margin-right: 16px; vertical-align: 4px;">
+<path d="M2 10h52v6H2Z" style="fill: var(--ink); fill-opacity: 0.06; stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.45;">
+</path>
+<path d="M18 4h20v6H18Z" style="fill: var(--bg); stroke: var(--ink); stroke-width: 1.1; stroke-opacity: 0.6;">
+</path>
+<path d="M28 0v4" style="stroke: var(--ink); stroke-width: 1; opacity: 0.3;">
+</path>
+</svg>Data infrastructure</div>
+<div aria-hidden="true" style="position: absolute; left: 472px; top: 1074px; width: 1388px; height: 1px; background: var(--ink); opacity: 0.14;">
+</div>
+<div class="n" style="left: 60px; top: 1112px; line-height: 40px;">
+<span class="t">Kubernetes</span>
+</div>
+<div class="n" style="left: 60px; top: 1158px;">Schedule and scale parallel pipelines</div>
+<div class="n" style="left: 60px; top: 1188px;">Maintain reliable execution across stages</div>
+<div class="n" style="left: 690px; top: 1112px; line-height: 40px;">
+<span class="t">Lakehouse</span>
+</div>
+<div class="n" style="left: 690px; top: 1158px;">Unify videos, sensors and processing artifacts</div>
+<div class="n" style="left: 690px; top: 1188px;">Manage tens of PB across pipeline stages</div>
+<div class="n" style="left: 1320px; top: 1112px; line-height: 40px;">
+<span class="t">350,000</span> hours per week</div>
+<div class="n" style="left: 1320px; top: 1158px;">Process ego data for training</div>
+<div class="n" style="left: 1320px; top: 1188px;">Scale linearly with added compute</div>
+</div>
+</div>
+<script>
+(function () {
+  var wrap = document.getElementById('natura-data-bench'), stage = wrap.querySelector('.nd');
+  var q = new URLSearchParams(location.search), page = document.body.hasAttribute('data-nd-page');
+  if (wrap.getAttribute('data-theme') === 'dark' || (page && q.get('theme') === 'dark')) {
+    stage.classList.add('dark');
+    if (page) document.documentElement.classList.add('nd-dark');
+  }
+  if (wrap.getAttribute('data-motion') === 'off' || (page && q.get('motion') === 'off')) stage.classList.add('still');
+  function fit() { stage.style.transform = 'scale(' + wrap.clientWidth / 1920 + ')'; }
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap); else window.addEventListener('resize', fit);
+})();
+</script>
+<!-- copy to here -->
+</body>
+</html>

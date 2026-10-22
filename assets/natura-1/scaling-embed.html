@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Natura-1 Scaling Validation</title>
+<style>
+/* Natura-1 scaling figure. Same tokens as the benchmark figure; scoped under .nb.
+   To match your blog, change the tokens in this first rule. */
+.nb{
+  --nb-bg:#fcfcfc;            /* page background */
+  --nb-ink:#25272a;           /* primary text */
+  --nb-ink2:#636465;          /* secondary text */
+  --nb-ink3:#858687;          /* axis ticks */
+  --nb-rule:#e8e8e7;          /* dividers */
+  --nb-grid:#f0f0ef;          /* gridlines */
+  --nb-axis:#d1d2d2;          /* baseline */
+  --nb-band:#eeeeed;          /* section band */
+  --nb-line:#3a3d41;          /* measured line and points (Natura-1 graphite) */
+  --nb-fit:#9a9c9e;           /* power-law fit */
+  --nb-serif:Georgia,"Times New Roman","Songti SC",serif;
+  --nb-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Noto Sans CJK SC",sans-serif;
+  container-type:inline-size;
+  margin:0;
+  background:var(--nb-bg);
+  color:var(--nb-ink);
+  font:13px/1.5 var(--nb-sans);
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+html,body{margin:0;background:#fcfcfc}
+main{max-width:980px;margin:0 auto;padding:32px 24px 40px}
+.nb *{box-sizing:border-box}
+.nb h3,.nb h4,.nb h5,.nb p,.nb dl,.nb dd{margin:0}
+
+.nb-head h3{font:400 29px/1.15 var(--nb-serif);letter-spacing:-.5px}
+.nb-head p{margin-top:11px;max-width:70ch;font-size:13.5px;line-height:1.65;color:var(--nb-ink2)}
+
+/* key */
+.sc-key{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:22px;padding:13px 0;border-top:1px solid var(--nb-rule);border-bottom:1px solid var(--nb-rule)}
+.sc-k{display:inline-flex;align-items:center;gap:9px;font-size:12px;line-height:1.3;color:var(--nb-ink2)}
+.sc-k i{position:relative;display:block;flex:none;width:26px;height:0}
+.sc-k-line{border-top:2px solid var(--nb-line)}
+.sc-k-line::after{content:"";position:absolute;left:50%;top:-1px;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:var(--nb-line);box-shadow:0 0 0 1.5px var(--nb-bg)}
+.sc-k-fit{border-top:1.5px dashed var(--nb-fit)}
+
+/* cohorts */
+.sc-cohort{margin-top:26px}
+.sc-band{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:3px 18px;padding:8px 12px;background:var(--nb-band);border-radius:3px}
+.sc-band h4{font:600 13px/1.3 var(--nb-sans);color:var(--nb-ink)}
+.sc-band span{font-size:11.5px;line-height:1.3;color:var(--nb-ink2)}
+.sc-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 44px;margin-top:22px}
+
+/* one panel */
+.sc-panel{position:relative;min-width:0;container-type:inline-size}
+.sc-ph{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.sc-ph h5{font:400 19px/1.2 var(--nb-serif);letter-spacing:-.3px}
+.sc-ph p{margin-top:5px;font-size:11.5px;line-height:1.4;color:var(--nb-ink2)}
+.sc-eq{text-align:right;white-space:nowrap}
+.sc-eq span{display:block;font-size:13px;line-height:1.3;font-weight:600;color:var(--nb-ink)}
+.sc-eq sup{font-size:.74em;line-height:0;vertical-align:.5em}
+.sc-eq small{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--nb-ink3)}
+
+/* square plot: the two axes have the same length at every width */
+.sc-plot{position:relative;aspect-ratio:1/1;margin:26px 20px 0 46px;border-bottom:1px solid var(--nb-axis)}
+.sc-gy{position:absolute;left:0;right:0;height:0;border-top:1px solid var(--nb-grid)}
+.sc-gy span{position:absolute;right:100%;top:0;transform:translateY(-50%);padding-right:10px;font-style:normal;font-size:10.5px;line-height:1;color:var(--nb-ink3);white-space:nowrap}
+.sc-gx{position:absolute;top:0;bottom:0;width:0;border-left:1px solid var(--nb-grid)}
+.sc-gx span{position:absolute;top:100%;left:0;transform:translateX(-50%);padding-top:9px;font-style:normal;font-size:10.5px;line-height:1;color:var(--nb-ink3);white-space:nowrap}
+.sc-lines{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+.sc-fit{fill:none;stroke:var(--nb-fit);stroke-width:1.5;stroke-dasharray:5 4;vector-effect:non-scaling-stroke}
+.sc-line{fill:none;stroke:var(--nb-line);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+
+/* the curves fall to the right, so the free space is above-right and below-left of each point */
+.sc-lab{position:absolute;transform:translate(-5px,calc(-100% - 8px));font-size:10.5px;line-height:1;color:var(--nb-ink2);white-space:nowrap;pointer-events:none;
+  text-shadow:0 0 3px var(--nb-bg),0 0 3px var(--nb-bg),1px 0 0 var(--nb-bg),-1px 0 0 var(--nb-bg),0 1px 0 var(--nb-bg),0 -1px 0 var(--nb-bg)}
+.sc-lab.below{transform:translate(calc(-100% + 5px),9px)}
+.sc-lab.end{font-size:11.5px;font-weight:600;color:var(--nb-ink)}
+/* the last label is centred over its point, in the right margin */
+.sc-lab.last{transform:translate(-50%,calc(-100% - 9px))}
+.sc-lab.last.below{transform:translate(-50%,10px)}
+
+.sc-pt{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
+.sc-pt::after{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:var(--nb-line);box-shadow:0 0 0 2px var(--nb-bg)}
+.sc-pt:focus{outline:none}
+.sc-pt.is-active::after,.sc-pt:focus-visible::after{box-shadow:0 0 0 2px var(--nb-bg),0 0 0 5.5px rgba(58,61,65,.2)}
+
+.sc-xt{margin:30px 20px 0 46px !important;text-align:center;font-size:11px;line-height:1.3;color:var(--nb-ink3)}
+
+.sc-tip{position:absolute;z-index:5;width:212px;max-width:calc(100% - 8px);padding:11px 13px;background:#fff;border:1px solid var(--nb-rule);border-radius:6px;
+  box-shadow:0 6px 20px -6px rgba(20,20,20,.22);pointer-events:none}
+.sc-tip[hidden]{display:none}
+.sc-tip-t{display:block;margin-bottom:8px;font-size:11px;line-height:1.4;color:var(--nb-ink2)}
+.sc-tip dl{display:grid;gap:5px;font-size:11.5px;line-height:1.4}
+.sc-tip dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.sc-tip dt{color:var(--nb-ink2)}
+.sc-tip dd{font-weight:600;color:var(--nb-ink);white-space:nowrap}
+
+/* small panels: keep the first and last value labels, the rest are in the tooltip */
+@container (max-width:400px){
+  .sc-lab.mid{display:none}
+  .sc-ph{flex-direction:column;gap:10px}
+  .sc-eq{text-align:left}
+  .sc-plot{margin-left:42px;margin-right:34px}
+  /* points sit closer together here: the last label starts at its point and runs into the right margin */
+  .sc-lab.last{transform:translate(-5px,calc(-100% - 8px))}
+  .sc-lab.last.below{transform:translate(-5px,9px)}
+  .sc-xt{margin-left:42px !important;margin-right:34px !important}
+}
+@container (max-width:1020px){.sc-panels{gap:30px 28px}}
+@container (max-width:560px){
+  .nb-head h3{font-size:25px}
+  .sc-panels{grid-template-columns:minmax(0,1fr);gap:34px}
+}
+@media (max-width:640px){main{padding:20px 16px 28px}}
+@media print{html,body{background:#fff}.nb{--nb-bg:#fff}main{padding:0;max-width:none}.sc-cohort{break-inside:avoid}.sc-tip{display:none !important}}
+
+</style>
+</head>
+<body><main><figure class="nb sc" aria-labelledby="sc-title">
+<header class="nb-head">
+  <h3 id="sc-title">Natura-1 scaling validation</h3>
+  <p>Teacher-forced action error on human and robot validation data, against hours of training data. Both axes are logarithmic, and lower error is better.</p>
+</header>
+<div class="sc-key" aria-hidden="true">
+  <span class="sc-k"><i class="sc-k-line"></i>Measured checkpoint</span>
+  <span class="sc-k"><i class="sc-k-fit"></i>Power-law fit</span>
+</div>
+<section class="sc-cohort"><div class="sc-band"><h4>Human validation data</h4><span>8 checkpoints, all used in the fit</span></div><div class="sc-panels">
+<div class="sc-panel" data-metric="MSE">
+  <div class="sc-ph">
+    <div><h5>Action MSE</h5><p>Log scale. Lower is better</p></div>
+    <div class="sc-eq"><span>MSE = 0.3570 · D<sup>−0.2235</sup></span><small>R² (log) = 0.981, D in hours</small></div>
+  </div>
+  <div class="sc-plot" role="group" aria-label="Human validation data: Action MSE versus training data hours. Both axes are logarithmic. Eight displayed checkpoints; power-law fit uses 8 checkpoints. Focus a point to inspect its coordinates.">
+    <i class="sc-gy" style="top:92.256%"><span>0.015</span></i><i class="sc-gy" style="top:65.535%"><span>0.02</span></i><i class="sc-gy" style="top:44.808%"><span>0.025</span></i><i class="sc-gy" style="top:27.874%"><span>0.03</span></i><i class="sc-gy" style="top:13.555%"><span>0.035</span></i><i class="sc-gx" style="left:8.111%"><span>50k</span></i><i class="sc-gx" style="left:28.597%"><span>100k</span></i><i class="sc-gx" style="left:49.083%"><span>200k</span></i><i class="sc-gx" style="left:76.164%"><span>500k</span></i><i class="sc-gx" style="left:96.651%"><span>1M</span></i>
+    <svg class="sc-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <polyline class="sc-fit" points="4.104,19.696 96.651,84.712"/><polyline class="sc-line" points="4.104,21.760 24.590,28.035 36.574,43.763 45.076,48.449 62.479,65.123 80.462,74.735 87.608,78.103 96.651,81.918"/>
+    </svg>
+    <span class="sc-lab above end first" style="left:4.104%;top:21.760%">0.0320</span><span class="sc-lab above mid" style="left:24.590%;top:28.035%">0.0299</span><span class="sc-lab below mid" style="left:36.574%;top:43.763%">0.0253</span><span class="sc-lab above mid" style="left:45.076%;top:48.449%">0.0240</span><span class="sc-lab below mid" style="left:62.479%;top:65.123%">0.0201</span><span class="sc-lab above mid" style="left:80.462%;top:74.735%">0.0181</span><span class="sc-lab below mid" style="left:87.608%;top:78.103%">0.0175</span><span class="sc-lab above end last" style="left:96.651%;top:81.918%">0.0168</span><button type="button" class="sc-pt" style="left:4.104%;top:21.760%" data-hours="43660.349701601925" data-hours-label="≈ 45K hours" data-value="0.032041" aria-label="Human validation data; training data approximately 45K hours; Action MSE 0.032041" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:24.590%;top:28.035%" data-hours="87320.699403203849" data-hours-label="≈ 85K hours" data-value="0.029948" aria-label="Human validation data; training data approximately 85K hours; Action MSE 0.029948" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:36.574%;top:43.763%" data-hours="130981.049104805788" data-hours-label="≈ 130K hours" data-value="0.025283" aria-label="Human validation data; training data approximately 130K hours; Action MSE 0.025283" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:45.076%;top:48.449%" data-hours="174641.398806407698" data-hours-label="≈ 175K hours" data-value="0.024039" aria-label="Human validation data; training data approximately 175K hours; Action MSE 0.024039" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:62.479%;top:65.123%" data-hours="314679.091194639332" data-hours-label="≈ 315K hours" data-value="0.020089" aria-label="Human validation data; training data approximately 315K hours; Action MSE 0.020089" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:80.462%;top:74.735%" data-hours="578264.056119778077" data-hours-label="≈ 580K hours" data-value="0.018114" aria-label="Human validation data; training data approximately 580K hours; Action MSE 0.018114" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:87.608%;top:78.103%" data-hours="736415.035074861255" data-hours-label="≈ 735K hours" data-value="0.017469" aria-label="Human validation data; training data approximately 735K hours; Action MSE 0.017469" aria-describedby="sc-0-tip"></button><button type="button" class="sc-pt" style="left:96.651%;top:81.918%" data-hours="1000000.000000000000" data-hours-label="≈ 1,000K hours" data-value="0.016766" aria-label="Human validation data; training data approximately 1,000K hours; Action MSE 0.016766" aria-describedby="sc-0-tip"></button>
+  </div>
+  <p class="sc-xt">Training data, hours (log scale)</p>
+  <div class="sc-tip" id="sc-0-tip" role="tooltip" hidden>
+    <span class="sc-tip-t">Human validation data, teacher forcing</span>
+    <dl><div><dt>Training data</dt><dd data-h></dd></div><div><dt>Action MSE</dt><dd data-v></dd></div></dl>
+  </div>
+</div>
+<div class="sc-panel" data-metric="MAE">
+  <div class="sc-ph">
+    <div><h5>Action MAE</h5><p>Log scale. Lower is better</p></div>
+    <div class="sc-eq"><span>MAE = 0.5281 · D<sup>−0.1622</sup></span><small>R² (log) = 0.981, D in hours</small></div>
+  </div>
+  <div class="sc-plot" role="group" aria-label="Human validation data: Action MAE versus training data hours. Both axes are logarithmic. Eight displayed checkpoints; power-law fit uses 8 checkpoints. Focus a point to inspect its coordinates.">
+    <i class="sc-gy" style="top:95.373%"><span>0.05</span></i><i class="sc-gy" style="top:74.711%"><span>0.06</span></i><i class="sc-gy" style="top:57.241%"><span>0.07</span></i><i class="sc-gy" style="top:42.109%"><span>0.08</span></i><i class="sc-gy" style="top:28.761%"><span>0.09</span></i><i class="sc-gy" style="top:16.820%"><span>0.1</span></i><i class="sc-gx" style="left:8.111%"><span>50k</span></i><i class="sc-gx" style="left:28.597%"><span>100k</span></i><i class="sc-gx" style="left:49.083%"><span>200k</span></i><i class="sc-gx" style="left:76.164%"><span>500k</span></i><i class="sc-gx" style="left:96.651%"><span>1M</span></i>
+    <svg class="sc-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <polyline class="sc-fit" points="4.104,24.562 96.651,82.106"/><polyline class="sc-line" points="4.104,26.802 24.590,32.102 36.574,44.640 45.076,50.394 62.479,64.830 80.462,73.305 87.608,76.410 96.651,79.655"/>
+    </svg>
+    <span class="sc-lab above end first" style="left:4.104%;top:26.802%">0.0916</span><span class="sc-lab above mid" style="left:24.590%;top:32.102%">0.0874</span><span class="sc-lab below mid" style="left:36.574%;top:44.640%">0.0782</span><span class="sc-lab above mid" style="left:45.076%;top:50.394%">0.0744</span><span class="sc-lab below mid" style="left:62.479%;top:64.830%">0.0655</span><span class="sc-lab above mid" style="left:80.462%;top:73.305%">0.0607</span><span class="sc-lab below mid" style="left:87.608%;top:76.410%">0.0591</span><span class="sc-lab above end last" style="left:96.651%;top:79.655%">0.0574</span><button type="button" class="sc-pt" style="left:4.104%;top:26.802%" data-hours="43660.349701601925" data-hours-label="≈ 45K hours" data-value="0.091569" aria-label="Human validation data; training data approximately 45K hours; Action MAE 0.091569" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:24.590%;top:32.102%" data-hours="87320.699403203849" data-hours-label="≈ 85K hours" data-value="0.087385" aria-label="Human validation data; training data approximately 85K hours; Action MAE 0.087385" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:36.574%;top:44.640%" data-hours="130981.049104805788" data-hours-label="≈ 130K hours" data-value="0.078233" aria-label="Human validation data; training data approximately 130K hours; Action MAE 0.078233" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:45.076%;top:50.394%" data-hours="174641.398806407698" data-hours-label="≈ 175K hours" data-value="0.074360" aria-label="Human validation data; training data approximately 175K hours; Action MAE 0.074360" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:62.479%;top:64.830%" data-hours="314679.091194639332" data-hours-label="≈ 315K hours" data-value="0.065466" aria-label="Human validation data; training data approximately 315K hours; Action MAE 0.065466" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:80.462%;top:73.305%" data-hours="578264.056119778077" data-hours-label="≈ 580K hours" data-value="0.060749" aria-label="Human validation data; training data approximately 580K hours; Action MAE 0.060749" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:87.608%;top:76.410%" data-hours="736415.035074861255" data-hours-label="≈ 735K hours" data-value="0.059107" aria-label="Human validation data; training data approximately 735K hours; Action MAE 0.059107" aria-describedby="sc-1-tip"></button><button type="button" class="sc-pt" style="left:96.651%;top:79.655%" data-hours="1000000.000000000000" data-hours-label="≈ 1,000K hours" data-value="0.057439" aria-label="Human validation data; training data approximately 1,000K hours; Action MAE 0.057439" aria-describedby="sc-1-tip"></button>
+  </div>
+  <p class="sc-xt">Training data, hours (log scale)</p>
+  <div class="sc-tip" id="sc-1-tip" role="tooltip" hidden>
+    <span class="sc-tip-t">Human validation data, teacher forcing</span>
+    <dl><div><dt>Training data</dt><dd data-h></dd></div><div><dt>Action MAE</dt><dd data-v></dd></div></dl>
+  </div>
+</div></div></section><section class="sc-cohort"><div class="sc-band"><h4>Robot validation data</h4><span>8 checkpoints, all used in the fit</span></div><div class="sc-panels">
+<div class="sc-panel" data-metric="MSE">
+  <div class="sc-ph">
+    <div><h5>Action MSE</h5><p>Log scale. Lower is better</p></div>
+    <div class="sc-eq"><span>MSE = 1.7193 · D<sup>−0.3893</sup></span><small>R² (log) = 0.948, D in hours</small></div>
+  </div>
+  <div class="sc-plot" role="group" aria-label="Robot validation data: Action MSE versus training data hours. Both axes are logarithmic. Eight displayed checkpoints; power-law fit uses 8 checkpoints. Focus a point to inspect its coordinates.">
+    <i class="sc-gy" style="top:95.644%"><span>0.008</span></i><i class="sc-gy" style="top:80.583%"><span>0.01</span></i><i class="sc-gy" style="top:53.216%"><span>0.015</span></i><i class="sc-gy" style="top:33.800%"><span>0.02</span></i><i class="sc-gy" style="top:6.433%"><span>0.03</span></i><i class="sc-gx" style="left:8.111%"><span>50k</span></i><i class="sc-gx" style="left:28.597%"><span>100k</span></i><i class="sc-gx" style="left:49.083%"><span>200k</span></i><i class="sc-gx" style="left:76.164%"><span>500k</span></i><i class="sc-gx" style="left:96.651%"><span>1M</span></i>
+    <svg class="sc-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <polyline class="sc-fit" points="4.104,13.941 96.651,96.225"/><polyline class="sc-line" points="4.104,13.123 24.590,24.829 36.574,38.361 45.076,61.401 62.479,74.427 80.462,83.395 87.608,86.336 96.651,89.488"/>
+    </svg>
+    <span class="sc-lab above end first" style="left:4.104%;top:13.123%">0.0272</span><span class="sc-lab above mid" style="left:24.590%;top:24.829%">0.0228</span><span class="sc-lab above mid" style="left:36.574%;top:38.361%">0.0187</span><span class="sc-lab below mid" style="left:45.076%;top:61.401%">0.0133</span><span class="sc-lab below mid" style="left:62.479%;top:74.427%">0.0110</span><span class="sc-lab above mid" style="left:80.462%;top:83.395%">0.0096</span><span class="sc-lab below mid" style="left:87.608%;top:86.336%">0.0092</span><span class="sc-lab above end last" style="left:96.651%;top:89.488%">0.0088</span><button type="button" class="sc-pt" style="left:4.104%;top:13.123%" data-hours="43660.349701601925" data-hours-label="≈ 45K hours" data-value="0.027169" aria-label="Robot validation data; training data approximately 45K hours; Action MSE 0.027169" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:24.590%;top:24.829%" data-hours="87320.699403203849" data-hours-label="≈ 85K hours" data-value="0.022843" aria-label="Robot validation data; training data approximately 85K hours; Action MSE 0.022843" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:36.574%;top:38.361%" data-hours="130981.049104805788" data-hours-label="≈ 130K hours" data-value="0.018693" aria-label="Robot validation data; training data approximately 130K hours; Action MSE 0.018693" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:45.076%;top:61.401%" data-hours="174641.398806407698" data-hours-label="≈ 175K hours" data-value="0.013287" aria-label="Robot validation data; training data approximately 175K hours; Action MSE 0.013287" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:62.479%;top:74.427%" data-hours="314679.091194639332" data-hours-label="≈ 315K hours" data-value="0.010955" aria-label="Robot validation data; training data approximately 315K hours; Action MSE 0.010955" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:80.462%;top:83.395%" data-hours="578264.056119778077" data-hours-label="≈ 580K hours" data-value="0.009592" aria-label="Robot validation data; training data approximately 580K hours; Action MSE 0.009592" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:87.608%;top:86.336%" data-hours="736415.035074861255" data-hours-label="≈ 735K hours" data-value="0.009183" aria-label="Robot validation data; training data approximately 735K hours; Action MSE 0.009183" aria-describedby="sc-2-tip"></button><button type="button" class="sc-pt" style="left:96.651%;top:89.488%" data-hours="1000000.000000000000" data-hours-label="≈ 1,000K hours" data-value="0.008764" aria-label="Robot validation data; training data approximately 1,000K hours; Action MSE 0.008764" aria-describedby="sc-2-tip"></button>
+  </div>
+  <p class="sc-xt">Training data, hours (log scale)</p>
+  <div class="sc-tip" id="sc-2-tip" role="tooltip" hidden>
+    <span class="sc-tip-t">Robot validation data, teacher forcing</span>
+    <dl><div><dt>Training data</dt><dd data-h></dd></div><div><dt>Action MSE</dt><dd data-v></dd></div></dl>
+  </div>
+</div>
+<div class="sc-panel" data-metric="MAE">
+  <div class="sc-ph">
+    <div><h5>Action MAE</h5><p>Log scale. Lower is better</p></div>
+    <div class="sc-eq"><span>MAE = 1.2383 · D<sup>−0.2330</sup></span><small>R² (log) = 0.964, D in hours</small></div>
+  </div>
+  <div class="sc-plot" role="group" aria-label="Robot validation data: Action MAE versus training data hours. Both axes are logarithmic. Eight displayed checkpoints; power-law fit uses 8 checkpoints. Focus a point to inspect its coordinates.">
+    <i class="sc-gy" style="top:95.374%"><span>0.05</span></i><i class="sc-gy" style="top:74.711%"><span>0.06</span></i><i class="sc-gy" style="top:57.242%"><span>0.07</span></i><i class="sc-gy" style="top:42.109%"><span>0.08</span></i><i class="sc-gy" style="top:28.760%"><span>0.09</span></i><i class="sc-gy" style="top:16.820%"><span>0.1</span></i><i class="sc-gx" style="left:8.111%"><span>50k</span></i><i class="sc-gx" style="left:28.597%"><span>100k</span></i><i class="sc-gx" style="left:49.083%"><span>200k</span></i><i class="sc-gx" style="left:76.164%"><span>500k</span></i><i class="sc-gx" style="left:96.651%"><span>1M</span></i>
+    <svg class="sc-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <polyline class="sc-fit" points="4.104,13.788 96.651,96.479"/><polyline class="sc-line" points="4.104,12.978 24.590,26.130 36.574,39.348 45.076,58.669 62.479,73.629 80.462,84.159 87.608,87.095 96.651,89.909"/>
+    </svg>
+    <span class="sc-lab above end first" style="left:4.104%;top:12.978%">0.1034</span><span class="sc-lab above mid" style="left:24.590%;top:26.130%">0.0921</span><span class="sc-lab above mid" style="left:36.574%;top:39.348%">0.0820</span><span class="sc-lab below mid" style="left:45.076%;top:58.669%">0.0691</span><span class="sc-lab below mid" style="left:62.479%;top:73.629%">0.0606</span><span class="sc-lab above mid" style="left:80.462%;top:84.159%">0.0552</span><span class="sc-lab below mid" style="left:87.608%;top:87.095%">0.0538</span><span class="sc-lab above end last" style="left:96.651%;top:89.909%">0.0525</span><button type="button" class="sc-pt" style="left:4.104%;top:12.978%" data-hours="43660.349701601925" data-hours-label="≈ 45K hours" data-value="0.103448" aria-label="Robot validation data; training data approximately 45K hours; Action MAE 0.103448" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:24.590%;top:26.130%" data-hours="87320.699403203849" data-hours-label="≈ 85K hours" data-value="0.092113" aria-label="Robot validation data; training data approximately 85K hours; Action MAE 0.092113" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:36.574%;top:39.348%" data-hours="130981.049104805788" data-hours-label="≈ 130K hours" data-value="0.081973" aria-label="Robot validation data; training data approximately 130K hours; Action MAE 0.081973" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:45.076%;top:58.669%" data-hours="174641.398806407698" data-hours-label="≈ 175K hours" data-value="0.069124" aria-label="Robot validation data; training data approximately 175K hours; Action MAE 0.069124" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:62.479%;top:73.629%" data-hours="314679.091194639332" data-hours-label="≈ 315K hours" data-value="0.060576" aria-label="Robot validation data; training data approximately 315K hours; Action MAE 0.060576" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:80.462%;top:84.159%" data-hours="578264.056119778077" data-hours-label="≈ 580K hours" data-value="0.055201" aria-label="Robot validation data; training data approximately 580K hours; Action MAE 0.055201" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:87.608%;top:87.095%" data-hours="736415.035074861255" data-hours-label="≈ 735K hours" data-value="0.053789" aria-label="Robot validation data; training data approximately 735K hours; Action MAE 0.053789" aria-describedby="sc-3-tip"></button><button type="button" class="sc-pt" style="left:96.651%;top:89.909%" data-hours="1000000.000000000000" data-hours-label="≈ 1,000K hours" data-value="0.052470" aria-label="Robot validation data; training data approximately 1,000K hours; Action MAE 0.052470" aria-describedby="sc-3-tip"></button>
+  </div>
+  <p class="sc-xt">Training data, hours (log scale)</p>
+  <div class="sc-tip" id="sc-3-tip" role="tooltip" hidden>
+    <span class="sc-tip-t">Robot validation data, teacher forcing</span>
+    <dl><div><dt>Training data</dt><dd data-h></dd></div><div><dt>Action MAE</dt><dd data-v></dd></div></dl>
+  </div>
+</div></div></section>
+</figure></main>
+<script>
+document.querySelectorAll('.sc-panel').forEach(function (panel) {
+  var tip = panel.querySelector('.sc-tip'), pts = [].slice.call(panel.querySelectorAll('.sc-pt')), active = null;
+  function place() {
+    if (!active) return;
+    var b = panel.getBoundingClientRect(), d = active.getBoundingClientRect(), c = (d.left + d.right) / 2 - b.left;
+    var left = Math.max(4, Math.min(c - tip.offsetWidth / 2, b.width - tip.offsetWidth - 4));
+    var above = d.top - b.top - tip.offsetHeight - 4;
+    tip.style.left = left + 'px';
+    tip.style.top = (above >= 0 ? above : d.bottom - b.top + 4) + 'px';
+  }
+  function hide() { if (active) active.classList.remove('is-active'); active = null; tip.hidden = true; }
+  function show(p) {
+    if (active) active.classList.remove('is-active');
+    active = p; p.classList.add('is-active');
+    tip.querySelector('[data-h]').textContent = p.dataset.hoursLabel;
+    tip.querySelector('[data-v]').textContent = Number(p.dataset.value).toFixed(6);
+    tip.hidden = false; place();
+  }
+  pts.forEach(function (p, i) {
+    p.addEventListener('pointerenter', function () { show(p); });
+    p.addEventListener('pointerleave', function (e) { if (e.pointerType !== 'touch') hide(); });
+    p.addEventListener('focus', function () { show(p); });
+    p.addEventListener('blur', hide);
+    p.addEventListener('click', function () { show(p); });
+    p.addEventListener('keydown', function (e) {
+      var t;
+      if (e.key === 'ArrowRight') t = Math.min(i + 1, pts.length - 1);
+      if (e.key === 'ArrowLeft') t = Math.max(i - 1, 0);
+      if (e.key === 'Home') t = 0;
+      if (e.key === 'End') t = pts.length - 1;
+      if (t !== undefined) { e.preventDefault(); pts[t].focus({preventScroll: true}); }
+      else if (e.key === 'Escape') { e.preventDefault(); hide(); }
+    });
+  });
+  document.addEventListener('pointerdown', function (e) {
+    if (!panel.contains(e.target) || !e.target.closest('.sc-pt')) hide();
+  });
+  if (window.ResizeObserver) new ResizeObserver(place).observe(panel);
+});
+</script>
+
+<!-- Generated embed adapter; edit the corresponding -latest.html source. -->
+<script>
+(() => {
+  const main = document.querySelector('main');
+  let lastHeight = 0;
+  const report = (force = false) => {
+    const height = Math.ceil(main.getBoundingClientRect().height);
+    if (force === true || height !== lastHeight) {
+      lastHeight = height;
+      parent.postMessage({type: 'natura-chart-size', chart: "scaling", height}, '*');
+    }
+  };
+  window.addEventListener('message', event => {
+    if (event.source === parent && event.data?.type === 'natura-chart-measure' &&
+        event.data.chart === "scaling") report(true);
+  });
+  new ResizeObserver(report).observe(main);
+  window.addEventListener('load', report);
+  document.fonts.ready.then(report);
+  report();
+})();
+</script>
+</body></html>

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Natura-1 Benchmark Results</title>
+<style>
+/* Natura-1 benchmark figure. Scoped under .nb so it can be pasted into a page.
+   To match your blog, change the tokens in this first rule. */
+.nb{
+  --nb-bg:#fcfcfc;            /* page background */
+  --nb-ink:#25272a;           /* primary text */
+  --nb-ink2:#636465;          /* secondary text */
+  --nb-ink3:#858687;          /* axis ticks */
+  --nb-rule:#e8e8e7;          /* dividers */
+  --nb-grid:#f0f0ef;          /* gridlines */
+  --nb-axis:#d1d2d2;          /* zero baseline */
+  --nb-track:#f4f4f3;         /* empty bar track */
+  --nb-agentic:#3a3d41;       /* Natura-1 Agentic */
+  --nb-base:#6c7075;          /* Natura-1 Base */
+  --nb-astra:#7f9ebf;         /* GPT-6-Astra */
+  --nb-astra-t:#e4ebf3;       /* GPT-6-Astra, gripper fill */
+  --nb-pi05:#cfa972;          /* π0.5 */
+  --nb-pi05-t:#f6eee1;        /* π0.5, gripper fill */
+  --nb-shadow:40,42,46;      /* rgb of the soft Natura shadow */
+  --nb-serif:Georgia,"Times New Roman","Songti SC",serif;
+  --nb-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Noto Sans CJK SC",sans-serif;
+  container-type:inline-size;
+  margin:0;
+  background:var(--nb-bg);
+  color:var(--nb-ink);
+  font:13px/1.5 var(--nb-sans);
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+html,body{margin:0;background:#fcfcfc}
+main{max-width:1200px;margin:0 auto;padding:32px 24px 40px}
+.nb *{box-sizing:border-box}
+.nb h3,.nb h4,.nb h5,.nb h6,.nb p{margin:0}
+.nb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+.nb-agentic{--c:var(--nb-agentic)}
+.nb-base{--c:var(--nb-base)}
+.nb-astra{--c:var(--nb-astra);--t:var(--nb-astra-t)}
+.nb-pi05{--c:var(--nb-pi05);--t:var(--nb-pi05-t)}
+/* solid bar = ran on dexterous hands, outlined bar = ran on grippers */
+
+/* headings */
+.nb-head h3{font:400 29px/1.15 var(--nb-serif);letter-spacing:-.5px}
+.nb-head p{margin-top:11px;max-width:70ch;font-size:13.5px;line-height:1.65;color:var(--nb-ink2)}
+.nb h4{font:400 21px/1.2 var(--nb-serif);letter-spacing:-.3px}
+.nb-sub{margin-top:6px !important;font-size:12px;line-height:1.55;color:var(--nb-ink2)}
+
+/* top: score columns + execution time */
+.nb-top{display:grid;grid-template-columns:minmax(0,1fr);gap:40px;margin-top:30px;padding-top:28px;border-top:1px solid var(--nb-rule)}
+@container (min-width:900px){.nb-top{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:72px}}
+
+/* ---- overall score ---- */
+.nb-cols{display:grid;grid-template-columns:24px minmax(0,4fr) 28px minmax(0,2fr);grid-template-rows:auto 236px auto;margin-top:22px}
+.nb-gtitle{grid-row:1;display:flex;align-items:center;justify-content:center;margin-bottom:22px;padding:8px 10px;
+  background:#eeeeed;border-radius:3px;text-align:center;font-size:13px;line-height:1.3;font-weight:600;color:var(--nb-ink)}
+.nb-g1{grid-column:2}.nb-g2{grid-column:4}
+.nb-yaxis{grid-area:2/1;position:relative}
+.nb-yaxis span{position:absolute;left:0;transform:translateY(50%);font-size:10px;line-height:1;color:var(--nb-ink3)}
+.nb-plot{grid-row:2;position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);
+  border-bottom:1px solid var(--nb-axis);
+  background:linear-gradient(to top,var(--nb-grid) 1px,transparent 1px) left bottom/100% calc(100% * 20 / 70)}
+.nb-col{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+.nb-bar{flex:none;display:block;width:min(52%,50px);min-height:2px;background-color:var(--c);border-radius:2px 2px 0 0}
+.nb-grip .nb-bar{background-color:var(--t);border:1px solid var(--c);border-bottom:0}
+.nb-val{margin-bottom:7px;font-size:12px;line-height:1;color:var(--nb-ink2)}
+.nb-col.nb-agentic .nb-val,.nb-col.nb-base .nb-val{font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--nb-ink)}
+.nb-col.nb-agentic .nb-bar,.nb-col.nb-base .nb-bar{
+  box-shadow:0 3px 14px -3px rgba(var(--nb-shadow),.26);clip-path:inset(-24px -24px 0 -24px)}
+/* the two "no result" columns share one note, so their own labels are for screen readers only */
+.nb-col.nb-na .nb-val{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.nb-zero-note{position:absolute;left:50%;right:0;bottom:11px;padding:0 6px;text-align:center;
+  font-size:11px;line-height:1.4;color:var(--nb-ink3)}
+.nb-xl{grid-row:3;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);padding-top:10px}
+.nb-xl-item{padding:0 2px;text-align:center;font-size:11.5px;line-height:1.35;color:var(--nb-ink2);overflow-wrap:anywhere}
+.nb-xl-item.nb-agentic,.nb-xl-item.nb-base{color:var(--nb-ink);font-weight:600}
+
+/* ---- execution time ---- */
+/* dots on a time axis, not bars: position says how long it took, and left is faster */
+.nb-tdir{display:flex;justify-content:space-between;margin-top:24px;padding-bottom:9px;border-bottom:1px solid var(--nb-rule);
+  font-size:11.5px;line-height:1;font-weight:600;color:var(--nb-ink2)}
+.nb-trows{display:grid;gap:17px;margin-top:17px}
+.nb-tline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px}
+.nb-tname{font-size:12.5px;line-height:1.3;color:var(--nb-ink2)}
+.nb-tname small{font-size:11px;color:var(--nb-ink3)}
+.nb-tval{font-size:12.5px;line-height:1;color:var(--nb-ink2);white-space:nowrap}
+.nb-trow.nb-agentic .nb-tname,.nb-trow.nb-base .nb-tname{font-weight:600;color:var(--nb-ink)}
+.nb-trow.nb-agentic .nb-tname small,.nb-trow.nb-base .nb-tname small{font-weight:400}
+.nb-trow.nb-agentic .nb-tval,.nb-trow.nb-base .nb-tval{font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--nb-ink)}
+.nb-ttrack{position:relative;height:12px;background:linear-gradient(var(--nb-axis),var(--nb-axis)) left center/100% 1px no-repeat}
+.nb-ttrack i{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background-color:var(--c);transform:translate(-50%,-50%);box-shadow:0 0 0 2.5px var(--nb-bg)}
+.nb-grip .nb-ttrack i{background-color:var(--t);border:1.5px solid var(--c)}
+.nb-tx{margin-top:7px !important;font-size:11.5px;line-height:1.4;color:var(--nb-ink2)}
+.nb-taxis{position:relative;height:16px;margin-top:12px;border-top:1px solid var(--nb-rule)}
+.nb-taxis span{position:absolute;top:6px;transform:translateX(-50%);font-size:10px;line-height:1;color:var(--nb-ink3);white-space:nowrap}
+.nb-taxis span:first-child{transform:none}
+.nb-taxis span::before{content:"";position:absolute;left:50%;top:-6px;height:4px;border-left:1px solid var(--nb-axis)}
+.nb-taxis span:first-child::before{left:0}
+
+/* ---- scores by dimension ---- */
+.nb-dims{margin-top:40px;padding-top:28px;border-top:1px solid var(--nb-rule)}
+.nb-dims .nb-sub{max-width:78ch}
+.nb-legend{display:flex;flex-wrap:wrap;gap:10px 44px;margin-top:20px;padding:13px 0;border-top:1px solid var(--nb-rule);border-bottom:1px solid var(--nb-rule)}
+.nb-lg{display:flex;flex-wrap:wrap;align-items:center;gap:7px 18px}
+.nb-lg-t{font-size:11.5px;font-weight:600;color:var(--nb-ink2)}
+.nb-k{display:inline-flex;align-items:center;gap:7px;font-size:12px;line-height:1.3;color:var(--nb-ink2);white-space:nowrap}
+.nb-k i{display:block;flex:none;width:16px;height:7px;background-color:var(--c);border-radius:1px}
+.nb-k.nb-grip i{background-color:var(--t);border:1px solid var(--c)}
+.nb-k.nb-agentic,.nb-k.nb-base{color:var(--nb-ink)}
+
+.nb-cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto 1fr;column-gap:44px;margin-top:26px}
+.nb-cat{display:grid;grid-row:span 2;grid-template-rows:subgrid;min-width:0}
+.nb-cat header{padding-bottom:20px}
+.nb-cat h5{font:400 19px/1.2 var(--nb-serif);letter-spacing:-.3px}
+.nb-cat header p{margin-top:7px;font-size:12px;line-height:1.55;color:var(--nb-ink2)}
+.nb-dimlist{display:grid;align-content:start;gap:22px}
+.nb-dim h6{font:500 12.5px/1.4 var(--nb-sans);color:var(--nb-ink);margin-bottom:9px}
+.nb-bars{display:grid;gap:3px}
+.nb-b{display:grid;grid-template-columns:minmax(0,1fr) 50px;align-items:center;column-gap:8px;height:11px}
+.nb-t{display:block;height:7px;background:var(--nb-track);border-radius:0 2px 2px 0}
+.nb-t i{display:block;height:100%;min-width:2px;background-color:var(--c);border-radius:0 2px 2px 0}
+.nb-grip .nb-t i{background-color:var(--t);border:1px solid var(--c)}
+.nb-v{font-size:11px;line-height:1;text-align:right;color:var(--nb-ink2)}
+.nb-b.nb-agentic .nb-v,.nb-b.nb-base .nb-v{color:var(--nb-ink);font-weight:600}
+/* no result on that hardware: a short dash in the model colour, no track */
+.nb-b.nb-nr .nb-v{font-size:10.5px;color:var(--nb-ink3);white-space:nowrap}
+.nb-b.nb-na{grid-template-columns:minmax(0,1fr) auto}
+.nb-b.nb-na .nb-t{width:9px;height:0;background:none;border-top:1.5px solid var(--c);border-radius:0}
+.nb-b.nb-na .nb-v{font-size:10.5px;color:var(--nb-ink3);white-space:nowrap}
+.nb-k.nb-na i{width:9px;height:0;background:none;border:0;border-top:1.5px solid var(--c);border-radius:0}
+
+/* three narrow columns: keep bars aligned when a name wraps to two lines */
+@container (min-width:640px) and (max-width:1020px){
+  .nb-cats{column-gap:30px}
+  .nb-dim h6{min-height:2.8em;display:flex;align-items:flex-end}
+}
+/* narrow: one column */
+@container (max-width:639.98px){
+  .nb-head h3{font-size:25px}
+  .nb-cols{grid-template-columns:20px minmax(0,4fr) 14px minmax(0,2fr);grid-template-rows:auto 210px auto}
+  .nb-bar{width:min(58%,50px)}
+  .nb-col.nb-agentic .nb-val,.nb-col.nb-base .nb-val{font-size:14.5px}
+  .nb-val{font-size:11px}
+  .nb-xl-item{font-size:10.5px}
+  .nb-zero-note{font-size:10.5px;bottom:9px}
+  .nb-cats{grid-template-columns:minmax(0,1fr);grid-template-rows:none;row-gap:30px}
+  .nb-cat{display:block}
+  .nb-cat header{padding-bottom:16px}
+  .nb-legend{gap:12px 28px}
+}
+@media (max-width:640px){main{padding:20px 16px 28px}}
+@media print{html,body{background:#fff}.nb{--nb-bg:#fff}main{padding:0;max-width:none}.nb-dim{break-inside:avoid}}
+
+</style>
+</head>
+<body><main><figure class="nb" aria-labelledby="nb-title">
+<header class="nb-head">
+  <h3 id="nb-title">Natura-1 benchmark results</h3>
+  <p>Natura-1 is evaluated on dexterous hands. GPT-6-Astra and π0.5 tested on the same robotic platform produced no measurable score, so their results on the ARX AC One dual-arm gripper platform are shown alongside.</p>
+</header>
+<div class="nb-top">
+<section class="nb-panel nb-score" aria-labelledby="nb-score-h">
+  <h4 id="nb-score-h">Overall score</h4>
+  <p class="nb-sub">Percent, grouped by the robotic platform each model ran on</p>
+  <div class="nb-cols">
+    <div class="nb-gtitle nb-g1">Dexterous hands</div>
+    <div class="nb-gtitle nb-g2">Gripper</div>
+    <div class="nb-yaxis" aria-hidden="true"><span style="bottom:0.0000%">0</span><span style="bottom:28.5714%">20</span><span style="bottom:57.1429%">40</span><span style="bottom:85.7143%">60</span></div>
+    <div class="nb-plot nb-g1"><div class="nb-col nb-agentic" data-series="agentic-hands" data-score="59.1" title="Natura-1 Agentic, dexterous hands: 59.1%"><span class="nb-val">59.1%</span><i class="nb-bar" style="height:84.4163%"></i></div><div class="nb-col nb-base" data-series="base-hands" data-score="53.4" title="Natura-1 Base, dexterous hands: 53.4%"><span class="nb-val">53.4%</span><i class="nb-bar" style="height:76.2887%"></i></div><div class="nb-col nb-astra nb-na" data-series="astra-hands" data-score="NR" title="GPT-6-Astra, dexterous hands: tested, no result"><span class="nb-val">No result</span><i class="nb-bar" style="height:0%"></i></div><div class="nb-col nb-pi05 nb-na" data-series="pi05-hands" data-score="NR" title="π0.5, dexterous hands: tested, no result"><span class="nb-val">No result</span><i class="nb-bar" style="height:0%"></i></div><p class="nb-zero-note">Tested on dexterous hands, but no measurable score</p></div>
+    <div class="nb-plot nb-g2"><div class="nb-col nb-astra nb-grip" data-series="astra-grippers" data-score="16.7" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 16.7%"><span class="nb-val">16.7%</span><i class="nb-bar" style="height:23.8672%"></i></div><div class="nb-col nb-pi05 nb-grip" data-series="pi05-grippers" data-score="13.5" title="π0.5, ARX AC One dual-arm gripper platform: 13.5%"><span class="nb-val">13.5%</span><i class="nb-bar" style="height:19.2522%"></i></div></div>
+    <div class="nb-xl nb-g1"><span class="nb-xl-item nb-agentic">Natura-1<br>Agentic</span><span class="nb-xl-item nb-base">Natura-1<br>Base</span><span class="nb-xl-item nb-astra">GPT-6-Astra</span><span class="nb-xl-item nb-pi05">π0.5</span></div>
+    <div class="nb-xl nb-g2"><span class="nb-xl-item nb-astra">GPT-6-Astra</span><span class="nb-xl-item nb-pi05">π0.5</span></div>
+  </div>
+</section>
+<section class="nb-panel nb-time" aria-labelledby="nb-time-h">
+  <h4 id="nb-time-h">Average execution time</h4>
+  <p class="nb-sub">Seconds on one linear scale, fastest first. Further left is better</p>
+  <div class="nb-tdir" aria-hidden="true"><span>← Faster</span><span>Slower →</span></div>
+  <div class="nb-trows"><div class="nb-trow nb-base" data-model="base" data-seconds="63.16"><div class="nb-tline"><span class="nb-tname">Natura-1 Base <small>dexterous hands</small></span><span class="nb-tval">63.16 s</span></div><div class="nb-ttrack"><i style="left:2.2557%"></i></div><p class="nb-tx">43.3× faster than GPT-6-Astra, 4.6× faster than π0.5</p></div><div class="nb-trow nb-agentic" data-model="agentic" data-seconds="139.31"><div class="nb-tline"><span class="nb-tname">Natura-1 Agentic <small>dexterous hands</small></span><span class="nb-tval">139.31 s</span></div><div class="nb-ttrack"><i style="left:4.9754%"></i></div><p class="nb-tx">19.6× faster than GPT-6-Astra, 2.1× faster than π0.5</p></div><div class="nb-trow nb-pi05 nb-grip" data-model="pi05" data-seconds="289.11"><div class="nb-tline"><span class="nb-tname">π0.5 <small>grippers</small></span><span class="nb-tval">289.11 s</span></div><div class="nb-ttrack"><i style="left:10.3254%"></i></div></div><div class="nb-trow nb-astra nb-grip" data-model="astra" data-seconds="2734.56"><div class="nb-tline"><span class="nb-tname">GPT-6-Astra <small>grippers</small></span><span class="nb-tval">2,734.56 s</span></div><div class="nb-ttrack"><i style="left:97.6629%"></i></div></div></div>
+  <div class="nb-taxis" aria-hidden="true"><span style="left:0">0</span><span style="left:35.7143%">1,000</span><span style="left:71.4286%">2,000 s</span></div>
+</section></div>
+
+<section class="nb-dims" aria-labelledby="nb-dims-h">
+  <h4 id="nb-dims-h">Scores by dimension</h4>
+  <p class="nb-sub">Natura-1 Agentic has the highest score, or ties for it, in all 12 dimensions. Each block lists the six rows in the order of the key. “No result” means the model was tested on that hardware but produced no measurable score.</p>
+  <div class="nb-legend">
+    <div class="nb-lg"><span class="nb-lg-t">Dexterous hands</span><span class="nb-k nb-agentic"><i></i>Natura-1 Agentic</span><span class="nb-k nb-base"><i></i>Natura-1 Base</span><span class="nb-k nb-astra"><i></i>GPT-6-Astra</span><span class="nb-k nb-pi05"><i></i>π0.5</span></div>
+    <div class="nb-lg"><span class="nb-lg-t">Gripper</span><span class="nb-k nb-astra nb-grip"><i></i>GPT-6-Astra</span><span class="nb-k nb-pi05 nb-grip"><i></i>π0.5</span></div>
+  </div>
+  <div class="nb-cats"><section class="nb-cat"><header><h5>Dexterous control</h5><p>Control contact, coordinate both hands, and use tools.</p></header><div class="nb-dimlist"><div class="nb-dim"><h6>Pose control &amp; Contact</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="D01" data-series="agentic-hands" data-value="63.2" title="Natura-1 Agentic, dexterous hands: 63.2%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:63.2%"></i></span><span class="nb-v">63.2%</span></div><div class="nb-b nb-base" data-dimension="D01" data-series="base-hands" data-value="56.9" title="Natura-1 Base, dexterous hands: 56.9%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:56.9%"></i></span><span class="nb-v">56.9%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="D01" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="D01" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="D01" data-series="astra-grippers" data-value="14.4" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 14.4%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:14.4%"></i></span><span class="nb-v">14.4%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="D01" data-series="pi05-grippers" data-value="8.6" title="π0.5, ARX AC One dual-arm gripper platform: 8.6%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:8.6%"></i></span><span class="nb-v">8.6%</span></div></div></div><div class="nb-dim"><h6>Bimanual coordination</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="D02" data-series="agentic-hands" data-value="61.5" title="Natura-1 Agentic, dexterous hands: 61.5%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:61.5%"></i></span><span class="nb-v">61.5%</span></div><div class="nb-b nb-base" data-dimension="D02" data-series="base-hands" data-value="50.0" title="Natura-1 Base, dexterous hands: 50.0%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:50.0%"></i></span><span class="nb-v">50.0%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="D02" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="D02" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="D02" data-series="astra-grippers" data-value="0.0" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 0.0%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:0.0%"></i></span><span class="nb-v">0.0%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="D02" data-series="pi05-grippers" data-value="0.0" title="π0.5, ARX AC One dual-arm gripper platform: 0.0%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:0.0%"></i></span><span class="nb-v">0.0%</span></div></div></div><div class="nb-dim"><h6>In-hand manipulation</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="D03" data-series="agentic-hands" data-value="16.7" title="Natura-1 Agentic, dexterous hands: 16.7%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:16.7%"></i></span><span class="nb-v">16.7%</span></div><div class="nb-b nb-base" data-dimension="D03" data-series="base-hands" data-value="16.7" title="Natura-1 Base, dexterous hands: 16.7%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:16.7%"></i></span><span class="nb-v">16.7%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="D03" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="D03" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap nb-na" data-dimension="D03" data-series="astra-grippers" data-value="NS" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: not scored"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"></span><span class="nb-v">Not scored</span></div><div class="nb-b nb-pi05 nb-grip nb-na" data-dimension="D03" data-series="pi05-grippers" data-value="NS" title="π0.5, ARX AC One dual-arm gripper platform: not scored"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"></span><span class="nb-v">Not scored</span></div></div></div><div class="nb-dim"><h6>Tool use</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="D04" data-series="agentic-hands" data-value="66.7" title="Natura-1 Agentic, dexterous hands: 66.7%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:66.7%"></i></span><span class="nb-v">66.7%</span></div><div class="nb-b nb-base" data-dimension="D04" data-series="base-hands" data-value="57.3" title="Natura-1 Base, dexterous hands: 57.3%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:57.3%"></i></span><span class="nb-v">57.3%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="D04" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="D04" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="D04" data-series="astra-grippers" data-value="10.8" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 10.8%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:10.8%"></i></span><span class="nb-v">10.8%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="D04" data-series="pi05-grippers" data-value="0.0" title="π0.5, ARX AC One dual-arm gripper platform: 0.0%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:0.0%"></i></span><span class="nb-v">0.0%</span></div></div></div></div></section><section class="nb-cat"><header><h5>Instruction following</h5><p>Preserve intent across changes in scenes, objects, and actions.</p></header><div class="nb-dimlist"><div class="nb-dim"><h6>Goal-directed reasoning</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="I01" data-series="agentic-hands" data-value="35.4" title="Natura-1 Agentic, dexterous hands: 35.4%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:35.4%"></i></span><span class="nb-v">35.4%</span></div><div class="nb-b nb-base" data-dimension="I01" data-series="base-hands" data-value="32.8" title="Natura-1 Base, dexterous hands: 32.8%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:32.8%"></i></span><span class="nb-v">32.8%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="I01" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="I01" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="I01" data-series="astra-grippers" data-value="15.5" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 15.5%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:15.5%"></i></span><span class="nb-v">15.5%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="I01" data-series="pi05-grippers" data-value="10.4" title="π0.5, ARX AC One dual-arm gripper platform: 10.4%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:10.4%"></i></span><span class="nb-v">10.4%</span></div></div></div><div class="nb-dim"><h6>Spatial &amp; scene generalization</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="I02" data-series="agentic-hands" data-value="100.0" title="Natura-1 Agentic, dexterous hands: 100.0%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:100.0%"></i></span><span class="nb-v">100.0%</span></div><div class="nb-b nb-base" data-dimension="I02" data-series="base-hands" data-value="90.9" title="Natura-1 Base, dexterous hands: 90.9%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:90.9%"></i></span><span class="nb-v">90.9%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="I02" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="I02" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="I02" data-series="astra-grippers" data-value="39.3" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 39.3%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:39.3%"></i></span><span class="nb-v">39.3%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="I02" data-series="pi05-grippers" data-value="20.6" title="π0.5, ARX AC One dual-arm gripper platform: 20.6%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:20.6%"></i></span><span class="nb-v">20.6%</span></div></div></div><div class="nb-dim"><h6>Tool &amp; object generalization</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="I03" data-series="agentic-hands" data-value="100.0" title="Natura-1 Agentic, dexterous hands: 100.0%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:100.0%"></i></span><span class="nb-v">100.0%</span></div><div class="nb-b nb-base" data-dimension="I03" data-series="base-hands" data-value="100.0" title="Natura-1 Base, dexterous hands: 100.0%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:100.0%"></i></span><span class="nb-v">100.0%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="I03" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="I03" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="I03" data-series="astra-grippers" data-value="40.8" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 40.8%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:40.8%"></i></span><span class="nb-v">40.8%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="I03" data-series="pi05-grippers" data-value="10.6" title="π0.5, ARX AC One dual-arm gripper platform: 10.6%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:10.6%"></i></span><span class="nb-v">10.6%</span></div></div></div><div class="nb-dim"><h6>New-action generalization</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="I04" data-series="agentic-hands" data-value="64.3" title="Natura-1 Agentic, dexterous hands: 64.3%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:64.3%"></i></span><span class="nb-v">64.3%</span></div><div class="nb-b nb-base" data-dimension="I04" data-series="base-hands" data-value="29.4" title="Natura-1 Base, dexterous hands: 29.4%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:29.4%"></i></span><span class="nb-v">29.4%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="I04" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="I04" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="I04" data-series="astra-grippers" data-value="13.8" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 13.8%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:13.8%"></i></span><span class="nb-v">13.8%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="I04" data-series="pi05-grippers" data-value="7.8" title="π0.5, ARX AC One dual-arm gripper platform: 7.8%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:7.8%"></i></span><span class="nb-v">7.8%</span></div></div></div><div class="nb-dim"><h6>Compositional generalization</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="I05" data-series="agentic-hands" data-value="77.8" title="Natura-1 Agentic, dexterous hands: 77.8%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:77.8%"></i></span><span class="nb-v">77.8%</span></div><div class="nb-b nb-base" data-dimension="I05" data-series="base-hands" data-value="73.7" title="Natura-1 Base, dexterous hands: 73.7%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:73.7%"></i></span><span class="nb-v">73.7%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="I05" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="I05" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="I05" data-series="astra-grippers" data-value="65.1" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 65.1%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:65.1%"></i></span><span class="nb-v">65.1%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="I05" data-series="pi05-grippers" data-value="36.2" title="π0.5, ARX AC One dual-arm gripper platform: 36.2%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:36.2%"></i></span><span class="nb-v">36.2%</span></div></div></div></div></section><section class="nb-cat"><header><h5>Long-horizon execution</h5><p>Organize actions, retain progress, and retry after failure.</p></header><div class="nb-dimlist"><div class="nb-dim"><h6>Planning</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="L01" data-series="agentic-hands" data-value="55.6" title="Natura-1 Agentic, dexterous hands: 55.6%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:55.6%"></i></span><span class="nb-v">55.6%</span></div><div class="nb-b nb-base" data-dimension="L01" data-series="base-hands" data-value="38.5" title="Natura-1 Base, dexterous hands: 38.5%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:38.5%"></i></span><span class="nb-v">38.5%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="L01" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="L01" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="L01" data-series="astra-grippers" data-value="20.6" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 20.6%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:20.6%"></i></span><span class="nb-v">20.6%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="L01" data-series="pi05-grippers" data-value="25.0" title="π0.5, ARX AC One dual-arm gripper platform: 25.0%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:25.0%"></i></span><span class="nb-v">25.0%</span></div></div></div><div class="nb-dim"><h6>Memory</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="L02" data-series="agentic-hands" data-value="70.0" title="Natura-1 Agentic, dexterous hands: 70.0%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:70.0%"></i></span><span class="nb-v">70.0%</span></div><div class="nb-b nb-base" data-dimension="L02" data-series="base-hands" data-value="57.7" title="Natura-1 Base, dexterous hands: 57.7%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:57.7%"></i></span><span class="nb-v">57.7%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="L02" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="L02" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="L02" data-series="astra-grippers" data-value="37.5" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 37.5%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:37.5%"></i></span><span class="nb-v">37.5%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="L02" data-series="pi05-grippers" data-value="10.9" title="π0.5, ARX AC One dual-arm gripper platform: 10.9%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:10.9%"></i></span><span class="nb-v">10.9%</span></div></div></div><div class="nb-dim"><h6>Recovery</h6><div class="nb-bars"><div class="nb-b nb-agentic" data-dimension="L03" data-series="agentic-hands" data-value="83.3" title="Natura-1 Agentic, dexterous hands: 83.3%"><span class="nb-sr">Natura-1 Agentic, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:83.3%"></i></span><span class="nb-v">83.3%</span></div><div class="nb-b nb-base" data-dimension="L03" data-series="base-hands" data-value="68.6" title="Natura-1 Base, dexterous hands: 68.6%"><span class="nb-sr">Natura-1 Base, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:68.6%"></i></span><span class="nb-v">68.6%</span></div><div class="nb-b nb-astra nb-nr" data-dimension="L03" data-series="astra-hands" data-value="NR" title="GPT-6-Astra, dexterous hands: no result"><span class="nb-sr">GPT-6-Astra, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-pi05 nb-nr" data-dimension="L03" data-series="pi05-hands" data-value="NR" title="π0.5, dexterous hands: no result"><span class="nb-sr">π0.5, dexterous hands: </span><span class="nb-t" aria-hidden="true"><i style="width:0%"></i></span><span class="nb-v">No result</span></div><div class="nb-b nb-astra nb-grip nb-gap" data-dimension="L03" data-series="astra-grippers" data-value="75.0" title="GPT-6-Astra, ARX AC One dual-arm gripper platform: 75.0%"><span class="nb-sr">GPT-6-Astra, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:75.0%"></i></span><span class="nb-v">75.0%</span></div><div class="nb-b nb-pi05 nb-grip" data-dimension="L03" data-series="pi05-grippers" data-value="44.6" title="π0.5, ARX AC One dual-arm gripper platform: 44.6%"><span class="nb-sr">π0.5, ARX AC One dual-arm gripper platform: </span><span class="nb-t" aria-hidden="true"><i style="width:44.6%"></i></span><span class="nb-v">44.6%</span></div></div></div></div></section></div>
+</section>
+</figure></main>
+<!-- Generated embed adapter; edit the corresponding -latest.html source. -->
+<script>
+(() => {
+  const main = document.querySelector('main');
+  let lastHeight = 0;
+  const report = (force = false) => {
+    const height = Math.ceil(main.getBoundingClientRect().height);
+    if (force === true || height !== lastHeight) {
+      lastHeight = height;
+      parent.postMessage({type: 'natura-chart-size', chart: "benchmark", height}, '*');
+    }
+  };
+  window.addEventListener('message', event => {
+    if (event.source === parent && event.data?.type === 'natura-chart-measure' &&
+        event.data.chart === "benchmark") report(true);
+  });
+  new ResizeObserver(report).observe(main);
+  window.addEventListener('load', report);
+  document.fonts.ready.then(report);
+  report();
+})();
+</script>
+</body></html>

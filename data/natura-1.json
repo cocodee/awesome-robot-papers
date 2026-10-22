@@ -1,0 +1,21 @@
+{
+  "title": "Natura-1: The Will to Act",
+  "authors": ["Nature Will Team"],
+  "venue": "Official technical blog; not identified as a peer-reviewed paper",
+  "year": 2026,
+  "accessed": "2026-10-22",
+  "source_url": "https://www.naturewill.com/blog/natura-1?lang=en",
+  "local_pdf": null,
+  "local_pdf_note": "The supplied source is HTML; no PDF link found on the inspected page.",
+  "local_html": "papers/natura-1/source.html",
+  "local_markdown": "papers/natura-1/source.md",
+  "english_note": "notes/natura-1-close-reading.md",
+  "chinese_note": "notes/natura-1-close-reading.zh-CN.md",
+  "source_sha256": "7f558d10f2435d6606d9955d19f792bfdf2559dae12e5e6b842a6101d63fb3af",
+  "key_innovation": "Joint video/action trajectory learning from large-scale human experience, followed by robot adaptation.",
+  "solved_problem": "Reported progress toward general dexterous manipulation and instruction following; deployment reliability remains unestablished.",
+  "robot_application_idea": "Evaluate history, language contrast pairs, and human-video pretraining with matched robot-data budgets.",
+  "availability_scope": "No paper, code, or weights link found on the inspected source page; not an exhaustive search.",
+  "embedded_assets_manifest": "data/natura-1-embeds.json",
+  "scaling_points": "data/natura-1-scaling.json"
+}

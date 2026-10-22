@@ -1,0 +1,182 @@
+[
+  {
+    "panel_text": "Action MSE Log scale. Lower is better MSE = 0.3570 · D −0.2235 R² (log) = 0.981, D in hours 0.015 0.02 0.025 0.03 0.035 50k 100k 200k 500k 1M 0.0320 0.0299 0.0253 0.0240 0.0201 0.0181 0.0175 0.0168 Training data, hours (log scale) Human validation data, teacher forcing Training data Action MSE",
+    "points": [
+      {
+        "data-hours": "43660.349701601925",
+        "data-hours-label": "≈ 45K hours",
+        "data-value": "0.032041"
+      },
+      {
+        "data-hours": "87320.699403203849",
+        "data-hours-label": "≈ 85K hours",
+        "data-value": "0.029948"
+      },
+      {
+        "data-hours": "130981.049104805788",
+        "data-hours-label": "≈ 130K hours",
+        "data-value": "0.025283"
+      },
+      {
+        "data-hours": "174641.398806407698",
+        "data-hours-label": "≈ 175K hours",
+        "data-value": "0.024039"
+      },
+      {
+        "data-hours": "314679.091194639332",
+        "data-hours-label": "≈ 315K hours",
+        "data-value": "0.020089"
+      },
+      {
+        "data-hours": "578264.056119778077",
+        "data-hours-label": "≈ 580K hours",
+        "data-value": "0.018114"
+      },
+      {
+        "data-hours": "736415.035074861255",
+        "data-hours-label": "≈ 735K hours",
+        "data-value": "0.017469"
+      },
+      {
+        "data-hours": "1000000.000000000000",
+        "data-hours-label": "≈ 1,000K hours",
+        "data-value": "0.016766"
+      }
+    ]
+  },
+  {
+    "panel_text": "Action MAE Log scale. Lower is better MAE = 0.5281 · D −0.1622 R² (log) = 0.981, D in hours 0.05 0.06 0.07 0.08 0.09 0.1 50k 100k 200k 500k 1M 0.0916 0.0874 0.0782 0.0744 0.0655 0.0607 0.0591 0.0574 Training data, hours (log scale) Human validation data, teacher forcing Training data Action MAE",
+    "points": [
+      {
+        "data-hours": "43660.349701601925",
+        "data-hours-label": "≈ 45K hours",
+        "data-value": "0.091569"
+      },
+      {
+        "data-hours": "87320.699403203849",
+        "data-hours-label": "≈ 85K hours",
+        "data-value": "0.087385"
+      },
+      {
+        "data-hours": "130981.049104805788",
+        "data-hours-label": "≈ 130K hours",
+        "data-value": "0.078233"
+      },
+      {
+        "data-hours": "174641.398806407698",
+        "data-hours-label": "≈ 175K hours",
+        "data-value": "0.074360"
+      },
+      {
+        "data-hours": "314679.091194639332",
+        "data-hours-label": "≈ 315K hours",
+        "data-value": "0.065466"
+      },
+      {
+        "data-hours": "578264.056119778077",
+        "data-hours-label": "≈ 580K hours",
+        "data-value": "0.060749"
+      },
+      {
+        "data-hours": "736415.035074861255",
+        "data-hours-label": "≈ 735K hours",
+        "data-value": "0.059107"
+      },
+      {
+        "data-hours": "1000000.000000000000",
+        "data-hours-label": "≈ 1,000K hours",
+        "data-value": "0.057439"
+      }
+    ]
+  },
+  {
+    "panel_text": "Action MSE Log scale. Lower is better MSE = 1.7193 · D −0.3893 R² (log) = 0.948, D in hours 0.008 0.01 0.015 0.02 0.03 50k 100k 200k 500k 1M 0.0272 0.0228 0.0187 0.0133 0.0110 0.0096 0.0092 0.0088 Training data, hours (log scale) Robot validation data, teacher forcing Training data Action MSE",
+    "points": [
+      {
+        "data-hours": "43660.349701601925",
+        "data-hours-label": "≈ 45K hours",
+        "data-value": "0.027169"
+      },
+      {
+        "data-hours": "87320.699403203849",
+        "data-hours-label": "≈ 85K hours",
+        "data-value": "0.022843"
+      },
+      {
+        "data-hours": "130981.049104805788",
+        "data-hours-label": "≈ 130K hours",
+        "data-value": "0.018693"
+      },
+      {
+        "data-hours": "174641.398806407698",
+        "data-hours-label": "≈ 175K hours",
+        "data-value": "0.013287"
+      },
+      {
+        "data-hours": "314679.091194639332",
+        "data-hours-label": "≈ 315K hours",
+        "data-value": "0.010955"
+      },
+      {
+        "data-hours": "578264.056119778077",
+        "data-hours-label": "≈ 580K hours",
+        "data-value": "0.009592"
+      },
+      {
+        "data-hours": "736415.035074861255",
+        "data-hours-label": "≈ 735K hours",
+        "data-value": "0.009183"
+      },
+      {
+        "data-hours": "1000000.000000000000",
+        "data-hours-label": "≈ 1,000K hours",
+        "data-value": "0.008764"
+      }
+    ]
+  },
+  {
+    "panel_text": "Action MAE Log scale. Lower is better MAE = 1.2383 · D −0.2330 R² (log) = 0.964, D in hours 0.05 0.06 0.07 0.08 0.09 0.1 50k 100k 200k 500k 1M 0.1034 0.0921 0.0820 0.0691 0.0606 0.0552 0.0538 0.0525 Training data, hours (log scale) Robot validation data, teacher forcing Training data Action MAE",
+    "points": [
+      {
+        "data-hours": "43660.349701601925",
+        "data-hours-label": "≈ 45K hours",
+        "data-value": "0.103448"
+      },
+      {
+        "data-hours": "87320.699403203849",
+        "data-hours-label": "≈ 85K hours",
+        "data-value": "0.092113"
+      },
+      {
+        "data-hours": "130981.049104805788",
+        "data-hours-label": "≈ 130K hours",
+        "data-value": "0.081973"
+      },
+      {
+        "data-hours": "174641.398806407698",
+        "data-hours-label": "≈ 175K hours",
+        "data-value": "0.069124"
+      },
+      {
+        "data-hours": "314679.091194639332",
+        "data-hours-label": "≈ 315K hours",
+        "data-value": "0.060576"
+      },
+      {
+        "data-hours": "578264.056119778077",
+        "data-hours-label": "≈ 580K hours",
+        "data-value": "0.055201"
+      },
+      {
+        "data-hours": "736415.035074861255",
+        "data-hours-label": "≈ 735K hours",
+        "data-value": "0.053789"
+      },
+      {
+        "data-hours": "1000000.000000000000",
+        "data-hours-label": "≈ 1,000K hours",
+        "data-value": "0.052470"
+      }
+    ]
+  }
+]
